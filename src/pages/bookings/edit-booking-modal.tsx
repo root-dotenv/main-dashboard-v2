@@ -3,10 +3,19 @@ import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import { Info } from "lucide-react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { toast } from "sonner";
-import { Loader2, Mail, MapPin, Phone, User } from "lucide-react";
+import {
+  AlertTriangle,
+  Loader2,
+  Mail,
+  MapPin,
+  Phone,
+  MessageSquare,
+  User,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -33,7 +42,18 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/custom/InputCustom";
+import { cn } from "@/lib/utils";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { EditableFormField } from "./EditableFormField";
 
 // --- Type Definitions ---
 interface Booking {
@@ -73,6 +93,12 @@ const schema = yup.object().shape({
   service_notes: yup.string().nullable(),
 });
 
+// --- Styling Constants (from all-bookings.tsx) ---
+const focusRingClass =
+  "focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/40 focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none";
+const inputBaseClass =
+  "bg-white dark:bg-[#171F2F] border border-[#DADCE0] dark:border-[#1D2939] dark:text-[#D0D5DD] dark:placeholder:text-[#5D636E] rounded-lg shadow-none h-10 px-3 py-2 text-sm";
+
 export default function EditBookingForm({
   booking,
   onUpdateComplete,
@@ -80,6 +106,8 @@ export default function EditBookingForm({
 }: EditBookingFormProps) {
   const queryClient = useQueryClient();
   const [isCheckoutRequested, setIsCheckoutRequested] = useState(false);
+  const [showSaveConfirmDialog, setShowSaveConfirmDialog] = useState(false);
+  const [dataToSave, setDataToSave] = useState<Partial<Booking> | null>(null);
 
   const form = useForm<Partial<Booking>>({
     resolver: yupResolver(schema),
@@ -152,7 +180,15 @@ export default function EditBookingForm({
       return;
     }
 
-    updateBookingMutation.mutate(changedData);
+    setDataToSave(changedData);
+    setShowSaveConfirmDialog(true);
+  };
+
+  const handleConfirmSave = () => {
+    if (dataToSave) {
+      updateBookingMutation.mutate(dataToSave);
+    }
+    setShowSaveConfirmDialog(false);
   };
 
   const handleCheckout = () => {
@@ -182,81 +218,42 @@ export default function EditBookingForm({
         >
           <div className="flex-1 overflow-y-auto px-6 py-6 space-y-8">
             <div className="space-y-6">
-              <h3 className="text-lg font-semibold">Guest Information</h3>
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Guest Information
+                </h3>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <HookFormField
+                <EditableFormField
                   control={form.control}
                   name="full_name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Full Name</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          prefixIcon={
-                            <User className="h-4 w-4 text-gray-400" />
-                          }
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  label="Full Name"
+                  placeholder="e.g., John Doe"
+                  icon={User}
                 />
-                <HookFormField
+                <EditableFormField
                   control={form.control}
                   name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="email"
-                          {...field}
-                          prefixIcon={
-                            <Mail className="h-4 w-4 text-gray-400" />
-                          }
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  label="Email"
+                  placeholder="e.g., john.doe@example.com"
+                  icon={Mail}
+                  type="email"
                 />
-                <HookFormField
+                <EditableFormField
                   control={form.control}
                   name="phone_number"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Phone Number</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="tel"
-                          {...field}
-                          prefixIcon={
-                            <Phone className="h-4 w-4 text-gray-400" />
-                          }
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  label="Phone Number"
+                  placeholder="e.g., 712 345 678"
+                  icon={Phone}
+                  type="tel"
                 />
-                <HookFormField
+                <EditableFormField
                   control={form.control}
                   name="address"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Address</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          prefixIcon={
-                            <MapPin className="h-4 w-4 text-gray-400" />
-                          }
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  label="Address"
+                  placeholder="e.g., Dar es Salaam, Tanzania"
+                  icon={MapPin}
                 />
               </div>
             </div>
@@ -264,23 +261,34 @@ export default function EditBookingForm({
             <Separator />
 
             <div className="space-y-6">
-              <h3 className="text-lg font-semibold">Booking Status</h3>
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Booking Status
+                </h3>
+              </div>
               <HookFormField
                 control={form.control}
                 name="booking_status"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Status</FormLabel>
+                    <FormLabel className="text-gray-700 dark:text-gray-300">
+                      Status
+                    </FormLabel>
                     <Select
+                      disabled={booking.booking_status === "Checked Out"}
                       onValueChange={field.onChange}
+                      value={field.value}
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger
+                          className={cn(inputBaseClass, focusRingClass)}
+                        >
                           <SelectValue placeholder="Select a status" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent>
+                      <SelectContent className="dark:bg-[#101828] dark:border-[#1D2939]">
                         <SelectItem value="Confirmed">Confirmed</SelectItem>
                         <SelectItem value="Pending">Pending</SelectItem>
                         <SelectItem value="Checked In">Checked In</SelectItem>
@@ -292,23 +300,42 @@ export default function EditBookingForm({
                   </FormItem>
                 )}
               />
+              {booking.booking_status === "Confirmed" && (
+                <div className="flex items-start gap-3 bg-amber-50 dark:bg-amber-900/20 text-amber-800 dark:text-amber-200 p-3 rounded-lg border border-amber-200 dark:border-amber-700/60">
+                  <Info className="h-5 w-5 mt-0.5 flex-shrink-0" />
+                  <p className="text-sm">
+                    This booking is already confirmed. Reverting its status to
+                    "Processing" or "Pending" is not recommended as it may
+                    disrupt the booking lifecycle.
+                  </p>
+                </div>
+              )}
             </div>
 
             <Separator />
 
             <div className="space-y-6">
-              <h3 className="text-lg font-semibold">Notes & Requests</h3>
+              <div className="flex items-center gap-3">
+                <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Notes & Requests
+                </h3>
+              </div>
               <HookFormField
                 control={form.control}
                 name="special_requests"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Guest's Special Requests</FormLabel>
+                    <FormLabel className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                      <MessageSquare className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                      <span>Guest's Special Requests</span>
+                    </FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="e.g., extra pillows, late check-in..."
                         rows={3}
                         {...field}
+                        className={cn(inputBaseClass, focusRingClass)}
                         value={field.value ?? ""}
                       />
                     </FormControl>
@@ -321,12 +348,16 @@ export default function EditBookingForm({
                 name="service_notes"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Internal Service Notes</FormLabel>
+                    <FormLabel className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                      <MessageSquare className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+                      <span>Internal Service Notes</span>
+                    </FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="e.g., VIP guest, anniversary celebration..."
                         rows={3}
                         {...field}
+                        className={cn(inputBaseClass, focusRingClass)}
                         value={field.value ?? ""}
                       />
                     </FormControl>
@@ -338,34 +369,40 @@ export default function EditBookingForm({
 
             {booking.checkin && !booking.checkout && (
               <>
-                <Separator />
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-red-600">
-                    Guest Check-out
-                  </h3>
-                  <p className="text-sm text-gray-600">
-                    This action will record the current time as the guest's
-                    departure and cannot be undone.
+                <div className="bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 rounded-lg p-6 space-y-4">
+                  <div className="flex items-center gap-3">
+                    <AlertTriangle className="h-6 w-6 text-rose-600 dark:text-rose-400" />
+                    <h3 className="text-lg font-semibold text-rose-800 dark:text-rose-200">
+                      Guest Check-out
+                    </h3>
+                  </div>
+                  <p className="text-sm text-rose-700 dark:text-rose-300">
+                    This action will mark the booking as "Completed" and cannot
+                    be undone.
                   </p>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-start space-x-3 pt-2">
                     <Checkbox
                       id="confirm-checkout"
                       checked={isCheckoutRequested}
                       onCheckedChange={(checked) =>
                         setIsCheckoutRequested(checked as boolean)
                       }
+                      className="mt-0.5 border-black dark:border-white"
                     />
-                    <label
-                      htmlFor="confirm-checkout"
-                      className="text-sm font-medium leading-none"
-                    >
-                      I confirm I want to check this guest out now.
-                    </label>
+                    <div>
+                      <label
+                        htmlFor="confirm-checkout"
+                        className="text-sm font-medium leading-none cursor-pointer"
+                      >
+                        I confirm I want to check this guest out now.
+                      </label>
+                    </div>
                   </div>
                   <Button
                     onClick={handleCheckout}
                     disabled={!isCheckoutRequested || isProcessing}
-                    className="w-full bg-red-600 hover:bg-red-700"
+                    variant="destructive"
+                    className="w-full"
                   >
                     {checkOutMutation.isPending && (
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -397,6 +434,29 @@ export default function EditBookingForm({
           </SheetFooter>
         </form>
       </Form>
+
+      <AlertDialog
+        open={showSaveConfirmDialog}
+        onOpenChange={setShowSaveConfirmDialog}
+      >
+        <AlertDialogContent className="shadow-none">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Changes</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to save these changes to the booking?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-blue-600 hover:bg-blue-700"
+              onClick={handleConfirmSave}
+            >
+              Save Changes
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

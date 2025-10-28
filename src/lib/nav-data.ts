@@ -62,11 +62,6 @@ export const navData = {
       items: [
         { title: "Check-in", url: "/reservations/checkin", icon: Circle },
         { title: "Check-out", url: "/reservations/checkout", icon: Circle },
-        {
-          title: "Special Requests",
-          url: "/reservations/special-requests",
-          icon: Circle,
-        },
       ],
     },
     {

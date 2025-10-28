@@ -59,13 +59,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
@@ -94,6 +87,7 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import ErrorPage from "@/components/custom/error-page";
+import { useHotel } from "@/providers/hotel-provider";
 
 // --- Type Definitions ---
 interface Booking {
@@ -137,11 +131,18 @@ const getBookingTypeBadgeClasses = (type: "Physical" | "Online"): string => {
   }
 };
 
+// --- Styling Constants (from all-bookings.tsx) ---
+const focusRingClass =
+  "focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/40 focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none";
+const inputBaseClass =
+  "bg-white dark:bg-[#171F2F] border border-[#DADCE0] dark:border-[#1D2939] dark:text-[#D0D5DD] dark:placeholder:text-[#5D636E] rounded-lg shadow-none h-10 px-3 py-2 text-sm";
+
 // --- Main Component ---
 export default function CheckedOutGuests() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const hotelId = "a3d5501e-c910-4e2e-a0b2-ad616c5910db";
+  const { hotel } = useHotel(); // Get hotel details
+  const hotelId = hotel?.id;
   const inputRef = useRef<HTMLInputElement>(null);
 
   // --- State ---
@@ -178,8 +179,7 @@ export default function CheckedOutGuests() {
         microservice_item_id: hotelId!,
         limit: String(pagination.pageSize),
         offset: String(pagination.pageIndex * pagination.pageSize),
-        // booking_status: "Checked Out",
-        checkout_after: "2025-09-23",
+        booking_status: "Completed",
       });
       if (debouncedGlobalFilter)
         params.append("full_name", debouncedGlobalFilter);
@@ -231,7 +231,7 @@ export default function CheckedOutGuests() {
       const { data } = await bookingClient.get(`/bookings`, {
         params: {
           microservice_item_id: hotelId,
-          booking_status: "Checked Out",
+          booking_status: "Completed",
           limit: totalCount || 10,
         },
       });
@@ -283,7 +283,7 @@ export default function CheckedOutGuests() {
                 table.toggleAllPageRowsSelected(!!value)
               }
               aria-label="Select all"
-              className="border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-800"
+              className="border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-[#171F2F] data-[state=checked]:bg-blue-600 data-[state=checked]:text-white dark:data-[state=checked]:bg-blue-500 shadow-none"
             />
           </div>
         ),
@@ -293,7 +293,7 @@ export default function CheckedOutGuests() {
               checked={row.getIsSelected()}
               onCheckedChange={(value) => row.toggleSelected(!!value)}
               aria-label="Select row"
-              className="border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800"
+              className="border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-[#171F2F] data-[state=checked]:bg-blue-600 data-[state=checked]:text-white dark:data-[state=checked]:bg-blue-500 shadow-none"
             />
           </div>
         ),
@@ -362,6 +362,22 @@ export default function CheckedOutGuests() {
         size: 180,
       },
       {
+        id: "details",
+        header: () => <div className="text-center">Details</div>,
+        cell: ({ row }) => (
+          <div className="flex justify-center">
+            <button
+              className="h-8 w-8 shadow-none flex items-center justify-center text-blue-600 hover:text-blue-800"
+              onClick={() => navigate(`/bookings/${row.original.id}`)}
+            >
+              <Eye className="h-5 w-5" />
+            </button>
+          </div>
+        ),
+        size: 80,
+        enableHiding: false,
+      },
+      {
         id: "actions",
         header: () => <div className="text-center">Actions</div>,
         cell: ({ row }) => (
@@ -376,7 +392,7 @@ export default function CheckedOutGuests() {
         enableHiding: false,
       },
     ],
-    [deleteBookingMutation]
+    [deleteBookingMutation, navigate]
   );
 
   const table = useReactTable({
@@ -400,133 +416,185 @@ export default function CheckedOutGuests() {
     table.resetRowSelection();
   };
 
+  // --- Active Filters Display ---
+  const activeFilters = useMemo(() => {
+    const filters = [];
+    if (globalFilter) {
+      filters.push({
+        label: `Guest: "${globalFilter}"`,
+        onClear: () => setGlobalFilter(""),
+      });
+    }
+    const bookingTypeFilter = columnFilters.find(
+      (f) => f.id === "booking_type"
+    );
+    if (bookingTypeFilter?.value) {
+      filters.push({
+        label: `Type: ${bookingTypeFilter.value}`,
+        onClear: () =>
+          setColumnFilters((prev) =>
+            prev.filter((f) => f.id !== "booking_type")
+          ),
+      });
+    }
+    return filters;
+  }, [globalFilter, columnFilters]);
+
+  const clearFilters = () => {
+    setGlobalFilter("");
+    setColumnFilters([]);
+    setSorting([]);
+  };
+
   if (isError) return <ErrorPage error={error as Error} onRetry={refetch} />;
 
   return (
-    <div className="flex-1 space-y-6 bg-gray-50 dark:bg-[#101828]">
-      <Card className="border-none p-0 bg-white dark:bg-[#171F2F] rounded-none shadow-none">
-        <CardHeader className="bg-white/80 dark:bg-[#101828]/80 backdrop-blur-sm border-b border-gray-200 dark:border-[#1D2939] sticky top-0 z-30 pt-4">
-          <h2 className="text-[1.5rem] font-bold tracking-wide">
-            Checked-Out Guests
-          </h2>
-          <CardDescription className="text-[0.9375rem] text-gray-600 dark:text-[#98A2B3] mt-1">
-            A historical list of all guests who have completed their stay.
-          </CardDescription>
-        </CardHeader>
+    <div className="flex-1 space-y-6 bg-[#F9FAFB] dark:bg-[#101828] pb-10">
+      {/* --- Redesigned Header --- */}
+      <div className="bg-white/80 dark:bg-[#101828]/80 backdrop-blur-sm border-b border-gray-200 dark:border-[#1D2939] sticky top-0 z-30 px-4 md:px-6 py-4 shadow-none h-[132px] flex flex-col justify-center">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl lg:text-[30px] lg:leading-[36px] font-bold tracking-tight text-gray-900 dark:text-gray-100">
+              Checked-Out Guests
+            </h1>
+            <p className="text-base text-gray-600 dark:text-[#98A2B3] mt-1">
+              A historical list of all guests who have completed their stay.
+            </p>
+          </div>
+          <Button
+            className="bg-blue-600 hover:bg-blue-700 shadow-none rounded-lg"
+            onClick={() => navigate("/bookings/new-booking")}
+          >
+            Create New Booking
+          </Button>
+        </div>
+      </div>
 
-        <CardContent className="px-6 py-4">
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-6">
-            <Card className="dark:bg-[#101828] dark:border-[#1D2939]">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium dark:text-[#D0D5DD]">
-                  Total Checked Out
-                </CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold dark:text-white">
-                  {isLoading ? (
-                    <Loader2 className="h-6 w-6 animate-spin" />
-                  ) : (
-                    totalCount
+      {/* --- Main Content Area --- */}
+      <main className="px-4 md:px-6 space-y-6">
+        {/* --- MODIFIED Stats Display --- */}
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-semibold text-gray-700 dark:text-[#D0D5DD]">
+            Total Checked Out:
+          </span>
+          {isLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Badge className="bg-gray-100 text-gray-800 dark:bg-gray-900/50 dark:text-gray-400 shadow-none rounded-md px-2.5 py-0.5 text-sm font-semibold">
+              {totalCount}
+            </Badge>
+          )}
+          <span className="text-sm text-gray-600 dark:text-[#98A2B3]">
+            Guests who have completed their stay
+          </span>
+        </div>
+
+        {/* --- Filters & Actions --- */}
+        <div className="space-y-4">
+          {/* --- MODIFIED Filter/Action Bar Alignment --- */}
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            {/* Left Side: Filters */}
+            <div className="flex flex-wrap items-center gap-4">
+              {/* Search */}
+              <div>
+                <label
+                  htmlFor="guest-search"
+                  className="sr-only block text-sm font-medium text-gray-700 dark:text-[#98A2B3] mb-1"
+                >
+                  Search by Guest
+                </label>
+                <div className="relative">
+                  <Input
+                    ref={inputRef}
+                    id="guest-search"
+                    placeholder="Search by guest name..."
+                    value={globalFilter}
+                    onChange={(e) => setGlobalFilter(e.target.value)}
+                    className={cn(
+                      "pr-8 w-full sm:w-60",
+                      inputBaseClass,
+                      focusRingClass
+                    )}
+                  />
+                  {globalFilter && (
+                    <button
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 dark:text-[#98A2B3] hover:text-gray-700 dark:hover:text-white"
+                      onClick={() => {
+                        setGlobalFilter("");
+                        inputRef.current?.focus();
+                      }}
+                    >
+                      <XIcon size={16} />
+                    </button>
                   )}
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Guests who have completed their stay
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-            <div className="flex flex-wrap items-center gap-2">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-[#5D636E]" />
-                <Input
-                  ref={inputRef}
-                  placeholder="Search by guest name..."
-                  value={globalFilter}
-                  onChange={(e) => setGlobalFilter(e.target.value)}
-                  className="pl-10 pr-10 w-full sm:w-60 bg-white dark:bg-[#101828] border-gray-200 dark:border-[#1D2939] text-gray-800 dark:text-[#D0D5DD] rounded-md shadow focus:ring-2 focus:ring-blue-500 dark:placeholder:text-[#5D636E]"
-                />
-                {globalFilter && (
-                  <button
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 dark:text-[#98A2B3]"
-                    onClick={() => {
-                      setGlobalFilter("");
-                      inputRef.current?.focus();
-                    }}
-                  >
-                    <XIcon size={18} />
-                  </button>
-                )}
               </div>
-              <Select
-                value={
-                  (table
-                    .getColumn("booking_type")
-                    ?.getFilterValue() as string) ?? ""
-                }
-                onValueChange={(value) =>
-                  table
-                    .getColumn("booking_type")
-                    ?.setFilterValue(value === "all" ? "" : value)
-                }
-              >
-                <SelectTrigger className="w-40 bg-white dark:bg-[#101828] border-gray-200 dark:border-[#1D2939] text-gray-800 dark:text-[#D0D5DD] rounded-md shadow focus:ring-2 focus:ring-blue-500">
-                  <SelectValue placeholder="Booking Type" />
-                </SelectTrigger>
-                <SelectContent className="dark:bg-[#101828] dark:border-[#1D2939]">
-                  <SelectItem
-                    value="all"
-                    className="dark:text-[#D0D5DD] dark:hover:bg-[#1C2433]"
-                  >
-                    All Types
-                  </SelectItem>
-                  <SelectItem
-                    value="Physical"
-                    className="dark:text-[#D0D5DD] dark:hover:bg-[#1C2433]"
-                  >
-                    Physical
-                  </SelectItem>
-                  <SelectItem
-                    value="Online"
-                    className="dark:text-[#D0D5DD] dark:hover:bg-[#1C2433]"
-                  >
-                    Online
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+
+              {/* Booking Type Select (Native) */}
+              <div>
+                <label
+                  htmlFor="booking-type-filter"
+                  className="sr-only block text-sm font-medium text-gray-700 dark:text-[#98A2B3] mb-1"
+                >
+                  Booking Type
+                </label>
+                <select
+                  id="booking-type-filter"
+                  value={
+                    (table
+                      .getColumn("booking_type")
+                      ?.getFilterValue() as string) ?? ""
+                  }
+                  onChange={(e) =>
+                    table
+                      .getColumn("booking_type")
+                      ?.setFilterValue(
+                        e.target.value === "all" ? "" : e.target.value
+                      )
+                  }
+                  className={cn(
+                    "w-full sm:w-40",
+                    inputBaseClass,
+                    focusRingClass
+                  )}
+                >
+                  <option value="all">All Types</option>
+                  <option value="Physical">Physical</option>
+                  <option value="Online">Online</option>
+                </select>
+              </div>
             </div>
+
+            {/* Right Side: Action Buttons */}
             <div className="flex items-center gap-3">
               {table.getSelectedRowModel().rows.length > 0 && (
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button
                       variant="outline"
-                      className="gap-2 bg-white dark:bg-transparent border-gray-200 dark:border-[#1D2939] rounded-lg shadow-sm hover:bg-rose-50 dark:hover:bg-rose-900/40 hover:border-rose-300 dark:hover:border-rose-600 text-rose-600 dark:text-rose-400"
+                      className="gap-2 bg-white dark:bg-transparent border-gray-200 dark:border-[#1D2939] rounded-lg shadow-none hover:bg-rose-50 dark:hover:bg-rose-900/40 hover:border-rose-300 dark:hover:border-rose-600 text-rose-600 dark:text-rose-400"
                     >
                       <Trash2 size={16} /> Delete (
                       {table.getSelectedRowModel().rows.length})
                     </Button>
                   </AlertDialogTrigger>
-                  <AlertDialogContent className="bg-white dark:bg-[#101828] dark:border-[#1D2939]">
+                  <AlertDialogContent className="bg-white dark:bg-[#101828] dark:border-[#1D2939] rounded-xl shadow-none">
                     <AlertDialogHeader>
-                      <AlertDialogTitle className="dark:text-[#D0D5DD]">
+                      <AlertDialogTitle className="text-lg font-bold text-gray-900 dark:text-[#D0D5DD]">
                         Confirm Deletion
                       </AlertDialogTitle>
-                      <AlertDialogDescription className="dark:text-[#98A2B3]">
+                      <AlertDialogDescription className="text-gray-600 dark:text-[#98A2B3]">
                         This will permanently delete{" "}
                         {table.getSelectedRowModel().rows.length} selected
                         booking(s). This action cannot be undone.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel className="dark:bg-[#171F2F] dark:text-[#D0D5DD] dark:hover:bg-[#1C2433] border-none">
+                      <AlertDialogCancel className="bg-gray-100 dark:bg-[#171F2F] hover:bg-gray-200 dark:hover:bg-[#1C2433] text-gray-700 dark:text-[#D0D5DD] rounded-lg border-none shadow-none">
                         Cancel
                       </AlertDialogCancel>
                       <AlertDialogAction
-                        className="bg-rose-600 hover:bg-rose-700"
+                        className="bg-rose-600 hover:bg-rose-700 text-white rounded-lg shadow-none"
                         onClick={handleDeleteRows}
                       >
                         Delete
@@ -539,14 +607,14 @@ export default function CheckedOutGuests() {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
-                    className="gap-2 bg-white dark:bg-[#101828] dark:text-[#D0D5DD] border-gray-200 dark:border-[#1D2939] rounded-md shadow"
+                    className="gap-2 bg-white dark:bg-[#101828] dark:text-[#D0D5DD] border-gray-200 dark:border-[#1D2939] rounded-lg shadow-none"
                   >
                     <Columns3Icon size={16} /> View
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="end"
-                  className="dark:bg-[#101828] dark:border-[#1D2939]"
+                  className="dark:bg-[#101828] dark:border-[#1D2939] shadow-none rounded-lg"
                 >
                   <DropdownMenuLabel className="dark:text-[#D0D5DD]">
                     Toggle columns
@@ -570,26 +638,27 @@ export default function CheckedOutGuests() {
                 variant="outline"
                 onClick={() => refetch()}
                 disabled={isRefetching || isLoading}
-                className="gap-2 bg-white dark:bg-[#101828] dark:text-[#D0D5DD] border-gray-200 dark:border-[#1D2939] rounded-md shadow"
+                className="gap-2 bg-white dark:bg-[#101828] dark:text-[#D0D5DD] border-gray-200 dark:border-[#1D2939] rounded-lg shadow-none"
               >
                 <IoRefreshOutline
                   className={cn("h-5 w-5", isRefetching && "animate-spin")}
                 />
                 Refresh
               </Button>
+              {/* More Actions Dropdown (Export) */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
                     size="icon"
-                    className="h-10 w-10 bg-white dark:bg-[#101828] border-gray-200 dark:border-[#1D2939] rounded-full shadow"
+                    className="h-10 w-10 bg-white dark:bg-[#101828] border-gray-200 dark:border-[#1D2939] rounded-lg shadow-none"
                   >
                     <MoreVertical className="h-5 w-5 text-gray-600 dark:text-[#98A2B3]" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="end"
-                  className="dark:bg-[#101828] dark:border-[#1D2939]"
+                  className="dark:bg-[#101828] dark:border-[#1D2939] rounded-lg shadow-none"
                 >
                   <DropdownMenuItem
                     onClick={handleExport}
@@ -617,125 +686,188 @@ export default function CheckedOutGuests() {
             </div>
           </div>
 
-          <div className="rounded-lg border border-gray-200 dark:border-[#1D2939] shadow-sm bg-white dark:bg-[#171F2F] overflow-hidden">
-            <Table>
-              <TableHeader>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow
-                    key={headerGroup.id}
-                    className="hover:bg-transparent border-b-2 border-gray-300 dark:border-b-[#1D2939]"
+          {/* Active Filters Display */}
+          {activeFilters.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-sm font-semibold text-gray-700 dark:text-[#98A2B3]">
+                Active Filters:
+              </span>
+              {activeFilters.map((filter, index) => (
+                <Badge
+                  key={index}
+                  variant="secondary"
+                  className="flex items-center gap-2 bg-blue-100 dark:bg-[#162142] border border-blue-200 dark:border-blue-900 text-blue-800 dark:text-[#7592FF] shadow-none rounded-full"
+                >
+                  {filter.label}
+                  <button
+                    onClick={filter.onClear}
+                    className="rounded-full hover:bg-blue-200 dark:hover:bg-blue-800/50 p-0.5"
                   >
-                    {headerGroup.headers.map((header) => (
-                      <TableHead
-                        key={header.id}
-                        style={{ width: `${header.getSize()}px` }}
-                        className="h-14 px-4 text-left align-middle font-semibold text-[13px] uppercase tracking-wide text-[#667085] dark:text-[#98A2B3] border-r border-gray-300 dark:border-r-[#1D2939] last:border-r-0 bg-gradient-to-b from-slate-50 to-slate-100 dark:from-[#101828] dark:to-[#101828]/90 shadow-sm first:px-6"
+                    <XIcon className="h-3 w-3" />
+                  </button>
+                </Badge>
+              ))}
+              <span
+                className="text-blue-600 text-sm font-medium cursor-pointer hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 p-1.5"
+                onClick={clearFilters}
+              >
+                Clear All
+              </span>
+            </div>
+          )}
+        </div>
+
+        {/* --- Table --- */}
+        <div className="rounded-lg border border-gray-200 dark:border-[#1D2939] shadow-none bg-white dark:bg-[#171F2F] overflow-hidden">
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow
+                  key={headerGroup.id}
+                  className="hover:bg-transparent border-b-2 border-gray-300 dark:border-b-[#1D2939]"
+                >
+                  {headerGroup.headers.map((header) => (
+                    <TableHead
+                      key={header.id}
+                      style={{ width: `${header.getSize()}px` }}
+                      className="h-14 px-4 text-left align-middle font-semibold text-[13px] uppercase tracking-wide text-[#667085] dark:text-[#98A2B3] border-r border-gray-200 dark:border-r-[#1D2939] last:border-r-0 bg-gradient-to-b from-slate-50 to-slate-100 dark:from-[#171F2F] dark:to-[#171F2F]/90 shadow-none"
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {isLoading ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    <div className="w-full flex items-center justify-center">
+                      <Loader className="animate-spin h-8 w-8 text-blue-600" />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    className="border-b border-gray-200 dark:border-b-[#1D2939] hover:bg-indigo-50/30 dark:hover:bg-[#1C2433] transition-colors data-[state=selected]:bg-blue-50 dark:data-[state=selected]:bg-[#162142]"
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell
+                        key={cell.id}
+                        className="px-4 py-3 align-middle border-r border-gray-200 dark:border-r-[#1D2939] last:border-r-0 text-gray-700 dark:text-[#D0D5DD] text-sm"
                       >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
                     ))}
                   </TableRow>
-                ))}
-              </TableHeader>
-              <TableBody>
-                {isLoading ? (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className="h-24 text-center"
-                    >
-                      <div className="w-full flex items-center justify-center">
-                        <Loader className="animate-spin h-8 w-8 text-blue-600" />
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ) : table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      data-state={row.getIsSelected() && "selected"}
-                      className="border-b border-gray-200 dark:border-b-[#1D2939] hover:bg-indigo-50/30 dark:hover:bg-[#1C2433] transition-colors"
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell
-                          key={cell.id}
-                          className="px-4 py-4 align-middle border-r border-gray-200 dark:border-r-[#1D2939] last:border-r-0 text-gray-700 dark:text-[#D0D5DD] first:px-6"
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className="h-24 text-center text-gray-500 dark:text-[#98A2B3]"
-                    >
-                      No checked-out guests found.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center text-gray-500 dark:text-[#98A2B3]"
+                  >
+                    No checked-out guests found.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
 
-          <div className="flex items-center justify-between gap-4 mt-6">
-            <div className="flex-1 text-sm text-gray-600 dark:text-[#98A2B3]">
-              {table.getSelectedRowModel().rows.length} of{" "}
-              {table.getRowModel().rows.length} row(s) selected.
-            </div>
-            <div className="flex items-center gap-6">
-              <div className="flex items-center justify-center text-sm font-medium text-gray-700 dark:text-[#98A2B3]">
-                Page {table.getState().pagination.pageIndex + 1} of{" "}
-                {table.getPageCount()}
-              </div>
-              <div className="flex items-center space-x-2">
-                <Button
-                  variant="outline"
-                  className="h-9 w-9 p-0 dark:bg-[#101828] dark:border-[#1D2939] dark:hover:bg-[#1C2433]"
-                  onClick={() => table.firstPage()}
-                  disabled={!hasPreviousPage}
-                >
-                  <ChevronFirstIcon className="h-5 w-5 dark:text-[#98A2B3]" />
-                </Button>
-                <Button
-                  variant="outline"
-                  className="h-9 w-9 p-0 dark:bg-[#101828] dark:border-[#1D2939] dark:hover:bg-[#1C2433]"
-                  onClick={() => table.previousPage()}
-                  disabled={!hasPreviousPage}
-                >
-                  <ChevronLeftIcon className="h-5 w-5 dark:text-[#98A2B3]" />
-                </Button>
-                <Button
-                  variant="outline"
-                  className="h-9 w-9 p-0 dark:bg-[#101828] dark:border-[#1D2939] dark:hover:bg-[#1C2433]"
-                  onClick={() => table.nextPage()}
-                  disabled={!hasNextPage}
-                >
-                  <ChevronRightIcon className="h-5 w-5 dark:text-[#98A2B3]" />
-                </Button>
-                <Button
-                  variant="outline"
-                  className="h-9 w-9 p-0 dark:bg-[#101828] dark:border-[#1D2939] dark:hover:bg-[#1C2433]"
-                  onClick={() => table.lastPage()}
-                  disabled={!hasNextPage}
-                >
-                  <ChevronLastIcon className="h-5 w-5 dark:text-[#98A2B3]" />
-                </Button>
-              </div>
+        {/* --- Pagination --- */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600 dark:text-[#98A2B3]">
+              Rows per page:
+            </span>
+            <Select
+              value={`${table.getState().pagination.pageSize}`}
+              onValueChange={(value) => {
+                table.setPageSize(Number(value));
+              }}
+            >
+              <SelectTrigger className="h-9 w-[70px] bg-white dark:bg-[#101828] border-gray-200 dark:border-[#1D2939] text-gray-800 dark:text-[#D0D5DD] rounded-lg shadow-none focus:ring-1 focus:ring-blue-500">
+                <SelectValue
+                  placeholder={table.getState().pagination.pageSize}
+                />
+              </SelectTrigger>
+              <SelectContent
+                side="top"
+                className="dark:bg-[#101828] dark:border-[#1D2939] shadow-none rounded-lg"
+              >
+                {[10, 20, 30, 40, 50].map((pageSize) => (
+                  <SelectItem
+                    key={pageSize}
+                    value={`${pageSize}`}
+                    className="dark:text-[#D0D5DD] dark:hover:bg-[#1C2433]"
+                  >
+                    {pageSize}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <div className="text-sm text-gray-600 dark:text-[#98A2B3] hidden sm:block">
+              {table.getFilteredSelectedRowModel().rows.length} of {totalCount}{" "}
+              row(s) selected.
             </div>
           </div>
-        </CardContent>
-      </Card>
+          <div className="flex items-center gap-6">
+            <div className="flex items-center justify-center text-sm font-medium text-gray-700 dark:text-[#98A2B3]">
+              Page {table.getState().pagination.pageIndex + 1} of{" "}
+              {table.getPageCount()}
+            </div>
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="outline"
+                className="h-9 w-9 p-0 shadow-none dark:bg-[#101828] dark:border-[#1D2939] dark:hover:bg-[#1C2433] rounded-lg"
+                onClick={() => table.firstPage()}
+                disabled={!hasPreviousPage}
+              >
+                <ChevronFirstIcon className="h-5 w-5 dark:text-[#98A2B3]" />
+              </Button>
+              <Button
+                variant="outline"
+                className="h-9 w-9 p-0 shadow-none dark:bg-[#101828] dark:border-[#1D2939] dark:hover:bg-[#1C2433] rounded-lg"
+                onClick={() => table.previousPage()}
+                disabled={!hasPreviousPage}
+              >
+                <ChevronLeftIcon className="h-5 w-5 dark:text-[#98A2B3]" />
+              </Button>
+              <Button
+                variant="outline"
+                className="h-9 w-9 p-0 shadow-none dark:bg-[#101828] dark:border-[#1D2939] dark:hover:bg-[#1C2433] rounded-lg"
+                onClick={() => table.nextPage()}
+                disabled={!hasNextPage}
+              >
+                <ChevronRightIcon className="h-5 w-5 dark:text-[#98A2B3]" />
+              </Button>
+              <Button
+                variant="outline"
+                className="h-9 w-9 p-0 shadow-none dark:bg-[#101828] dark:border-[#1D2939] dark:hover:bg-[#1C2433] rounded-lg"
+                onClick={() => table.lastPage()}
+                disabled={!hasNextPage}
+              >
+                <ChevronLastIcon className="h-5 w-5 dark:text-[#98A2B3]" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }
@@ -775,7 +907,6 @@ function RowActions({
   row: Row<Booking>;
   deleteBookingMutation: any;
 }) {
-  const navigate = useNavigate();
   const booking = row.original;
 
   return (
@@ -785,7 +916,7 @@ function RowActions({
           <Button
             size="icon"
             variant="ghost"
-            className="h-9 w-9 rounded-full hover:bg-indigo-100 dark:hover:bg-[#1C2433] text-gray-600 dark:text-[#98A2B3]"
+            className="h-9 w-9 rounded-full hover:bg-indigo-100 dark:hover:bg-[#1C2433] text-gray-600 dark:text-[#98A2B3] shadow-none"
           >
             <EllipsisIcon size={18} />
           </Button>
@@ -793,15 +924,8 @@ function RowActions({
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="bg-white dark:bg-[#101828] border-gray-200 dark:border-[#1D2939] rounded-lg shadow-lg"
+        className="bg-white dark:bg-[#101828] border-gray-200 dark:border-[#1D2939] rounded-lg shadow-none"
       >
-        <DropdownMenuItem
-          onClick={() => navigate(`/bookings/${booking.id}`)}
-          className="gap-2 text-gray-700 dark:text-[#D0D5DD] hover:bg-indigo-50 dark:hover:bg-[#1C2433]"
-        >
-          <Eye className="h-5 w-5 text-indigo-600" /> View Details
-        </DropdownMenuItem>
-        <DropdownMenuSeparator className="dark:bg-[#1D2939]" />
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <div className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-rose-50 dark:hover:bg-rose-900/40 text-rose-600 dark:text-rose-400">
@@ -809,22 +933,22 @@ function RowActions({
               <span>Delete</span>
             </div>
           </AlertDialogTrigger>
-          <AlertDialogContent className="dark:bg-[#101828] dark:border-[#1D2939]">
+          <AlertDialogContent className="bg-white dark:bg-[#101828] dark:border-[#1D2939] rounded-xl shadow-none">
             <AlertDialogHeader>
-              <AlertDialogTitle className="dark:text-[#D0D5DD]">
+              <AlertDialogTitle className="text-lg font-bold text-gray-900 dark:text-[#D0D5DD]">
                 Confirm Deletion
               </AlertDialogTitle>
-              <AlertDialogDescription className="dark:text-[#98A2B3]">
+              <AlertDialogDescription className="text-gray-600 dark:text-[#98A2B3]">
                 This will permanently delete the booking for '
                 {booking.full_name}'. This action cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel className="dark:bg-[#171F2F] dark:text-[#D0D5DD] dark:hover:bg-[#1C2433] border-none">
+              <AlertDialogCancel className="bg-gray-100 dark:bg-[#171F2F] hover:bg-gray-200 dark:hover:bg-[#1C2433] text-gray-700 dark:text-[#D0D5DD] rounded-lg border-none shadow-none">
                 Cancel
               </AlertDialogCancel>
               <AlertDialogAction
-                className="bg-rose-600 hover:bg-rose-700"
+                className="bg-rose-600 hover:bg-rose-700 text-white rounded-lg shadow-none"
                 onClick={() => deleteBookingMutation.mutate(booking.id)}
               >
                 Delete

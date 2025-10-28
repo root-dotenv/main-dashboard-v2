@@ -1,6 +1,7 @@
 // --- src/pages/hotel/empty-state.tsx ---
 import { type ReactNode } from "react";
 import { FaInbox } from "react-icons/fa";
+import { fa } from "zod/v4/locales";
 
 interface EmptyStateProps {
   icon?: ReactNode;

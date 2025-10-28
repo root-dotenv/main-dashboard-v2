@@ -202,3 +202,39 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom styles for react-phone-number-input */
+.PhoneInput {
+  @apply flex items-center h-11 w-full rounded-md border border-gray-300 bg-white shadow-sm;
+  @apply dark:bg-gray-800 dark:border-gray-600;
+}
+
+.PhoneInput--focus {
+  @apply border-blue-500 ring-1 ring-blue-500;
+  @apply dark:border-blue-500 dark:ring-blue-500;
+}
+
+.PhoneInput.PhoneInput--error {
+  @apply border-red-500 ring-1 ring-red-500;
+  @apply dark:border-red-500 dark:ring-red-500;
+}
+
+.PhoneInputCountry {
+  @apply pr-2;
+}
+
+.PhoneInputCountrySelect {
+  @apply border-none bg-transparent h-full;
+}
+
+.PhoneInputCountrySelect:focus {
+  @apply outline-none;
+}
+
+.PhoneInputInput {
+  @apply !border-none !shadow-none h-full !bg-transparent;
+}
+
+.PhoneInputInput:focus {
+  @apply !outline-none;
+}

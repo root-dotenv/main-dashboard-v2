@@ -34,7 +34,13 @@ import {
   MoreVertical,
   Smartphone,
 } from "lucide-react";
-import { TbFileTypeCsv } from "react-icons/tb";
+import { TbBellRinging, TbFileTypeCsv } from "react-icons/tb";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"; // Keep Shadcn Input for search
@@ -102,6 +108,8 @@ interface Booking {
   payment_reference: string;
   created_at: string;
   updated_at: string;
+  special_requests: string | null;
+  service_notes: string | null;
 }
 
 interface PaginatedBookingsResponse {
@@ -397,16 +405,24 @@ export default function AllBookings() {
       {
         accessorKey: "payment_status",
         header: "Payment Status",
-        cell: ({ row }) => (
-          <Badge
-            variant={
-              row.original.payment_status === "Paid" ? "success" : "pending"
-            }
-            className="shadow-none dark:text-white rounded-full" // Added rounded-full
-          >
-            {row.original.payment_status}
-          </Badge>
-        ),
+        cell: ({ row }) => {
+          const status = row.original.payment_status;
+          const statusClasses =
+            status === "Paid"
+              ? getStatusBadgeClasses("confirmed")
+              : getStatusBadgeClasses("pending");
+
+          return (
+            <Badge
+              className={cn(
+                "rounded-full px-3 py-1 font-medium border shadow-none",
+                statusClasses
+              )}
+            >
+              {status}
+            </Badge>
+          );
+        },
         size: 130, // Adjusted size
       },
       {
@@ -428,6 +444,35 @@ export default function AllBookings() {
           );
         },
         size: 160, // Adjusted size
+      },
+      {
+        id: "notes",
+        header: () => <div className="text-center">Notes</div>,
+        cell: ({ row }) => {
+          const hasSpecialRequest = !!row.original.special_requests;
+          const hasServiceNotes = !!row.original.service_notes;
+          const needsAttention = hasSpecialRequest || hasServiceNotes;
+
+          return (
+            <div className="text-center">
+              {needsAttention ? (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger className="flex w-full justify-center">
+                      <TbBellRinging className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Has special requests or notes.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : (
+                <span className="text-gray-400">-</span>
+              )}
+            </div>
+          );
+        },
+        size: 80,
       },
       // --- NEW DETAILS COLUMN ---
       {

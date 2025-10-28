@@ -17,6 +17,8 @@ interface BookingPrintTicketProps {
     booking_status: string;
     payment_status: string;
     amount_paid: string;
+    address: string;
+    billing_meta_data: any; // Using any for now, should be typed
   };
   roomDetails?: {
     room_type_name: string;
@@ -29,158 +31,130 @@ export default function BookingPrintTicket({
   roomDetails,
 }: BookingPrintTicketProps) {
   const { hotel } = useHotel();
+
+  const safariProFee =
+    booking.billing_meta_data?.charges_breakdown?.SAFARI_PRO_PROCESSING_FEE
+      ?.amount || 0;
+  const baseCharge =
+    booking.billing_meta_data?.charges_breakdown?.BASE_CHARGE?.amount || 0;
+  const subtotal = baseCharge + safariProFee;
+  const vat = booking.billing_meta_data?.charges_breakdown?.TAX?.amount || 0;
+  const total = subtotal + vat;
+
   return (
-    <div className="max-w-md mx-auto bg-white text-black print:shadow-none shadow-lg">
-      {/* Ticket Container with perforated edges effect */}
-      <div className="border-2 border-dashed border-gray-400 p-6 font-mono text-sm">
-        {/* Header */}
-        <div className="text-center border-b-2 border-gray-300 pb-4 mb-6">
-          <h1 className="text-3xl font-bold tracking-widest text-gray-800 mb-2">
-            {hotel?.name}{" "}
-          </h1>
-          <div className="text-lg font-semibold text-gray-600 mb-1">
-            BOOKING VOUCHER
+    <div className="max-w-4xl mx-auto bg-white text-black p-8">
+      <div className="border border-gray-300 p-8">
+        <h1 className="text-2xl font-bold text-center mb-8">TAX INVOICE</h1>
+
+        <div className="grid grid-cols-2 gap-8 mb-8">
+          <div>
+            <h2 className="font-bold">ISSUED BY (AS AGENT):</h2>
+            <p>Kilongawima Road, Mbezi Beach,</p>
+            <p>Kinondoni, Dar es Salaam, Tanzania</p>
+            <p>Email: safaripro.net@gmail.com</p>
+            <p>Phone: +255-754-447-387</p>
           </div>
-          <div className="inline-block bg-gray-800 text-white px-4 py-1 text-xs font-bold tracking-wider">
-            #{booking.code}
+          <div className="text-right">
+            <h2 className="font-bold">ON BEHALF OF (PRINCIPAL SUPPLIER):</h2>
+            <p>{hotel?.name}</p>
+            <p>{hotel?.address}</p>
+            <p>TIN: [Vendor's TIN Placeholder]</p>
           </div>
         </div>
 
-        {/* Guest Information */}
-        <div className="mb-6">
-          <div className="bg-gray-100 px-3 py-2 mb-3 font-bold text-gray-800 border-l-4 border-gray-600">
-            GUEST INFORMATION
+        <div className="mb-8">
+          <h2 className="font-bold">BILLED TO:</h2>
+          <p>{booking.full_name}</p>
+          <p>{booking.address}</p>
+          <p>{booking.email}</p>
+        </div>
+
+        <div className="flex justify-between mb-8">
+          <div>
+            <p>
+              <span className="font-bold">INVOICE NUMBER:</span> {booking.code}
+            </p>
+            <p>
+              <span className="font-bold">BOOKING REF:</span> {booking.code}
+            </p>
           </div>
-          <div className="pl-2 space-y-2 text-xs">
-            <div className="flex justify-between">
-              <span className="font-semibold text-gray-600">Name:</span>
-              <span className="font-bold text-right flex-1 ml-2">
-                {booking.full_name}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-semibold text-gray-600">Email:</span>
-              <span className="text-right flex-1 ml-2 break-all">
-                {booking.email}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-semibold text-gray-600">Phone:</span>
-              <span className="text-right flex-1 ml-2">
-                {booking.phone_number}
-              </span>
-            </div>
+          <div className="text-right">
+            <p>
+              <span className="font-bold">DATE OF ISSUE:</span>{" "}
+              {format(new Date(), "MMM dd, yyyy")}
+            </p>
+            <p>
+              <span className="font-bold">STATUS:</span>{" "}
+              {booking.payment_status.toUpperCase()}
+            </p>
           </div>
         </div>
 
-        {/* Reservation Details */}
-        <div className="mb-6">
-          <div className="bg-gray-100 px-3 py-2 mb-3 font-bold text-gray-800 border-l-4 border-gray-600">
-            RESERVATION DETAILS
-          </div>
-          <div className="pl-2 space-y-2 text-xs">
-            <div className="flex justify-between">
-              <span className="font-semibold text-gray-600">Check-in:</span>
-              <span className="font-bold text-right flex-1 ml-2">
-                {format(new Date(booking.start_date), "MMM dd, yyyy")}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-semibold text-gray-600">Check-out:</span>
-              <span className="font-bold text-right flex-1 ml-2">
-                {format(new Date(booking.end_date), "MMM dd, yyyy")}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-semibold text-gray-600">Duration:</span>
-              <span className="text-right flex-1 ml-2">
-                {booking.duration_days} Night
-                {booking.duration_days > 1 ? "s" : ""}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-semibold text-gray-600">Room Type:</span>
-              <span className="text-right flex-1 ml-2">
-                {roomDetails?.room_type_name || "N/A"}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-semibold text-gray-600">Room Code:</span>
-              <span className="font-bold text-right flex-1 ml-2">
-                {roomDetails?.code || "N/A"}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-semibold text-gray-600">Guests:</span>
-              <span className="text-right flex-1 ml-2">
-                {booking.number_of_guests} Guest
-                {booking.number_of_guests > 1 ? "s" : ""}
-              </span>
-            </div>
-          </div>
-        </div>
+        <table className="w-full mb-8">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="text-left p-2">DESCRIPTION</th>
+              <th className="text-right p-2">AMOUNT (TZS)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="p-2">
+                {booking.microservice_item_name}
+                <p className="text-xs text-gray-600">
+                  Supplied by {hotel?.name}
+                </p>
+              </td>
+              <td className="text-right p-2">{baseCharge.toFixed(2)}</td>
+            </tr>
+            <tr>
+              <td className="p-2">
+                SafariPro Booking Fee
+                <p className="text-xs text-gray-600">
+                  Service provided by SafariPro Booking App
+                </p>
+              </td>
+              <td className="text-right p-2">{safariProFee.toFixed(2)}</td>
+            </tr>
+          </tbody>
+        </table>
 
-        {/* Status and Payment */}
-        <div className="mb-6">
-          <div className="bg-gray-100 px-3 py-2 mb-3 font-bold text-gray-800 border-l-4 border-gray-600">
-            STATUS & PAYMENT
-          </div>
-          <div className="pl-2 space-y-2 text-xs">
+        <div className="flex justify-end mb-8">
+          <div className="w-1/2">
             <div className="flex justify-between">
-              <span className="font-semibold text-gray-600">
-                Booking Status:
-              </span>
-              <span className="font-bold text-right flex-1 ml-2 uppercase">
-                {booking.booking_status}
-              </span>
+              <p>SUBTOTAL:</p>
+              <p>{subtotal.toFixed(2)}</p>
             </div>
             <div className="flex justify-between">
-              <span className="font-semibold text-gray-600">
-                Payment Status:
-              </span>
-              <span className="font-bold text-right flex-1 ml-2 uppercase">
-                {booking.payment_status}
-              </span>
+              <p>VAT (18%):</p>
+              <p>{vat.toFixed(2)}</p>
             </div>
-            <div className="flex justify-between">
-              <span className="font-semibold text-gray-600">Amount Paid:</span>
-              <span className="font-bold text-right flex-1 ml-2">
-                {new Intl.NumberFormat("en-US", {
-                  style: "currency",
-                  currency: "TZS",
-                }).format(parseFloat(booking.amount_paid))}
-              </span>
+            <div className="flex justify-between font-bold text-lg">
+              <p>TOTAL:</p>
+              <p>{total.toFixed(2)}</p>
             </div>
           </div>
         </div>
 
-        {/* QR Code Placeholder */}
-        <div className="text-center mb-6">
-          <div className="inline-block border-2 border-gray-300 p-2">
-            <div className="w-16 h-16 bg-gray-200 flex items-center justify-center text-xs text-gray-500">
-              QR CODE
-            </div>
-          </div>
+        <div>
+          <h2 className="font-bold">PAYMENT DETAILS:</h2>
+          <p>
+            Paid via {booking.payment_method} on{" "}
+            {format(new Date(), "MMM dd, yyyy")}.
+          </p>
         </div>
 
-        {/* Footer */}
-        <div className="border-t-2 border-gray-300 pt-4 text-center">
-          <div className="text-xs text-gray-600 mb-2">
-            Thank you for choosing SafariPro!
-          </div>
-          <div className="font-bold text-xs text-gray-800">
-            {booking.microservice_item_name}
-          </div>
-          <div className="text-xs text-gray-500 mt-3">
-            Keep this voucher for your records
-          </div>
+        <div className="text-xs text-gray-600 mt-8">
+          <p className="font-bold">NOTES & TERMS:</p>
+          <p>
+            This invoice is issued by SafariPro on behalf of the supplier. All
+            tour-related services are rendered by the supplier as per the terms
+            and conditions agreed upon at the time of booking.
+          </p>
         </div>
 
-        {/* Perforated bottom edge effect */}
-        <div className="mt-4 text-center">
-          <div className="text-gray-400 text-xs tracking-widest">
-            ✂ ✂ ✂ ✂ ✂ ✂ ✂ ✂ ✂ ✂ ✂ ✂ ✂ ✂ ✂
-          </div>
+        <div className="text-center mt-8">
+          <p className="font-bold">THANK YOU FOR BOOKING WITH SAFARIPRO!</p>
         </div>
       </div>
     </div>

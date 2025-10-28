@@ -2,7 +2,7 @@
 import React from "react";
 import { useHotel } from "@/providers/hotel-provider";
 import { useQueries, useQuery } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import hotelClient from "@/api/hotel-client";
 import bookingClient from "@/api/booking-client";
 import { format } from "date-fns";
@@ -43,7 +43,6 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import {
@@ -53,19 +52,17 @@ import {
   AreaChart as AreaChartIcon,
   ArrowRight,
   Menu,
-  Pencil,
   Eye,
   TrendingUp,
   Users,
   Bed,
   Star,
-  Wifi,
-  Coffee,
-  Utensils,
   ArrowUpRight,
   Building2,
   ChevronRight,
-  Globe,
+  Settings,
+  GalleryHorizontal,
+  Sparkles,
 } from "lucide-react";
 import type {
   Booking,
@@ -136,34 +133,6 @@ const getOccupancyProgressClass = (percentage: number): string => {
 };
 
 // --- Child Components (Merged & Updated) ---
-
-const QuickActions = () => (
-  <DropdownMenu>
-    <DropdownMenuTrigger asChild>
-      <Button variant="outline" className="gap-2">
-        <Menu className="h-4 w-4" />
-        Quick Actions
-      </Button>
-    </DropdownMenuTrigger>
-    <DropdownMenuContent align="end" className="w-56">
-      <DropdownMenuItem asChild>
-        <Link to="/bookings/new-booking" className="flex items-center gap-2">
-          <CalendarCheck2 className="h-4 w-4" /> New Booking
-        </Link>
-      </DropdownMenuItem>
-      <DropdownMenuItem asChild>
-        <Link to="/rooms/new-room" className="flex items-center gap-2">
-          <Bed className="h-4 w-4" /> Add Room
-        </Link>
-      </DropdownMenuItem>
-      <DropdownMenuItem asChild>
-        <Link to="/reservations/checkin" className="flex items-center gap-2">
-          <Users className="h-4 w-4" /> Manage Check-ins
-        </Link>
-      </DropdownMenuItem>
-    </DropdownMenuContent>
-  </DropdownMenu>
-);
 
 const StatCard = ({
   title,
@@ -761,68 +730,11 @@ const RecentBookings = ({
   </Card>
 );
 
-const FeatureListCard = <
-  T extends {
-    id: string;
-    name?: string;
-    language?: string;
-    country_name?: string;
-  }
->({
-  items,
-  isLoading,
-}: {
-  items: T[] | undefined;
-  isLoading: boolean;
-}) => {
-  if (isLoading)
-    return (
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <Skeleton key={i} className="h-16 w-full" />
-        ))}
-      </div>
-    );
-  if (!items || items.length === 0)
-    return (
-      <div className="text-center py-8 text-gray-500">No items to display.</div>
-    );
-
-  return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {items.map((item) => (
-        <div
-          key={item.id}
-          className="p-4 rounded-lg border bg-gradient-to-br from-white to-gray-50 hover:shadow transition-all"
-        >
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-blue-100">
-              <Star className="h-5 w-5 text-blue-600" />
-            </div>
-            <div>
-              <h4 className="font-semibold text-gray-900">
-                {item.name || item.language}
-              </h4>
-              {(item as any).description && (
-                <p className="text-sm text-gray-600">
-                  {(item as any).description}
-                </p>
-              )}
-              {item.country_name && (
-                <p className="text-sm text-gray-600">{item.country_name}</p>
-              )}
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
-
 // --- Main Overview Component ---
 
 export default function MainOverview() {
   const { hotel, isLoading: isHotelLoading } = useHotel();
+  const navigate = useNavigate();
   const today = new Date().toISOString().split("T")[0];
 
   // --- Core Data Queries ---
@@ -865,7 +777,7 @@ export default function MainOverview() {
           0
         );
         last7Days.push({
-          date: date.toLocaleDateString("en-US", {
+          date: date.toLocaleString("en-US", {
             month: "short",
             day: "numeric",
           }),
@@ -969,7 +881,6 @@ export default function MainOverview() {
     .filter((q) => q.isSuccess)
     .map((q) => q.data);
 
-  // --- FIX [1]: Added `|| []` to safely handle cases where results might be undefined ---
   const allocationsWithRoomNames = (allocationData?.results || []).map(
     (alloc) => ({
       ...alloc,
@@ -983,40 +894,19 @@ export default function MainOverview() {
     revenueData?.find(
       (d) =>
         d.date ===
-        new Date().toLocaleDateString("en-US", {
+        new Date().toLocaleString("en-US", {
           month: "short",
           day: "numeric",
         })
     )?.revenue || 0;
 
   return (
-    <div className="flex-1 bg-gradient-to-br from-gray-50 via-white to-gray-50">
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="px-4 md:px-8 py-6">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                {hotel?.name} Management Overview
-              </h1>
-              <p className="text-gray-600 mt-1">
-                Here's what's happening at {hotel?.name || "your hotel"} today
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <QuickActions />
-              <Button className="bg-blue-600 hover:bg-blue-700" asChild>
-                <Link to="/hotel/customize-hotel">
-                  <Pencil className="h-4 w-4 mr-2" />
-                  Customize Hotel
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="flex-1 bg-gray-50 dark:bg-gray-900/50">
+      
 
-      <div className="px-4 md:px-8 py-6 space-y-8">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <main className="container mx-auto p-4 md:p-6 lg:p-8 space-y-8">
+        {/* Stat Cards */}
+        <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <StatCard
             title="Occupancy Rate"
             value={`${hotel?.occupancy_rate || 0}%`}
@@ -1031,16 +921,16 @@ export default function MainOverview() {
           <StatCard
             title="Today's Revenue (TZS)"
             value={formatCurrency(todaysRevenue)}
-            description="Based on paid bookings"
+            description="From all paid bookings"
             icon={DollarSign}
             isLoading={isRevenueLoading}
             linkTo="/bookings/all-bookings"
             variant="success"
           />
           <StatCard
-            title="Currently Checked-In"
+            title="Guests Checked-In"
             value={checkedInData?.count || 0}
-            description="Guests currently in the hotel"
+            description="Currently in the hotel"
             icon={CalendarCheck2}
             isLoading={isCheckInLoading}
             linkTo="/reservations/checkin"
@@ -1049,136 +939,127 @@ export default function MainOverview() {
           <StatCard
             title="Today's Check-outs"
             value={checkedOutData?.count || 0}
-            description="Guests who checked out today"
+            description="Scheduled for today"
             icon={CalendarX2}
             isLoading={isCheckOutLoading}
             linkTo="/reservations/checkout"
             variant="info"
           />
-        </div>
+        </section>
 
-        <div className="grid gap-6 lg:grid-cols-3">
-          <RevenueChart data={revenueData || []} isLoading={isRevenueLoading} />
-          {/* --- FIX [2]: Added `|| []` to prevent .map on undefined --- */}
-          <RoomDistributionChart
-            data={(hotel?.room_type || []).map((rt) => ({
-              name: rt.name,
-              total: rt.room_counts.total,
-            }))}
-            isLoading={isHotelLoading}
-          />
-        </div>
-
-        <div className="grid gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2">
+        {/* Main Dashboard Grid */}
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-8">
+            <RevenueChart
+              data={revenueData || []}
+              isLoading={isRevenueLoading}
+            />
+            <RecentBookings
+              bookings={bookingData?.results}
+              isLoading={isBookingLoading}
+            />
+          </div>
+          <div className="space-y-8">
+            <RoomDistributionChart
+              data={(hotel?.room_type || []).map((rt) => ({
+                name: rt.name,
+                total: rt.room_counts.total,
+              }))}
+              isLoading={isHotelLoading}
+            />
             <RoomTypesTable
               roomTypes={hotel?.room_type}
               isLoading={isHotelLoading}
             />
           </div>
-          <div>
-            {/* --- FIX [3]: Added `|| []` to prevent .slice on undefined --- */}
-            <RecentCheckIns
-              guests={(checkedInData?.results || []).slice(0, 3)}
-              isLoading={isCheckInLoading}
-            />
-          </div>
-        </div>
+        </section>
 
-        <div className="grid grid-cols-1 gap-6">
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <RecentCheckIns
+            guests={(checkedInData?.results || []).slice(0, 5)}
+            isLoading={isCheckInLoading}
+          />
           <RecentAllocations
             allocations={allocationsWithRoomNames}
             isLoading={isAllocationLoading}
           />
-        </div>
+        </section>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Star className="h-5 w-5 text-amber-500" /> Hotel Features &
-              Services
-            </CardTitle>
-            <CardDescription>
-              An overview of what your hotel offers.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="amenities" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
-                <TabsTrigger value="amenities" className="gap-2">
-                  <Wifi className="h-4 w-4" />
-                  Amenities
-                </TabsTrigger>
-                <TabsTrigger value="facilities" className="gap-2">
-                  <Building2 className="h-4 w-4" />
-                  Facilities
-                </TabsTrigger>
-                <TabsTrigger value="services" className="gap-2">
-                  <Coffee className="h-4 w-4" />
-                  Services
-                </TabsTrigger>
-                <TabsTrigger value="departments" className="gap-2">
-                  <Users className="h-4 w-4" />
-                  Departments
-                </TabsTrigger>
-                <TabsTrigger value="meal_plans" className="gap-2">
-                  <Utensils className="h-4 w-4" />
-                  Meal Plans
-                </TabsTrigger>
-                <TabsTrigger value="translations" className="gap-2">
-                  <Globe className="h-4 w-4" />
-                  Translations
-                </TabsTrigger>
-              </TabsList>
-              <div className="mt-6">
-                <TabsContent value="amenities">
-                  <FeatureListCard
-                    items={amenities}
-                    isLoading={amenityQueries.some((q) => q.isLoading)}
-                  />
-                </TabsContent>
-                <TabsContent value="facilities">
-                  <FeatureListCard
-                    items={facilities}
-                    isLoading={facilityQueries.some((q) => q.isLoading)}
-                  />
-                </TabsContent>
-                <TabsContent value="services">
-                  <FeatureListCard
-                    items={services}
-                    isLoading={serviceQueries.some((q) => q.isLoading)}
-                  />
-                </TabsContent>
-                <TabsContent value="departments">
-                  <FeatureListCard
-                    items={departments}
-                    isLoading={departmentQueries.some((q) => q.isLoading)}
-                  />
-                </TabsContent>
-                <TabsContent value="meal_plans">
-                  <FeatureListCard
-                    items={mealTypes}
-                    isLoading={mealTypeQueries.some((q) => q.isLoading)}
-                  />
-                </TabsContent>
-                <TabsContent value="translations">
-                  <FeatureListCard
-                    items={translations}
-                    isLoading={translationQueries.some((q) => q.isLoading)}
-                  />
-                </TabsContent>
+        {/* Navigation & Actions Section */}
+        <section>
+          <Card className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm">
+            <CardHeader>
+              <CardTitle className="text-xl font-bold text-gray-800 dark:text-gray-200">
+                Management Actions
+              </CardTitle>
+              <CardDescription>
+                Quickly access key management areas of your hotel.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-center">
+                {[
+                  {
+                    title: "New Booking",
+                    icon: CalendarCheck2,
+                    path: "/bookings/new-booking",
+                    color: "text-sky-600",
+                  },
+                  {
+                    title: "Add New Room",
+                    icon: Bed,
+                    path: "/rooms/new-room",
+                    color: "text-indigo-600",
+                  },
+                  {
+                    title: "Manage Check-ins",
+                    icon: Users,
+                    path: "/reservations/checkin",
+                    color: "text-amber-600",
+                  },
+                  {
+                    title: "Customize Hotel",
+                    icon: Settings,
+                    path: "/hotel/customize-hotel",
+                    color: "text-rose-600",
+                  },
+                  {
+                    title: "Features & Services",
+                    icon: Sparkles,
+                    path: "/hotel/hotel-features",
+                    color: "text-blue-600",
+                  },
+                  {
+                    title: "Property Details",
+                    icon: Building2,
+                    path: "/hotel/customize-hotel",
+                    color: "text-purple-600",
+                  },
+                  {
+                    title: "Photo Gallery",
+                    icon: GalleryHorizontal,
+                    path: "/hotel/hotel-gallery",
+                    color: "text-teal-600",
+                  },
+                ].map((action) => (
+                  <button
+                    key={action.title}
+                    onClick={() => navigate(action.path)}
+                    className="flex flex-col items-center justify-center p-4 rounded-lg bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 group"
+                  >
+                    <action.icon
+                      className={cn("h-8 w-8 mb-2", action.color)}
+                    />
+                    <span className="font-semibold text-sm text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white">
+                      {action.title}
+                    </span>
+                  </button>
+                ))}
               </div>
-            </Tabs>
-          </CardContent>
-        </Card>
-
-        <div className="grid grid-cols-1 gap-4">
-          <RecentBookings
-            bookings={bookingData?.results}
-            isLoading={isBookingLoading}
-          />
-        </div>
-      </div>
+            </CardContent>
+          </Card>
+        </section>
+      </main>
     </div>
   );
 }

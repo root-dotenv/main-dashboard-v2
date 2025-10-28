@@ -17,7 +17,6 @@ import MakeBookingPage from "@/pages/bookings/make-booking";
 import BookingDetailsPage from "@/pages/bookings/booking-details";
 import CheckedInGuests from "@/pages/reservation/checked-in";
 import CheckedOutGuests from "@/pages/reservation/checked-out";
-import SpecialRequests from "@/pages/reservation/special-requests";
 import HotelFeaturesLayout from "@/pages/hotel-features/hotel-features";
 import HotelDepartments from "@/pages/inventory/hotel-departments";
 import InventoryItems from "@/pages/inventory/inventory-items";
@@ -105,10 +104,6 @@ export const router = createBrowserRouter([
               { path: "bookings/all-bookings", element: <AllBookings /> },
               { path: "reservations/checkin", element: <CheckedInGuests /> },
               { path: "reservations/checkout", element: <CheckedOutGuests /> },
-              {
-                path: "reservations/special-requests",
-                element: <SpecialRequests />,
-              },
               {
                 path: "hotel/hotel-features",
                 element: <HotelFeaturesLayout />,

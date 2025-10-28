@@ -27,10 +27,10 @@ import {
   RefreshCw,
   CheckCircle,
   CreditCard,
-  MapPin,
   Clock,
   Shield,
 } from "lucide-react";
+import { FaCheck } from "react-icons/fa6";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
@@ -171,7 +171,7 @@ export default function Step3_ConfirmBooking() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             <Card className="border border-gray-200 dark:border-gray-700 shadow-none">
-              <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-b shadow-none">
+              <CardHeader className="border-b">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
@@ -191,7 +191,7 @@ export default function Step3_ConfirmBooking() {
                     size="sm"
                     onClick={() => refetch()}
                     disabled={isFetching}
-                    className="border-gray-300 dark:border-gray-600"
+                    className="border-gray-300 dark:border-gray-600 shadow-none"
                   >
                     <RefreshCw
                       className={cn(
@@ -295,9 +295,9 @@ export default function Step3_ConfirmBooking() {
                           <span className="text-gray-600 dark:text-gray-400">
                             Booking Code:
                           </span>
-                          <Badge className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300 font-mono">
+                          <p className="font-semibold text-[0.875rem] text-emerald-800">
                             {bookingData.code}
-                          </Badge>
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -344,7 +344,7 @@ export default function Step3_ConfirmBooking() {
                           <span className="font-semibold text-gray-900 dark:text-white">
                             Total (USD)
                           </span>
-                          <span className="text-xl font-bold text-green-600 dark:text-green-400">
+                          <span className="text-xl font-bold text-emerald-800 dark:text-emerald-600 space-mono-bold">
                             $
                             {bookingData.billing_meta_data?.calculation_breakdown?.final_amount?.toFixed(
                               2
@@ -355,9 +355,8 @@ export default function Step3_ConfirmBooking() {
                     </div>
 
                     {/* Currency Conversion */}
-                    <div className="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6 text-center">
+                    <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6 text-center">
                       <div className="flex items-center justify-center gap-2 mb-3">
-                        <Shield className="h-5 w-5 text-blue-600" />
                         <p className="text-sm font-semibold text-blue-800 dark:text-blue-300">
                           Total Amount to be Paid
                         </p>
@@ -397,7 +396,7 @@ export default function Step3_ConfirmBooking() {
           {/* Sidebar */}
           <div className="lg:col-span-1 space-y-6">
             {/* Security Assurance */}
-            <Card className="border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20">
+            <Card className="border border-gray-200 dark:border-gray-700 shadow-none">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
@@ -414,44 +413,25 @@ export default function Step3_ConfirmBooking() {
                 </div>
                 <ul className="space-y-2 text-sm text-blue-800 dark:text-blue-200">
                   <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <FaCheck className="h-4 w-4" />
                     Encrypted payment processing
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <FaCheck className="h-4 w-4" />
                     PCI DSS compliant
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <FaCheck className="h-4 w-4" />
                     Secure data transmission
                   </li>
                 </ul>
-              </CardContent>
-            </Card>
-
-            {/* Support Card */}
-            <Card className="border border-gray-200 dark:border-gray-700">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
-                    <MapPin className="h-5 w-5 text-white" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900 dark:text-white">
-                      Need Assistance?
-                    </h4>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      Our team is here to help
-                    </p>
-                  </div>
-                </div>
               </CardContent>
             </Card>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex justify-between items-center pt-6 border-t border-gray-200 dark:border-gray-700">
+        <div className="flex justify-start items-center pt-6 border-t border-gray-200 dark:border-gray-700 gap-6">
           <Button
             variant="outline"
             onClick={() => setStep(2)}
@@ -465,7 +445,6 @@ export default function Step3_ConfirmBooking() {
             disabled={!currencyConversionDetails || isFetching}
             className="h-11 px-8 bg-blue-600 hover:bg-blue-700 text-white font-semibold"
           >
-            <CreditCard className="mr-2 h-4 w-4" />
             Proceed to Payment
           </Button>
         </div>

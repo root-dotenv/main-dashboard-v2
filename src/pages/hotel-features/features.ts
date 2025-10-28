@@ -55,9 +55,20 @@ export interface MealType {
   updated_at: string;
 }
 
+// --- Theme (NEW) ---
+export interface Theme {
+  id: string;
+  name: string;
+  description: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 // --- Translation ---
 export interface Translation {
   id: string;
+  name: string; // Add name property
   language: string;
   country: string;
   is_active: boolean;

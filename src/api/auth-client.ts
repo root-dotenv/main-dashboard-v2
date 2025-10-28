@@ -20,6 +20,15 @@ authClient.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
+    console.log(
+      `%c[API Request] %c${config.method?.toUpperCase()} %c${config.url}`,
+      "color: #2463EB; font-weight: bold;",
+      "color: #A75800;",
+      "color: black;",
+      config.data ? { payload: config.data } : ""
+    );
+
     return config;
   },
   (error) => {
@@ -31,6 +40,13 @@ authClient.interceptors.request.use(
 // Response interceptor to handle token refreshing automatically.
 authClient.interceptors.response.use(
   (response) => {
+    console.log(
+      `%c[API Response] %c${response.status} %c${response.config.url}`,
+      "color: #008A00; font-weight: bold;",
+      "color: #008A00;",
+      "color: black;",
+      { data: response.data }
+    );
     // If the request is successful, just return the response.
     return response;
   },

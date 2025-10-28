@@ -87,7 +87,7 @@ export default function RoomCard({
     <Card className="group transition-all duration-300 border-[1px] border-gray-200 dark:border-gray-700 overflow-hidden shadow-none">
       <div className="flex flex-col lg:flex-row">
         {/* Image Gallery */}
-        <div className="relative lg:w-2/5 xl:w-1/3 overflow-hidden">
+        <div className="relative lg:w-2/5 xl:w-1/3 overflow-hidden rounded-t-lg lg:rounded-l-lg lg:rounded-t-none">
           <img
             src={
               displayImage ||

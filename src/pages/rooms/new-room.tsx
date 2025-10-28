@@ -51,6 +51,8 @@ import {
   UploadCloud,
   HelpCircle,
   Trash2,
+  Users as UsersIcon,
+  DollarSign,
 } from "lucide-react";
 
 // --- TYPE DEFINITIONS & SCHEMAS ---
@@ -625,17 +627,23 @@ const AmenitiesSelector = ({ allAmenities, field }: any) => {
 const FormLabelWithInfo = ({
   label,
   infoText,
+  icon,
 }: {
   label: string;
   infoText: string;
+  icon?: React.ReactNode;
 }) => (
   <div className="flex items-center gap-2">
-    <FormLabel className="text-gray-800 dark:text-gray-300">{label}</FormLabel>
+    {icon && <span className="text-gray-500 dark:text-gray-400">{icon}</span>}
+    <FormLabel className="text-gray-800 dark:text-gray-300">
+      {label}
+    </FormLabel>{" "}
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
           <HelpCircle className="h-4 w-4 text-gray-400 dark:text-gray-500 cursor-help" />
         </TooltipTrigger>
+        {/* Adjusted TooltipContent styling */}
         <TooltipContent className="bg-gray-800 text-white border-gray-900">
           <p className="max-w-xs">{infoText}</p>
         </TooltipContent>
@@ -812,6 +820,8 @@ function SingleRoomForm({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabelWithInfo
+                      // Added Icon
+                      icon={<UsersIcon className="h-4 w-4 text-gray-500" />}
                       label="Max Occupancy"
                       infoText="The maximum number of guests this room can accommodate."
                     />
@@ -866,6 +876,8 @@ function SingleRoomForm({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabelWithInfo
+                      // Added Icon
+                      icon={<Layers className="h-4 w-4 text-gray-500" />}
                       label="Floor Number"
                       infoText="The floor this room is on."
                     />
@@ -922,6 +934,8 @@ function SingleRoomForm({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabelWithInfo
+                      // Added Icon
+                      icon={<DollarSign className="h-4 w-4 text-gray-500" />}
                       label="Price/Night (USD)"
                       infoText="The standard rate for this room for one night, in US Dollars."
                     />
@@ -971,6 +985,10 @@ function SingleRoomForm({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabelWithInfo
+                      // Added live counter
+                      label={`Room Amenities (${
+                        (field.value as string[])?.length || 0
+                      })`}
                       label="Room Amenities"
                       infoText="Select all the amenities available within this specific room."
                     />
@@ -1009,6 +1027,11 @@ function SingleRoomForm({
 function BulkRoomForm({ form, roomTypes, allAmenities }: FormComponentProps) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+
+  const selectedAmenities = useWatch({
+    control: form.control,
+    name: "room_amenities",
+  });
 
   const mutation = useMutation({
     mutationFn: bulkCreateRoomsWithFile,
@@ -1108,6 +1131,8 @@ function BulkRoomForm({ form, roomTypes, allAmenities }: FormComponentProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabelWithInfo
+                      // Added Icon
+                      icon={<DollarSign className="h-4 w-4 text-gray-500" />}
                       label="Price/Night (USD)"
                       infoText="This price will be applied to every room created in this batch."
                     />
@@ -1131,6 +1156,8 @@ function BulkRoomForm({ form, roomTypes, allAmenities }: FormComponentProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabelWithInfo
+                      // Added Icon
+                      icon={<Layers className="h-4 w-4 text-gray-500" />}
                       label="Floor Number"
                       infoText="The floor these rooms are on."
                     />
@@ -1203,6 +1230,10 @@ function BulkRoomForm({ form, roomTypes, allAmenities }: FormComponentProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabelWithInfo
+                      // Added live counter
+                      label={`Shared Amenities (${
+                        (field.value as string[])?.length || 0
+                      })`}
                       label="Shared Amenities"
                       infoText="Select all amenities that will be available in every room created in this batch."
                     />

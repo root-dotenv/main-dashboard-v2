@@ -9,7 +9,7 @@ import { toastError, toastSuccess } from "@/utils/toast";
 
 // --- Type Definitions ---
 export interface LoginCredentials {
-  identifier: string; // Can be email or phone
+  identifier: string;
   password: string;
 }
 
@@ -22,13 +22,28 @@ export interface UpdateProfileCredentials {
   date_of_birth: string;
 }
 
+export interface ForgotPasswordCredentials {
+  identifier: string;
+}
+
+export interface VerifyOtpCredentials {
+  identifier: string;
+  otp_code: string;
+  otp_type: "reset-password";
+}
+
+export interface ResetPasswordCredentials {
+  identifier: string;
+  new_password: string;
+}
+
 export interface PasswordChangeCredentials {
   current_password: string;
   new_password: string;
 }
 
 export interface UserProfile {
-  id: string; // This is the main member/profile ID
+  id: string;
   user_id: string;
   role_id: string;
   email: string;
@@ -42,22 +57,29 @@ export interface UserProfile {
 // --- State and Actions Interface ---
 interface AuthState {
   userProfile: UserProfile | null;
-  hotelId: string | null; // --- ADDED: hotelId to state ---
+  hotelId: string | null;
   accessToken: string | null;
   refreshToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   isRefreshing: boolean;
   error: string | null;
-  login: (credentials: LoginCredentials) => Promise<void>;
+  login: (
+    credentials: LoginCredentials
+  ) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   fetchUserProfile: () => Promise<void>;
-  fetchUserHotel: (profileId: string) => Promise<void>; // --- ADDED: Action to fetch hotel ---
+  fetchUserHotel: (profileId: string) => Promise<void>;
   updateUserProfile: (
     credentials: UpdateProfileCredentials
-  ) => Promise<boolean>; // --- ADDED: Action to update profile ---
-  changePassword: (credentials: PasswordChangeCredentials) => Promise<boolean>; // --- ADDED: Action to change password ---
+  ) => Promise<boolean>;
+  changePassword: (credentials: PasswordChangeCredentials) => Promise<boolean>;
+  forgotPassword: (credentials: ForgotPasswordCredentials) => Promise<boolean>;
+  verifyOtp: (credentials: VerifyOtpCredentials) => Promise<boolean>;
+  resetPassword: (credentials: ResetPasswordCredentials) => Promise<boolean>;
+  resendOtp: (identifier: string) => Promise<boolean>;
   refreshTokenAction: () => Promise<string | null>;
+  clearError: () => void;
 }
 
 // --- Initial State ---
@@ -70,9 +92,14 @@ const initialState: Omit<
   | "refreshTokenAction"
   | "updateUserProfile"
   | "changePassword"
+  | "forgotPassword"
+  | "verifyOtp"
+  | "resetPassword"
+  | "resendOtp"
+  | "clearError"
 > = {
   userProfile: null,
-  hotelId: null, // --- ADDED: Initial hotelId ---
+  hotelId: null,
   accessToken: null,
   refreshToken: null,
   isAuthenticated: false,
@@ -90,28 +117,41 @@ export const useAuthStore = create<AuthState>()(
       login: async (credentials) => {
         set({ isLoading: true, error: null });
         try {
-          const tokenResponse = await authClient.post(
+          const processedCredentials = {
+            ...credentials,
+            identifier: credentials.identifier.includes("@")
+              ? credentials.identifier.toLowerCase()
+              : credentials.identifier,
+          };
+          const { data } = await authClient.post(
             "/auth/login",
-            credentials
+            processedCredentials
           );
-          const { access_token, refresh_token } = tokenResponse.data;
-          set({ accessToken: access_token, refreshToken: refresh_token });
+
+          const { access_token, refresh_token } = data;
+          set({
+            accessToken: access_token,
+            refreshToken: refresh_token,
+            isAuthenticated: true,
+          });
+          authClient.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${access_token}`;
 
           await get().fetchUserProfile();
 
-          set({ isAuthenticated: true, isLoading: false });
           toastSuccess({
             title: "Login Successful!",
             description: "Redirecting to your dashboard...",
           });
         } catch (error) {
           const errorMessage = parseAxiosError(error);
-          toastError({
-            title: "Authentication Failed",
-            description: errorMessage,
-          });
-          set({ ...initialState, error: errorMessage });
-          throw new Error(errorMessage);
+          // DON'T show toast here - let the component handle it
+          set({ isLoading: false, error: errorMessage });
+          // IMPORTANT: Re-throw the error so the UI component can catch it and display the message.
+          throw error;
+        } finally {
+          set({ isLoading: false });
         }
       },
 
@@ -190,6 +230,63 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
+      forgotPassword: async (credentials) => {
+        set({ isLoading: true, error: null });
+        try {
+          await authClient.post("/password/forgot-password", credentials);
+          toastSuccess({
+            title: "Reset code sent",
+            description: "Please check your email or phone for the OTP.",
+          });
+          return true;
+        } catch (error) {
+          const errorMessage = parseAxiosError(error);
+          toastError({ title: "Request Failed", description: errorMessage });
+          throw error; // Re-throw for the UI component to handle
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
+      verifyOtp: async (credentials) => {
+        set({ isLoading: true, error: null });
+        try {
+          await authClient.post("/otp/verify", credentials);
+          toastSuccess({ title: "OTP Verified Successfully" });
+          return true;
+        } catch (error) {
+          const errorMessage = parseAxiosError(error);
+          toastError({
+            title: "Verification Failed",
+            description: errorMessage,
+          });
+          throw error;
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
+      resetPassword: async (credentials) => {
+        set({ isLoading: true, error: null });
+        try {
+          await authClient.post("/password/reset-password", credentials);
+          // No toast here, the UI will show a persistent success message before navigating
+          return true;
+        } catch (error) {
+          const errorMessage = parseAxiosError(error);
+          toastError({ title: "Reset Failed", description: errorMessage });
+          throw error;
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+
+      resendOtp: async (identifier: string) => {
+        // As confirmed, resending OTP uses the forgot-password endpoint again.
+        toastSuccess({ description: "A new code has been sent." });
+        return get().forgotPassword({ identifier });
+      },
+
       refreshTokenAction: async () => {
         const currentRefreshToken = get().refreshToken;
         if (!currentRefreshToken) {
@@ -239,6 +336,8 @@ export const useAuthStore = create<AuthState>()(
           window.location.replace("/login");
         }
       },
+
+      clearError: () => set({ error: null }),
     }),
     {
       name: "auth-storage",
@@ -248,7 +347,7 @@ export const useAuthStore = create<AuthState>()(
         refreshToken: state.refreshToken,
         isAuthenticated: state.isAuthenticated,
         userProfile: state.userProfile,
-        hotelId: state.hotelId, // --- ADDED: Persist hotelId ---
+        hotelId: state.hotelId,
       }),
     }
   )

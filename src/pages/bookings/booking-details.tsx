@@ -1,15 +1,18 @@
 "use client";
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { format } from "date-fns";
+import { toast } from "sonner";
 import {
   ArrowLeft,
   CalendarCheck,
   Clock,
   FilePenLine,
   Mail,
+  Loader2,
+  CreditCard,
   MapPin,
   Phone,
   Printer,
@@ -33,6 +36,7 @@ import { Separator } from "@/components/ui/separator";
 import { toTitleCase } from "../../utils/capitalize";
 import BookingPrintTicket from "./booking-ticket";
 import { cn } from "@/lib/utils";
+import { DoorOpen } from "lucide-react";
 import EditBookingForm from "./edit-booking-modal";
 
 // --- TYPE DEFINITIONS ---
@@ -120,6 +124,7 @@ const getStatusClass = (status: string) => {
 export default function BookingDetailsPage() {
   const { booking_id } = useParams<{ booking_id: string }>();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [showPrintView, setShowPrintView] = useState(false);
   const [isFormDirty, setIsFormDirty] = useState(false);
@@ -172,6 +177,21 @@ export default function BookingDetailsPage() {
       enabled: !!booking?.property_id,
     }
   );
+
+  const checkOutMutation = useMutation({
+    mutationFn: () =>
+      axios.post(`${BOOKING_BASE_URL}bookings/${booking_id}/check_out`),
+    onSuccess: () => {
+      toast.success("Guest checked out successfully!");
+      queryClient.invalidateQueries({
+        queryKey: ["bookingDetails", booking_id],
+      });
+    },
+    onError: (error: any) =>
+      toast.error(
+        `Check-out failed: ${error.response?.data?.detail || error.message}`
+      ),
+  });
 
   const handlePrint = () => {
     setShowPrintView(true);
@@ -235,9 +255,25 @@ export default function BookingDetailsPage() {
                 </div>
               </div>
               <div className="flex items-center gap-2">
+                {booking.booking_status === "Checked In" && (
+                  <Button
+                    variant="outline"
+                    className="gap-2 text-red-600 border-[#DADCE0] bg-white dark:bg-transparent hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:border-red-600/50 dark:hover:bg-red-900/40 shadow-none"
+                    onClick={() => checkOutMutation.mutate()}
+                    disabled={checkOutMutation.isPending}
+                  >
+                    {checkOutMutation.isPending ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <DoorOpen className="h-4 w-4" />
+                    )}
+                    Check Out
+                  </Button>
+                )}
                 <SheetTrigger asChild>
                   <Button variant="outline" className="gap-2">
-                    <FilePenLine className="h-4 w-4" /> Edit
+                    <FilePenLine className="h-4 w-4" />
+                    Edit
                   </Button>
                 </SheetTrigger>
                 <Button
@@ -368,6 +404,43 @@ export default function BookingDetailsPage() {
                 </CardContent>
               </Card>
 
+              {/* Payment Details Card */}
+              <Card className="bg-[#FFF] dark:bg-[#171F2F] border border-[#E4E7EC] dark:border-[#1D2939] shadow-none">
+                <CardHeader>
+                  <CardTitle>Payment Details</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-500">Amount Required:</span>
+                    <span className="font-semibold text-gray-800 dark:text-white">
+                      {new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "TZS",
+                      }).format(parseFloat(booking.amount_required))}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-500">Amount Paid:</span>
+                    <span className="font-semibold text-green-600 dark:text-green-400">
+                      {new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "TZS",
+                      }).format(parseFloat(booking.amount_paid))}
+                    </span>
+                  </div>
+                  {booking.payment_reference && (
+                    <div className="flex items-start justify-between text-sm">
+                      <span className="text-gray-500 flex items-center gap-2">
+                        <CreditCard className="h-4 w-4" /> Payment Reference:
+                      </span>
+                      <span className="font-mono text-xs bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
+                        {booking.payment_reference}
+                      </span>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
               {(booking.special_requests || booking.service_notes) && (
                 <Card className="bg-[#FFF] dark:bg-[#171F2F] border border-[#E4E7EC] dark:border-[#1D2939] shadow-none">
                   <CardHeader>
@@ -408,7 +481,7 @@ export default function BookingDetailsPage() {
                       {roomDetails.amenities.slice(0, 8).map((amenity) => (
                         <Badge
                           key={amenity.id}
-                          className="bg-[#EFF6FF] text-blue-600 border border-blue-200 dark:bg-[#162142] dark:border-transparent dark:text-[#98A2B3]"
+                          className="bg-[#EFF6FF] text-blue-600 border border-blue-200 dark:bg-[#162142] dark:border-transparent dark:text-[#98A2B3] text-sm"
                         >
                           {amenity.name}
                         </Badge>
@@ -438,7 +511,7 @@ export default function BookingDetailsPage() {
         open={showUnsavedChangesDialog}
         onOpenChange={setShowUnsavedChangesDialog}
       >
-        <AlertDialogContent>
+        <AlertDialogContent className="shadow-none">
           <AlertDialogHeader>
             <AlertDialogTitle>You have unsaved changes!</AlertDialogTitle>
             <AlertDialogDescription>
