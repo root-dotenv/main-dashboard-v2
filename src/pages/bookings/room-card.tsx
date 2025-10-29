@@ -178,7 +178,7 @@ export default function RoomCard({
 
               {/* Price */}
               <div className="text-left sm:text-right sm:pl-4 flex-shrink-0">
-                <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                <p className="text-2xl font-bold text-[#0785CF] dark:text-[#0785CF]">
                   ${totalCostWithTaxes.toFixed(2)}
                 </p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -226,7 +226,7 @@ export default function RoomCard({
                 <span className="ml-2">• Free cancellation</span>
               </div>
               <Button
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 w-full sm:w-auto rounded-full"
+                className="bg-[#0785CF] hover:bg-[#0785CF]/90 text-white font-semibold px-6 w-full sm:w-auto rounded-full"
                 onClick={() => onSelectRoom(room)}
               >
                 Select Room

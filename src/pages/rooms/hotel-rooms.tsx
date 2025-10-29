@@ -468,7 +468,7 @@
 //         header: "Capacity",
 //         cell: ({ row }) => (
 //           <div className="flex items-center px-3 py-1">
-//             <Users className="w-4 h-4 mr-2 text-blue-700 dark:text-blue-400" />
+//             <Users className="w-4 h-4 mr-2 text-[#0785CF] dark:text-[#0785CF]" />
 //             <span className="font-medium text-gray-700 dark:text-[#D0D5DD]">
 //               {row.original.max_occupancy} Guests
 //             </span>
@@ -639,7 +639,7 @@
 //               </CardDescription>
 //             </div>
 //             <Button
-//               className="bg-blue-600 hover:bg-blue-700 gap-2"
+//               className="bg-[#0785CF] hover:bg-[#0785CF]/90 gap-2"
 //               onClick={() => navigate("/rooms/new-room")}
 //             >
 //               <MdAdd size={20} />
@@ -688,7 +688,7 @@
 //                   className={cn(
 //                     "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-all duration-200",
 //                     isActive
-//                       ? "bg-blue-600 dark:bg-[#1c263a] text-white shadow"
+//                       ? "bg-[#0785CF] dark:bg-[#1c263a] text-white shadow"
 //                       : "bg-transparent text-gray-600 dark:text-[#98A2B3] hover:text-gray-800 dark:hover:text-white"
 //                   )}
 //                 >
@@ -713,7 +713,7 @@
 //                   placeholder="Search by room code..."
 //                   value={globalFilter}
 //                   onChange={(e) => setGlobalFilter(e.target.value)}
-//                   className="pl-10 pr-10 w-full sm:w-80 bg-white dark:bg-[#101828] border-gray-200 dark:border-[#1D2939] text-gray-800 dark:text-[#D0D5DD] rounded-md shadow focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition-all dark:placeholder:text-[#5D636E]"
+//                   className="pl-10 pr-10 w-full sm:w-80 bg-white dark:bg-[#101828] border-gray-200 dark:border-[#1D2939] text-gray-800 dark:text-[#D0D5DD] rounded-md shadow focus:ring-2 focus:ring-blue-500 focus:border-[#0785CF] transition-all dark:placeholder:text-[#5D636E]"
 //                 />
 //                 {globalFilter && (
 //                   <button
@@ -742,7 +742,7 @@
 //                 <SelectContent className="bg-[#FFF] dark:bg-[#101828] px-2 py-3 border-[1.5px] border-[#E4E7EC] dark:border-[#1D2939] rounded-xl shadow-sm">
 //                   <SelectItem
 //                     value="all"
-//                     className="hover:bg-blue-100 dark:hover:bg-[#1C2433] text-[#1D2939] dark:text-[#D0D5DD] uppercase text-[13px] font-semibold"
+//                     className="hover:bg-[#D6EEF9] dark:hover:bg-[#1C2433] text-[#1D2939] dark:text-[#D0D5DD] uppercase text-[13px] font-semibold"
 //                   >
 //                     All Room Types
 //                   </SelectItem>
@@ -750,7 +750,7 @@
 //                     <SelectItem
 //                       key={rt.id}
 //                       value={rt.id}
-//                       className="hover:bg-blue-50 dark:hover:bg-[#1C2433] text-[#1D2939] dark:text-[#D0D5DD] uppercase text-[13px] font-semibold"
+//                       className="hover:bg-[#D6EEF9] dark:hover:bg-[#1C2433] text-[#1D2939] dark:text-[#D0D5DD] uppercase text-[13px] font-semibold"
 //                     >
 //                       {rt.name}
 //                     </SelectItem>
@@ -786,7 +786,7 @@
 //                       <ToggleGroupItem
 //                         key={opt.value}
 //                         value={opt.value}
-//                         className="w-full justify-start data-[state=on]:bg-blue-100 dark:data-[state=on]:bg-blue-900/50"
+//                         className="w-full justify-start data-[state=on]:bg-[#D6EEF9] dark:data-[state=on]:bg-[#B4E6F5]/50"
 //                       >
 //                         {opt.label}
 //                       </ToggleGroupItem>
@@ -886,7 +886,7 @@
 //                         key={c.id}
 //                         checked={c.getIsVisible()}
 //                         onCheckedChange={c.toggleVisibility}
-//                         className="capitalize text-gray-700 dark:text-[#D0D5DD] hover:bg-blue-100 dark:hover:bg-[#1C2433]"
+//                         className="capitalize text-gray-700 dark:text-[#D0D5DD] hover:bg-[#D6EEF9] dark:hover:bg-[#1C2433]"
 //                       >
 //                         {c.id.replace(/_/g, " ")}
 //                       </DropdownMenuCheckboxItem>
@@ -925,7 +925,7 @@
 //                     className="gap-2 text-gray-700 dark:text-[#D0D5DD] hover:bg-indigo-50 dark:hover:bg-[#1C2433]"
 //                   >
 //                     {isExporting ? (
-//                       <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
+//                       <Loader2 className="h-5 w-5 animate-spin text-[#0785CF]" />
 //                     ) : (
 //                       <TbFileTypeCsv className="h-5 w-5 text-emerald-600" />
 //                     )}
@@ -947,19 +947,19 @@
 //                 <Badge
 //                   key={index}
 //                   variant="secondary"
-//                   className="flex items-center gap-2 bg-blue-100 dark:bg-[#162142] border border-blue-200 dark:border-blue-900 text-blue-800 dark:text-[#7592FF]"
+//                   className="flex items-center gap-2 bg-[#D6EEF9] dark:bg-[#162142] border border-[#B4E6F5]200 dark:border-[#B4E6F5]900 text-blue-800 dark:text-[#7592FF]"
 //                 >
 //                   {filter.label}
 //                   <button
 //                     onClick={filter.onClear}
-//                     className="rounded-full hover:bg-blue-200 dark:hover:bg-blue-800/50 p-0.5"
+//                     className="rounded-full hover:bg-[#B4E6F<｜place▁holder▁no▁797｜>] dark:hover:bg-blue-800/50 p-0.5"
 //                   >
 //                     <XIcon className="h-3 w-3" />
 //                   </button>
 //                 </Badge>
 //               ))}
 //               <span
-//                 className="text-blue-600 block text-sm font-medium cursor-pointer hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 h-auto p-1.5"
+//                 className="text-[#0785CF] block text-sm font-medium cursor-pointer hover:text-[#0785CF] dark:text-[#0785CF] dark:hover:text-[#0785CF] h-auto p-1.5"
 //                 onClick={clearFilters}
 //               >
 //                 Clear All
@@ -1000,7 +1000,7 @@
 //                       className="h-24 text-center"
 //                     >
 //                       <div className="w-full flex items-center justify-center">
-//                         <Loader className="animate-spin h-8 w-8 text-blue-600" />
+//                         <Loader className="animate-spin h-8 w-8 text-[#0785CF]" />
 //                       </div>
 //                     </TableCell>
 //                   </TableRow>
@@ -1187,7 +1187,7 @@
 //           onClick={() => navigate(`/rooms/${row.original.id}`)}
 //           className="gap-2 text-gray-700 dark:text-[#D0D5DD] hover:bg-indigo-50 dark:hover:bg-[#1C2433]"
 //         >
-//           <Eye className="h-5 w-5 text-indigo-600" /> View Details
+//           <Eye className="h-5 w-5 text-[#0785CF]" /> View Details
 //         </DropdownMenuItem>
 //         <DropdownMenuSeparator className="dark:bg-[#1D2939]" />
 //         <DropdownMenuGroup>
@@ -1771,7 +1771,7 @@ export default function HotelRooms() {
         header: "Capacity",
         cell: ({ row }) => (
           <div className="flex items-center px-3 py-1">
-            <Users className="w-4 h-4 mr-2 text-blue-700 dark:text-blue-400" />
+            <Users className="w-4 h-4 mr-2 text-[#0785CF] dark:text-[#0785CF]" />
             <span className="font-medium text-gray-700 dark:text-[#D0D5DD]">
               {row.original.max_occupancy} Guests
             </span>
@@ -1833,10 +1833,10 @@ export default function HotelRooms() {
         cell: ({ row }) => (
           <div className="text-center">
             <button
-              className="h-9 w-9 shadow-none dark:text-blue-600"
+              className="h-9 w-9 shadow-none dark:text-[#0785CF]"
               onClick={() => navigate(`/rooms/${row.original.id}`)}
             >
-              <Eye className="h-4 w-4 text-blue-600" />
+              <Eye className="h-4 w-4 text-[#0785CF]" />
             </button>
           </div>
         ),
@@ -1965,7 +1965,7 @@ export default function HotelRooms() {
             </div>
             {/* --- MODIFIED BUTTON (text, no icon) --- */}
             <Button
-              className="bg-blue-600 hover:bg-blue-700 shadow-none"
+              className="bg-[#0785CF] hover:bg-[#0785CF]/90 shadow-none"
               onClick={() => navigate("/rooms/new-room")}
             >
               Create New Room
@@ -2014,7 +2014,7 @@ export default function HotelRooms() {
                   className={cn(
                     "flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200", // removed gap-2
                     isActive
-                      ? "bg-blue-600 dark:bg-[#1c263a] text-white shadow-none"
+                      ? "bg-[#0785CF] dark:bg-[#1c263a] text-white shadow-none"
                       : "bg-transparent text-gray-600 dark:text-[#98A2B3] hover:text-gray-800 dark:hover:text-white"
                   )}
                 >
@@ -2043,7 +2043,7 @@ export default function HotelRooms() {
                     placeholder="Search by room code..."
                     value={globalFilter}
                     onChange={(e) => setGlobalFilter(e.target.value)}
-                    className="pl-10 pr-10 w-full bg-white dark:bg-[#101828] border-gray-200 dark:border-[#1D2939] text-gray-800 dark:text-[#D0D5DD] rounded-md shadow-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition-all dark:placeholder:text-[#5D636E]"
+                    className="pl-10 pr-10 w-full bg-white dark:bg-[#101828] border-gray-200 dark:border-[#1D2939] text-gray-800 dark:text-[#D0D5DD] rounded-md shadow-none focus:ring-2 focus:ring-blue-500 focus:border-[#0785CF] transition-all dark:placeholder:text-[#5D636E]"
                   />
                   {globalFilter && (
                     <button
@@ -2069,7 +2069,7 @@ export default function HotelRooms() {
                       .getColumn("room_type_ids")
                       ?.setFilterValue(value === "all" ? "" : value);
                   }}
-                  className="w-full h-10 px-3 py-2 bg-white dark:bg-[#101828] border border-gray-200 dark:border-[#1D2939] text-gray-800 dark:text-[#D0D5DD] rounded-md shadow-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600"
+                  className="w-full h-10 px-3 py-2 bg-white dark:bg-[#101828] border border-gray-200 dark:border-[#1D2939] text-gray-800 dark:text-[#D0D5DD] rounded-md shadow-none focus:ring-2 focus:ring-blue-500 focus:border-[#0785CF]"
                 >
                   <option value="all">All Room Types</option>
                   {roomTypesData?.map((rt) => (
@@ -2093,7 +2093,7 @@ export default function HotelRooms() {
                       .getColumn("max_occupancy")
                       ?.setFilterValue(value === "" ? null : value); // Send null if empty
                   }}
-                  className="w-full h-10 px-3 py-2 bg-white dark:bg-[#101828] border border-gray-200 dark:border-[#1D2939] text-gray-800 dark:text-[#D0D5DD] rounded-md shadow-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600"
+                  className="w-full h-10 px-3 py-2 bg-white dark:bg-[#101828] border border-gray-200 dark:border-[#1D2939] text-gray-800 dark:text-[#D0D5DD] rounded-md shadow-none focus:ring-2 focus:ring-blue-500 focus:border-[#0785CF]"
                 >
                   <option value="">All Capacities</option>
                   {GUEST_CAPACITY_OPTIONS.map((opt) => (
@@ -2119,7 +2119,7 @@ export default function HotelRooms() {
                     placeholder="e.g. 50"
                     value={minPrice}
                     onChange={(e) => setMinPrice(e.target.value)}
-                    className="mt-1 w-full bg-white dark:bg-[#101828] border-gray-200 dark:border-[#1D2939] text-gray-800 dark:text-[#D0D5DD] rounded-md shadow-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition-all dark:placeholder:text-[#5D636E]"
+                    className="mt-1 w-full bg-white dark:bg-[#101828] border-gray-200 dark:border-[#1D2939] text-gray-800 dark:text-[#D0D5DD] rounded-md shadow-none focus:ring-2 focus:ring-blue-500 focus:border-[#0785CF] transition-all dark:placeholder:text-[#5D636E]"
                     min="0"
                   />
                 </div>
@@ -2136,7 +2136,7 @@ export default function HotelRooms() {
                     placeholder="e.g. 300"
                     value={maxPrice}
                     onChange={(e) => setMaxPrice(e.target.value)}
-                    className="mt-1 w-full bg-white dark:bg-[#101828] border-gray-200 dark:border-[#1D2939] text-gray-800 dark:text-[#D0D5DD] rounded-md shadow-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition-all dark:placeholder:text-[#5D636E]"
+                    className="mt-1 w-full bg-white dark:bg-[#101828] border-gray-200 dark:border-[#1D2939] text-gray-800 dark:text-[#D0D5DD] rounded-md shadow-none focus:ring-2 focus:ring-blue-500 focus:border-[#0785CF] transition-all dark:placeholder:text-[#5D636E]"
                     min="0"
                   />
                 </div>
@@ -2155,7 +2155,7 @@ export default function HotelRooms() {
                       setPriceRangeFilter("");
                     }
                   }}
-                  className="bg-blue-600 hover:bg-blue-700 shadow-none"
+                  className="bg-[#0785CF] hover:bg-[#0785CF]/90 shadow-none"
                 >
                   Apply Price
                 </Button>
@@ -2167,7 +2167,7 @@ export default function HotelRooms() {
                     onClick={() => {
                       setPriceRangeFilter(""); // This will trigger the useEffect to clear inputs
                     }}
-                    className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 shadow-none"
+                    className="text-[#0785CF] dark:text-[#0785CF] hover:text-[#0785CF] dark:hover:text-[#0785CF] shadow-none"
                   >
                     Clear Price
                   </Button>
@@ -2236,7 +2236,7 @@ export default function HotelRooms() {
                         key={c.id}
                         checked={c.getIsVisible()}
                         onCheckedChange={c.toggleVisibility}
-                        className="capitalize text-gray-700 dark:text-[#D0D5DD] hover:bg-blue-100 dark:hover:bg-[#1C2433]"
+                        className="capitalize text-gray-700 dark:text-[#D0D5DD] hover:bg-[#D6EEF9] dark:hover:bg-[#1C2433]"
                       >
                         {c.id.replace(/_/g, " ")}
                       </DropdownMenuCheckboxItem>
@@ -2275,7 +2275,7 @@ export default function HotelRooms() {
                     className="gap-2 text-gray-700 dark:text-[#D0D5DD] hover:bg-indigo-50 dark:hover:bg-[#1C2433]"
                   >
                     {isExporting ? (
-                      <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
+                      <Loader2 className="h-5 w-5 animate-spin text-[#0785CF]" />
                     ) : (
                       <TbFileTypeCsv className="h-5 w-5 text-emerald-600" />
                     )}
@@ -2297,19 +2297,19 @@ export default function HotelRooms() {
                 <Badge
                   key={index}
                   variant="secondary"
-                  className="flex items-center gap-2 bg-blue-100 dark:bg-[#162142] border border-blue-200 dark:border-blue-900 text-blue-800 dark:text-[#7592FF] shadow-none"
+                  className="flex items-center gap-2 bg-[#D6EEF9] dark:bg-[#162142] border border-[#B4E6F5]200 dark:border-[#B4E6F5]900 text-blue-800 dark:text-[#7592FF] shadow-none"
                 >
                   {filter.label}
                   <button
                     onClick={filter.onClear}
-                    className="rounded-full hover:bg-blue-200 dark:hover:bg-blue-800/50 p-0.5"
+                    className="rounded-full hover:bg-[#B4E6F<｜place▁holder▁no▁797｜>] dark:hover:bg-blue-800/50 p-0.5"
                   >
                     <XIcon className="h-3 w-3" />
                   </button>
                 </Badge>
               ))}
               <span
-                className="text-blue-600 block text-sm font-medium cursor-pointer hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 h-auto p-1.5"
+                className="text-[#0785CF] block text-sm font-medium cursor-pointer hover:text-[#0785CF] dark:text-[#0785CF] dark:hover:text-[#0785CF] h-auto p-1.5"
                 onClick={clearFilters}
               >
                 Clear All
@@ -2350,7 +2350,7 @@ export default function HotelRooms() {
                       className="h-24 text-center"
                     >
                       <div className="w-full flex items-center justify-center">
-                        <Loader className="animate-spin h-8 w-8 text-blue-600" />
+                        <Loader className="animate-spin h-8 w-8 text-[#0785CF]" />
                       </div>
                     </TableCell>
                   </TableRow>

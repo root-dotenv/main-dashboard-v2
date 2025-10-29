@@ -113,8 +113,8 @@ export default function Step5_CheckInAndFinish() {
   if ((isFetchingDetails && !currentBookingDetails) || isFetchingExchangeRate) {
     return (
       <div className="flex flex-col items-center justify-center text-center py-20">
-        <div className="w-20 h-20 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mb-6">
-          <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
+        <div className="w-20 h-20 bg-[#D6EEF9] dark:bg-[#B4E6F5]/20 rounded-full flex items-center justify-center mb-6">
+          <Loader2 className="h-10 w-10 animate-spin text-[#0785CF]" />
         </div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
           Preparing Your Booking Ticket
@@ -196,7 +196,7 @@ export default function Step5_CheckInAndFinish() {
   if (!currentBookingDetails) {
     return (
       <div className="flex flex-col items-center justify-center text-center py-20">
-        <Loader2 className="h-12 w-12 animate-spin text-blue-600 mb-4" />
+        <Loader2 className="h-12 w-12 animate-spin text-[#0785CF] mb-4" />
         <p className="text-gray-600 dark:text-gray-400">
           Loading booking details...
         </p>
@@ -232,7 +232,7 @@ export default function Step5_CheckInAndFinish() {
               checkInMutation.isPending ||
               currentBookingDetails.booking_status === "Checked In"
             }
-            className="h-12 bg-blue-600 hover:bg-blue-700 text-white"
+            className="h-12 bg-[#0785CF] hover:bg-[#0785CF]/90 text-white"
           >
             {checkInMutation.isPending
               ? "Checking In..."

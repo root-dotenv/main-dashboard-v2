@@ -39,7 +39,7 @@ export const ExpandableText: React.FC<ExpandableTextProps> = ({
       {isTruncatable && (
         <button
           onClick={toggleIsExpanded}
-          className="text-blue-600 font-semibold text-sm mt-2 hover:underline focus:outline-none"
+          className="text-[#0785CF] font-semibold text-sm mt-2 hover:underline focus:outline-none"
         >
           {isExpanded ? "Show less" : "Read more"}
         </button>

@@ -187,7 +187,7 @@ const bulkCreateRoomsWithFile = async (data: any) => {
 
 // --- STYLING CONSTANTS & MAIN COMPONENT ---
 const focusRingClass =
-  "focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/40 focus:border-blue-500 dark:focus:border-blue-400";
+  "focus:ring-2 focus:ring-[#0785CF]/40 dark:focus:ring-[#0785CF]/40 focus:border-[#0785CF] dark:focus:border-[#0785CF]";
 const inputBaseClass =
   "bg-white dark:bg-gray-900/50 border-gray-300 dark:border-gray-700 dark:text-gray-200 dark:placeholder:text-gray-500";
 
@@ -224,7 +224,7 @@ export default function NewRoomPage() {
   if (isLoadingRoomTypes || isLoadingAmenities || !hotelId) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-950">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#0785CF]" />
       </div>
     );
   }
@@ -270,7 +270,7 @@ export default function NewRoomPage() {
                 className={cn(
                   "flex items-center gap-2 px-3 md:px-4 py-2 text-sm font-semibold rounded-md transition-all duration-200 cursor-pointer",
                   activeTab === tab.value
-                    ? "hover:bg-[#1547E5] bg-[#155DFC] dark:bg-[#1C263A] text-[#FFF] dark:text-gray-100 shadow-none border dark:border-none border-[#DADCE0]"
+                    ? "hover:bg-[#0785CF]/90 bg-[#0785CF] dark:bg-[#0785CF] text-[#FFF] dark:text-gray-100 shadow-none border dark:border-none border-[#DADCE0]"
                     : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                 )}
               >
@@ -609,7 +609,7 @@ const AmenitiesSelector = ({ allAmenities, field }: any) => {
               className={cn(
                 "flex h-5 w-5 items-center justify-center rounded-full border transition-colors",
                 isChecked
-                  ? "border-blue-600 bg-blue-600"
+                  ? "border-[#0785CF] bg-[#0785CF]"
                   : "border-gray-400 bg-transparent"
               )}
             >
@@ -719,7 +719,7 @@ const ImageDropzone = ({ field }: { field: any }) => {
       className={cn(
         "flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-lg cursor-pointer transition-colors",
         isDragging
-          ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+          ? "border-[#0785CF] bg-[#D6EEF9] dark:bg-[#B4E6F5]/20"
           : "border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 hover:bg-gray-100 dark:hover:bg-gray-800"
       )}
     >
@@ -1011,7 +1011,7 @@ function SingleRoomForm({
             type="submit"
             size="lg"
             disabled={mutation.isPending}
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-[#0785CF] hover:bg-[#0785CF]/90"
           >
             {mutation.isPending && (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -1256,7 +1256,7 @@ function BulkRoomForm({ form, roomTypes, allAmenities }: FormComponentProps) {
             type="submit"
             size="lg"
             disabled={mutation.isPending}
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-[#0785CF] hover:bg-[#0785CF]/90"
           >
             {mutation.isPending && (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -1317,7 +1317,7 @@ function MultipleImageDropzone({
       className={cn(
         "flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-colors",
         isDragging
-          ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+          ? "border-[#0785CF] bg-[#D6EEF9] dark:bg-[#B4E6F5]/20"
           : "border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 hover:bg-gray-100 dark:hover:bg-gray-800"
       )}
     >
@@ -1497,7 +1497,7 @@ function AdditionalImageUploader({
           </Button>
           <Button
             type="button"
-            className="bg-blue-600 hover:bg-blue-700 shadow-none"
+            className="bg-[#0785CF] hover:bg-[#0785CF]/90 shadow-none"
             onClick={handleUploadAndFinish}
             disabled={
               uploadImageMutation.isPending || selectedFiles.length === 0

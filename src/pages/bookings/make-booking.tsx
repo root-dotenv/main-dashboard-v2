@@ -43,7 +43,7 @@ const BookingStepper = ({ currentStep }: { currentStep: number }) => {
           {/* Progress Line */}
           <div className="absolute top-4 left-0 right-0 h-0.5 bg-gray-200 dark:bg-gray-700 -z-10">
             <div
-              className="h-full bg-blue-600 transition-all duration-500 ease-in-out"
+              className="h-full bg-[#0785CF] transition-all duration-500 ease-in-out"
               style={{
                 width: `${((currentStep - 1) / (steps.length - 1)) * 100}%`,
               }}
@@ -65,9 +65,9 @@ const BookingStepper = ({ currentStep }: { currentStep: number }) => {
                   <div
                     className={cn(
                       "relative flex items-center justify-center w-8 h-8 rounded-full border-2 transition-all duration-300 mb-3",
-                      isCompleted && "bg-blue-600 border-blue-600",
+                      isCompleted && "bg-[#0785CF] border-[#0785CF]",
                       isCurrent &&
-                        "border-blue-600 bg-white dark:bg-gray-800 shadow-lg scale-110",
+                        "border-[#0785CF] bg-white dark:bg-gray-800 shadow-lg scale-110",
                       isUpcoming &&
                         "border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
                     )}
@@ -78,7 +78,7 @@ const BookingStepper = ({ currentStep }: { currentStep: number }) => {
                       <span
                         className={cn(
                           "text-sm font-semibold",
-                          isCurrent && "text-blue-600",
+                          isCurrent && "text-[#0785CF]",
                           isUpcoming && "text-gray-400"
                         )}
                       >
@@ -88,7 +88,7 @@ const BookingStepper = ({ currentStep }: { currentStep: number }) => {
 
                     {/* Active Pulse Animation */}
                     {isCurrent && (
-                      <div className="absolute inset-0 rounded-full bg-blue-600 animate-ping opacity-20" />
+                      <div className="absolute inset-0 rounded-full bg-[#0785CF] animate-ping opacity-20" />
                     )}
                   </div>
 
@@ -130,13 +130,13 @@ const BookingHeader = () => {
   const { hotel } = useHotel();
 
   return (
-    <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 text-white sticky top-0 z-30">
+    <div className="bg-gradient-to-r from-[#0785CF] via-[#B4E6F5] to-[#D6EEF9] text-white sticky top-0 z-30">
       <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="py-8">
           {/* Breadcrumb */}
-          <nav className="flex items-center space-x-2 text-blue-100 text-sm mb-4">
+          <nav className="flex items-center space-x-2 text-[#D6EEF9] text-sm mb-4">
             <span>Bookings</span>
-            <span className="text-blue-200">/</span>
+            <span className="text-white/60">/</span>
             <span className="text-white font-medium">New Booking</span>
           </nav>
 
@@ -148,7 +148,7 @@ const BookingHeader = () => {
               </h1>
             </div>
             {hotel && (
-              <div className="flex items-center gap-2 text-sm text-blue-100">
+              <div className="flex items-center gap-2 text-sm text-[#D6EEF9]">
                 <Clock className="h-4 w-4" />
                 <span>Check-in: 3:00 PM • Check-out: 11:00 AM</span>
               </div>
@@ -182,7 +182,7 @@ export default function MakeBookingPage() {
         } else {
           return (
             <div className="flex justify-center py-20">
-              <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
+              <Loader2 className="h-10 w-10 animate-spin text-[#0785CF]" />
             </div>
           );
         }
@@ -219,7 +219,7 @@ export default function MakeBookingPage() {
           <div className="mt-8 text-center">
             <p className="text-gray-600 dark:text-gray-400 text-sm">
               Need assistance?{" "}
-              <button className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium underline">
+              <button className="text-[#0785CF] dark:text-[#0785CF] hover:text-[#0785CF] dark:hover:text-[#0785CF] font-medium underline">
                 Contact our support team
               </button>
             </p>

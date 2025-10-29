@@ -58,7 +58,7 @@ const ProfileDetail = ({
   <div className="flex items-start py-4 border-b border-gray-100 last:border-b-0">
     <div className="flex items-start gap-4 w-full px-2">
       {icon && (
-        <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 mt-0.5">
+        <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-[#D6EEF9] flex items-center justify-center text-[#0785CF] mt-0.5">
           {icon}
         </div>
       )}

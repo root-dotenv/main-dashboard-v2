@@ -103,7 +103,7 @@ export function Notifications() {
         </h3>
         {unreadCount > 0 && (
           <button
-            className="text-xs font-medium text-primary hover:underline dark:text-blue-400"
+            className="text-xs font-medium text-primary hover:underline dark:text-[#0785CF]"
             onClick={handleMarkAllAsRead}
           >
             Mark all as read
@@ -137,7 +137,7 @@ export function Notifications() {
                 {notification.unread && (
                   <div className="absolute right-4 top-4">
                     <span className="sr-only">Unread</span>
-                    <Dot className="text-primary dark:text-blue-400" />
+                    <Dot className="text-primary dark:text-[#0785CF]" />
                   </div>
                 )}
               </div>

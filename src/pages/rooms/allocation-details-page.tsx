@@ -103,10 +103,11 @@ export default function AllocationDetailsPage() {
       queryClient.invalidateQueries({ queryKey: ["allocations"] });
       navigate("/rooms/allocate-rooms"); // Use navigate instead of window.history
     },
-    onError: (error: any) => {
-      toast.error(
-        `Deletion failed: ${error.response?.data?.detail || error.message}`
-      );
+    onError: (error: unknown) => {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as { response?: { data?: { detail?: string } } })?.response?.data?.detail || error.message || "Deletion failed"
+        : "Deletion failed";
+      toast.error(errorMessage);
     },
   });
 
@@ -134,7 +135,7 @@ export default function AllocationDetailsPage() {
   const stats = [
     {
       title: "Total Allocated",
-      count: `${allocation.total_rooms} Rooms`,
+      count: allocation.total_rooms,
       icon: ListTodo,
     },
     {
@@ -144,7 +145,7 @@ export default function AllocationDetailsPage() {
     },
     {
       title: "Currently Available",
-      count: `${allocation.total_rooms - totalRoomsUsed} Rooms`,
+      count: allocation.total_rooms - totalRoomsUsed,
       icon: BedDouble,
     },
   ];
@@ -287,10 +288,10 @@ export default function AllocationDetailsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 shadow-none">
             {stats.map((stat) => (
               <StatCard
-                key={stat.label}
-                title={stat.label}
-                count={stat.value}
-                isLoading={isLoadingUsage} // Link loading to usage data
+                key={stat.title}
+                title={stat.title}
+                count={stat.count}
+                isLoading={isLoadingUsage}
                 icon={stat.icon}
               />
             ))}

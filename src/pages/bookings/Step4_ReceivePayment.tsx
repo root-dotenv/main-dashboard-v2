@@ -174,8 +174,8 @@ export default function Step4_ReceivePayment() {
   if (isFetchingDetails && !currentBookingDetails) {
     return (
       <div className="flex flex-col items-center justify-center text-center py-20">
-        <div className="w-20 h-20 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mb-6">
-          <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
+        <div className="w-20 h-20 bg-[#D6EEF9] dark:bg-[#B4E6F5]/20 rounded-full flex items-center justify-center mb-6">
+          <Loader2 className="h-10 w-10 animate-spin text-[#0785CF]" />
         </div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
           Loading Payment Details
@@ -284,7 +284,7 @@ export default function Step4_ReceivePayment() {
     <div className="space-y-8 p-8">
       {/* Header Section */}
       <div className="text-center">
-        <div className="inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-4 py-2 rounded-full text-sm font-medium mb-4">
+        <div className="inline-flex items-center gap-2 bg-[#D6EEF9] dark:bg-[#B4E6F5]/20 text-[#0785CF] dark:text-[#0785CF] px-4 py-2 rounded-full text-sm font-medium mb-4">
           <Banknote className="h-4 w-4" />
           Step 4: Cash Payment
         </div>
@@ -302,7 +302,7 @@ export default function Step4_ReceivePayment() {
         <Card className="lg:col-span-2 border border-gray-200 dark:border-gray-700 shadow-none">
           <CardHeader className="border-b">
             <CardTitle className="flex items-center gap-3 text-2xl text-gray-900 dark:text-white">
-              <Banknote className="h-6 w-6 text-blue-600" />
+              <Banknote className="h-6 w-6 text-[#0785CF]" />
               Cash Payment Confirmation
             </CardTitle>
             <CardDescription className="text-gray-600 dark:text-gray-400">
@@ -349,7 +349,7 @@ export default function Step4_ReceivePayment() {
                 <span className="text-sm text-gray-600 dark:text-gray-400">
                   Payment Reference:
                 </span>
-                <Badge className="font-mono bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                <Badge className="font-mono bg-[#D6EEF9] text-[#0785CF] dark:bg-[#B4E6F5]/30 dark:text-[#0785CF]">
                   {currentBookingDetails.payment_reference || "N/A"}
                 </Badge>
               </div>
@@ -422,7 +422,7 @@ export default function Step4_ReceivePayment() {
                           onCheckedChange={(checked) =>
                             setIsConfirmed(!!checked)
                           }
-                          className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
+                          className="data-[state=checked]:bg-[#0785CF] data-[state=checked]:border-[#0785CF]"
                         />
                         <label
                           htmlFor="confirm-amount"

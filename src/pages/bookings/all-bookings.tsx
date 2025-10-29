@@ -173,7 +173,7 @@ const fetchBookingCount = async (
 
 // --- Styling Constants ---
 const focusRingClass =
-  "focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/40 focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none";
+  "focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/40 focus:border-[#B4E6F5]500 dark:focus:border-[#B4E6F5]400 focus:outline-none";
 const inputBaseClass =
   "bg-white dark:bg-[#171F2F] border border-[#DADCE0] dark:border-[#1D2939] dark:text-[#D0D5DD] dark:placeholder:text-[#5D636E] rounded-lg shadow-none h-10 px-3 py-2 text-sm"; // Adjusted base class
 
@@ -346,7 +346,7 @@ export default function AllBookings() {
                 table.toggleAllPageRowsSelected(!!value)
               }
               aria-label="Select all"
-              className="border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-[#171F2F] data-[state=checked]:bg-blue-600 data-[state=checked]:text-white dark:data-[state=checked]:bg-blue-500 shadow-none"
+              className="border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-[#171F2F] data-[state=checked]:bg-[#0785CF] data-[state=checked]:text-white dark:data-[state=checked]:bg-[#0785CF] shadow-none"
             />
           </div>
         ),
@@ -356,7 +356,7 @@ export default function AllBookings() {
               checked={row.getIsSelected()}
               onCheckedChange={(value) => row.toggleSelected(!!value)}
               aria-label="Select row"
-              className="border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-[#171F2F] data-[state=checked]:bg-blue-600 data-[state=checked]:text-white dark:data-[state=checked]:bg-blue-500 shadow-none"
+              className="border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-[#171F2F] data-[state=checked]:bg-[#0785CF] data-[state=checked]:text-white dark:data-[state=checked]:bg-[#0785CF] shadow-none"
             />
           </div>
         ),
@@ -484,7 +484,7 @@ export default function AllBookings() {
               className="h-8 w-8 shadow-none"
               onClick={() => navigate(`/bookings/${row.original.id}`)}
             >
-              <Eye className="h-4 w-4 text-blue-600" />
+              <Eye className="h-4 w-4 text-[#0785CF]" />
             </button>
           </div>
         ),
@@ -640,7 +640,7 @@ export default function AllBookings() {
             </p>
           </div>
           <Button
-            className="bg-blue-600 hover:bg-blue-700 shadow-none rounded-lg" // Removed gap-2
+            className="bg-[#0785CF] hover:bg-[#0785CF]/90 shadow-none rounded-lg" // Removed gap-2
             onClick={() => navigate("/bookings/new-booking")}
           >
             {/* Removed Icon */}
@@ -689,7 +689,7 @@ export default function AllBookings() {
                 className={cn(
                   "px-4 py-2 text-sm font-medium rounded-md transition-all duration-200",
                   bookingTypeFilter === tab.value
-                    ? "bg-blue-600 dark:bg-[#1c263a] text-white shadow-sm"
+                    ? "bg-[#0785CF] dark:bg-[#1c263a] text-white shadow-sm"
                     : "bg-transparent text-gray-600 dark:text-[#98A2B3] hover:text-gray-800 dark:hover:text-white"
                 )}
               >
@@ -947,19 +947,19 @@ export default function AllBookings() {
               <Badge
                 key={index}
                 variant="secondary"
-                className="flex items-center gap-2 bg-blue-100 dark:bg-[#162142] border border-blue-200 dark:border-blue-900 text-blue-800 dark:text-[#7592FF] shadow-none rounded-full" // Added shadow-none, rounded-full
+                className="flex items-center gap-2 bg-[#D6EEF9] dark:bg-[#162142] border border-[#B4E6F5]200 dark:border-[#B4E6F5]900 text-blue-800 dark:text-[#7592FF] shadow-none rounded-full" // Added shadow-none, rounded-full
               >
                 {filter.label}
                 <button
                   onClick={filter.onClear}
-                  className="rounded-full hover:bg-blue-200 dark:hover:bg-blue-800/50 p-0.5"
+                  className="rounded-full hover:bg-[#B4E6F<｜place▁holder▁no▁797｜>] dark:hover:bg-blue-800/50 p-0.5"
                 >
                   <XIcon className="h-3 w-3" />
                 </button>
               </Badge>
             ))}
             <span
-              className="text-blue-600 text-sm font-medium cursor-pointer hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 p-1.5"
+              className="text-[#0785CF] text-sm font-medium cursor-pointer hover:text-[#0785CF] dark:text-[#0785CF] dark:hover:text-[#0785CF] p-1.5"
               onClick={clearFilters}
             >
               Clear All
@@ -1001,7 +1001,7 @@ export default function AllBookings() {
                     className="h-24 text-center"
                   >
                     <div className="w-full flex items-center justify-center">
-                      <Loader className="animate-spin h-8 w-8 text-blue-600" />
+                      <Loader className="animate-spin h-8 w-8 text-[#0785CF]" />
                     </div>
                   </TableCell>
                 </TableRow>
@@ -1010,7 +1010,7 @@ export default function AllBookings() {
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    className="border-b border-gray-200 dark:border-b-[#1D2939] hover:bg-indigo-50/30 dark:hover:bg-[#1C2433] transition-colors data-[state=selected]:bg-blue-50 dark:data-[state=selected]:bg-[#162142]" // Adjusted selected style
+                    className="border-b border-gray-200 dark:border-b-[#1D2939] hover:bg-indigo-50/30 dark:hover:bg-[#1C2433] transition-colors data-[state=selected]:bg-[#D6EEF9] dark:data-[state=selected]:bg-[#162142]" // Adjusted selected style
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
@@ -1137,7 +1137,7 @@ export default function AllBookings() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogAction
-              className="bg-blue-600 hover:bg-blue-700 rounded-lg shadow-none"
+              className="bg-[#0785CF] hover:bg-[#0785CF]/90 rounded-lg shadow-none"
               onClick={() => setCheckInError(null)}
             >
               OK

@@ -133,7 +133,7 @@ const useDebounce = <T,>(value: T, delay: number): T => {
 const getBookingTypeBadgeClasses = (type: "Physical" | "Online"): string => {
   switch (type) {
     case "Physical":
-      return "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/50 dark:text-blue-400 dark:border-blue-700/60";
+      return "bg-[#D6EEF9] text-blue-800 border-[#B4E6F5]200 dark:bg-[#B4E6F5]/50 dark:text-[#0785CF] dark:border-[#B4E6F5]700/60";
     case "Online":
       return "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/50 dark:text-yellow-400 dark:border-yellow-700/60";
     default:
@@ -143,7 +143,7 @@ const getBookingTypeBadgeClasses = (type: "Physical" | "Online"): string => {
 
 // --- Styling Constants (from all-bookings.tsx) ---
 const focusRingClass =
-  "focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/40 focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none";
+  "focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/40 focus:border-[#B4E6F5]500 dark:focus:border-[#B4E6F5]400 focus:outline-none";
 const inputBaseClass =
   "bg-white dark:bg-[#171F2F] border border-[#DADCE0] dark:border-[#1D2939] dark:text-[#D0D5DD] dark:placeholder:text-[#5D636E] rounded-lg shadow-none h-10 px-3 py-2 text-sm";
 
@@ -304,7 +304,7 @@ export default function CheckedInGuests() {
                 table.toggleAllPageRowsSelected(!!value)
               }
               aria-label="Select all"
-              className="border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-[#171F2F] data-[state=checked]:bg-blue-600 data-[state=checked]:text-white dark:data-[state=checked]:bg-blue-500 shadow-none"
+              className="border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-[#171F2F] data-[state=checked]:bg-[#0785CF] data-[state=checked]:text-white dark:data-[state=checked]:bg-[#0785CF] shadow-none"
             />
           </div>
         ),
@@ -314,7 +314,7 @@ export default function CheckedInGuests() {
               checked={row.getIsSelected()}
               onCheckedChange={(value) => row.toggleSelected(!!value)}
               aria-label="Select row"
-              className="border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-[#171F2F] data-[state=checked]:bg-blue-600 data-[state=checked]:text-white dark:data-[state=checked]:bg-blue-500 shadow-none"
+              className="border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-[#171F2F] data-[state=checked]:bg-[#0785CF] data-[state=checked]:text-white dark:data-[state=checked]:bg-[#0785CF] shadow-none"
             />
           </div>
         ),
@@ -417,7 +417,7 @@ export default function CheckedInGuests() {
         cell: ({ row }) => (
           <div className="flex justify-center">
             <button
-              className="h-8 w-8 shadow-none flex items-center justify-center text-blue-600 hover:text-blue-800"
+              className="h-8 w-8 shadow-none flex items-center justify-center text-[#0785CF] hover:text-blue-800"
               onClick={() => navigate(`/bookings/${row.original.id}`)}
             >
               <Eye className="h-5 w-5" />
@@ -513,7 +513,7 @@ export default function CheckedInGuests() {
             </p>
           </div>
           <Button
-            className="bg-blue-600 hover:bg-blue-700 shadow-none rounded-lg"
+            className="bg-[#0785CF] hover:bg-[#0785CF]/90 shadow-none rounded-lg"
             onClick={() => navigate("/bookings/new-booking")}
           >
             Create New Booking
@@ -531,7 +531,7 @@ export default function CheckedInGuests() {
           {isLoading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
-            <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-400 shadow-none rounded-md px-2.5 py-0.5 text-sm font-semibold">
+            <Badge className="bg-[#D6EEF9] text-blue-800 dark:bg-[#B4E6F5]/50 dark:text-[#0785CF] shadow-none rounded-md px-2.5 py-0.5 text-sm font-semibold">
               {totalCount}
             </Badge>
           )}
@@ -747,19 +747,19 @@ export default function CheckedInGuests() {
                 <Badge
                   key={index}
                   variant="secondary"
-                  className="flex items-center gap-2 bg-blue-100 dark:bg-[#162142] border border-blue-200 dark:border-blue-900 text-blue-800 dark:text-[#7592FF] shadow-none rounded-full"
+                  className="flex items-center gap-2 bg-[#D6EEF9] dark:bg-[#162142] border border-[#B4E6F5]200 dark:border-[#B4E6F5]900 text-blue-800 dark:text-[#7592FF] shadow-none rounded-full"
                 >
                   {filter.label}
                   <button
                     onClick={filter.onClear}
-                    className="rounded-full hover:bg-blue-200 dark:hover:bg-blue-800/50 p-0.5"
+                    className="rounded-full hover:bg-[#B4E6F<｜place▁holder▁no▁797｜>] dark:hover:bg-blue-800/50 p-0.5"
                   >
                     <XIcon className="h-3 w-3" />
                   </button>
                 </Badge>
               ))}
               <span
-                className="text-blue-600 text-sm font-medium cursor-pointer hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 p-1.5"
+                className="text-[#0785CF] text-sm font-medium cursor-pointer hover:text-[#0785CF] dark:text-[#0785CF] dark:hover:text-[#0785CF] p-1.5"
                 onClick={clearFilters}
               >
                 Clear All
@@ -803,7 +803,7 @@ export default function CheckedInGuests() {
                       className="h-24 text-center"
                     >
                       <div className="w-full flex items-center justify-center">
-                        <Loader className="animate-spin h-8 w-8 text-blue-600" />
+                        <Loader className="animate-spin h-8 w-8 text-[#0785CF]" />
                       </div>
                     </TableCell>
                   </TableRow>
@@ -812,7 +812,7 @@ export default function CheckedInGuests() {
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
-                      className="border-b border-gray-200 dark:border-b-[#1D2939] hover:bg-indigo-50/30 dark:hover:bg-[#1C2433] transition-colors data-[state=selected]:bg-blue-50 dark:data-[state=selected]:bg-[#162142]"
+                      className="border-b border-gray-200 dark:border-b-[#1D2939] hover:bg-indigo-50/30 dark:hover:bg-[#1C2433] transition-colors data-[state=selected]:bg-[#D6EEF9] dark:data-[state=selected]:bg-[#162142]"
                     >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell

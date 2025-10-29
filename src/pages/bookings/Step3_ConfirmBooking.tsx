@@ -104,8 +104,8 @@ export default function Step3_ConfirmBooking() {
   if (isLoading || (isFetching && !currencyConversionDetails)) {
     return (
       <div className="flex flex-col items-center justify-center text-center py-20">
-        <div className="w-20 h-20 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mb-6">
-          <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
+        <div className="w-20 h-20 bg-[#D6EEF9] dark:bg-[#B4E6F5]/20 rounded-full flex items-center justify-center mb-6">
+          <Loader2 className="h-10 w-10 animate-spin text-[#0785CF]" />
         </div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
           Finalizing Your Invoice
@@ -154,7 +154,7 @@ export default function Step3_ConfirmBooking() {
       <div className="space-y-8 p-8">
         {/* Header Section */}
         <div className="text-center">
-          <div className="inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-4 py-2 rounded-full text-sm font-medium mb-4">
+          <div className="inline-flex items-center gap-2 bg-[#D6EEF9] dark:bg-[#B4E6F5]/20 text-[#0785CF] dark:text-[#0785CF] px-4 py-2 rounded-full text-sm font-medium mb-4">
             <FileText className="h-4 w-4" />
             Step 3: Booking Confirmation
           </div>
@@ -174,7 +174,7 @@ export default function Step3_ConfirmBooking() {
               <CardHeader className="border-b">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                    <div className="w-10 h-10 bg-[#0785CF] rounded-full flex items-center justify-center">
                       <CheckCircle className="h-5 w-5 text-white" />
                     </div>
                     <div>
@@ -210,9 +210,9 @@ export default function Step3_ConfirmBooking() {
                     {/* Guest Information */}
                     <div className="space-y-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
+                        <div className="w-2 h-6 bg-[#0785CF] rounded-full"></div>
                         <h4 className="font-semibold text-lg text-gray-900 dark:text-white flex items-center gap-2">
-                          <User className="h-5 w-5 text-blue-600" />
+                          <User className="h-5 w-5 text-[#0785CF]" />
                           Guest Details
                         </h4>
                       </div>
@@ -236,9 +236,9 @@ export default function Step3_ConfirmBooking() {
                     {/* Stay Information */}
                     <div className="space-y-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
+                        <div className="w-2 h-6 bg-[#0785CF] rounded-full"></div>
                         <h4 className="font-semibold text-lg text-gray-900 dark:text-white flex items-center gap-2">
-                          <Calendar className="h-5 w-5 text-blue-600" />
+                          <Calendar className="h-5 w-5 text-[#0785CF]" />
                           Stay Details
                         </h4>
                       </div>
@@ -271,7 +271,7 @@ export default function Step3_ConfirmBooking() {
                           </span>
                           <Badge
                             variant="secondary"
-                            className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
+                            className="bg-[#D6EEF9] text-[#0785CF] dark:bg-[#B4E6F5]/30 dark:text-[#0785CF]"
                           >
                             {bookingData.duration_days} Night
                             {bookingData.duration_days > 1 ? "s" : ""}
@@ -285,7 +285,7 @@ export default function Step3_ConfirmBooking() {
                     {/* Reference Information */}
                     <div className="space-y-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
+                        <div className="w-2 h-6 bg-[#0785CF] rounded-full"></div>
                         <h4 className="font-semibold text-lg text-gray-900 dark:text-white">
                           Booking Reference
                         </h4>
@@ -307,9 +307,9 @@ export default function Step3_ConfirmBooking() {
                   <div className="space-y-6">
                     <div className="space-y-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
+                        <div className="w-2 h-6 bg-[#0785CF] rounded-full"></div>
                         <h4 className="font-semibold text-lg text-gray-900 dark:text-white flex items-center gap-2">
-                          <CreditCard className="h-5 w-5 text-blue-600" />
+                          <CreditCard className="h-5 w-5 text-[#0785CF]" />
                           Pricing Breakdown (USD)
                         </h4>
                       </div>
@@ -355,14 +355,14 @@ export default function Step3_ConfirmBooking() {
                     </div>
 
                     {/* Currency Conversion */}
-                    <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6 text-center">
+                    <div className="bg-[#D6EEF9] dark:bg-[#B4E6F5]/20 border border-[#B4E6F5]200 dark:border-[#B4E6F5]800 rounded-xl p-6 text-center">
                       <div className="flex items-center justify-center gap-2 mb-3">
-                        <p className="text-sm font-semibold text-blue-800 dark:text-blue-300">
+                        <p className="text-sm font-semibold text-blue-800 dark:text-[#0785CF]">
                           Total Amount to be Paid
                         </p>
                       </div>
 
-                      <p className="text-3xl font-bold text-blue-700 dark:text-blue-400 mb-2">
+                      <p className="text-3xl font-bold text-[#0785CF] dark:text-[#0785CF] mb-2">
                         {currencyConversionDetails ? (
                           new Intl.NumberFormat("en-US", {
                             style: "currency",
@@ -370,12 +370,12 @@ export default function Step3_ConfirmBooking() {
                               currencyConversionDetails.converted_currency,
                           }).format(currencyConversionDetails.converted_amount)
                         ) : (
-                          <Loader2 className="h-8 w-8 animate-spin inline-block text-blue-600" />
+                          <Loader2 className="h-8 w-8 animate-spin inline-block text-[#0785CF]" />
                         )}
                       </p>
 
                       {currencyConversionDetails && (
-                        <div className="flex items-center justify-center gap-2 text-xs text-blue-600 dark:text-blue-400">
+                        <div className="flex items-center justify-center gap-2 text-xs text-[#0785CF] dark:text-[#0785CF]">
                           <Clock className="h-3 w-3" />
                           <span>
                             1 {currencyConversionDetails.original_currency} ≈{" "}
@@ -399,14 +399,14 @@ export default function Step3_ConfirmBooking() {
             <Card className="border border-gray-200 dark:border-gray-700 shadow-none">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                  <div className="w-10 h-10 bg-[#0785CF] rounded-full flex items-center justify-center">
                     <Shield className="h-5 w-5 text-white" />
                   </div>
                   <div>
                     <h4 className="font-semibold text-blue-900 dark:text-blue-100">
                       Secure Booking
                     </h4>
-                    <p className="text-sm text-blue-700 dark:text-blue-300">
+                    <p className="text-sm text-[#0785CF] dark:text-[#0785CF]">
                       Your information is protected
                     </p>
                   </div>
@@ -443,7 +443,7 @@ export default function Step3_ConfirmBooking() {
             variant="main"
             onClick={() => setStep(4)}
             disabled={!currencyConversionDetails || isFetching}
-            className="h-11 px-8 bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+            className="h-11 px-8 bg-[#0785CF] hover:bg-[#0785CF]/90 text-white font-semibold"
           >
             Proceed to Payment
           </Button>

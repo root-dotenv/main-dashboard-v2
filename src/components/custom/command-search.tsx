@@ -175,7 +175,7 @@ export function CommandSearch() {
                   {bookingResults.results.length}
                 </Badge>
               </div>
-              {bookingResults.results.map((booking, index) => (
+              {bookingResults.results.map((booking) => (
                 <CommandItem
                   key={booking.id}
                   value={`booking-${booking.id}-${booking.full_name}`}
@@ -233,8 +233,8 @@ export function CommandSearch() {
                 >
                   <div className="flex items-center gap-3 w-full">
                     <div className="flex-shrink-0">
-                      <div className="rounded-lg bg-blue-100 p-2 group-data-[selected=true]:bg-blue-200 dark:bg-blue-900 dark:group-data-[selected=true]:bg-blue-800">
-                        <BedDouble className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                      <div className="rounded-lg bg-[#D6EEF9] p-2 group-data-[selected=true]:bg-[#B4E6F<｜place▁holder▁no▁797｜>] dark:bg-[#B4E6F5] dark:group-data-[selected=true]:bg-blue-800">
+                        <BedDouble className="h-4 w-4 text-[#0785CF] dark:text-[#0785CF]" />
                       </div>
                     </div>
                     <div className="flex-1 min-w-0">
@@ -295,12 +295,12 @@ export function CommandSearch() {
                 onSelect={() =>
                   runCommand(() => navigate("/rooms/hotel-rooms"))
                 }
-                className="group mx-2 rounded-lg px-4 py-3 data-[selected=true]:bg-blue-50 dark:data-[selected=true]:bg-blue-950"
+                className="group mx-2 rounded-lg px-4 py-3 data-[selected=true]:bg-[#D6EEF9] dark:data-[selected=true]:bg-blue-950"
               >
                 <div className="flex items-center gap-3 w-full">
                   <div className="flex-shrink-0">
-                    <div className="rounded-lg bg-blue-100 p-2 group-data-[selected=true]:bg-blue-200 dark:bg-blue-900 dark:group-data-[selected=true]:bg-blue-800">
-                      <BedDouble className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                    <div className="rounded-lg bg-[#D6EEF9] p-2 group-data-[selected=true]:bg-[#B4E6F<｜place▁holder▁no▁797｜>] dark:bg-[#B4E6F5] dark:group-data-[selected=true]:bg-blue-800">
+                      <BedDouble className="h-4 w-4 text-[#0785CF] dark:text-[#0785CF]" />
                     </div>
                   </div>
                   <div className="flex-1">

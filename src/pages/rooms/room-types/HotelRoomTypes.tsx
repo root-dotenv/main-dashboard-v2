@@ -46,7 +46,7 @@ export default function HotelRoomTypes() {
   if (isHotelLoading) {
     return (
       <div className="w-full h-64 flex items-center justify-center">
-        <Loader className="h-8 w-8 animate-spin text-blue-600" />
+        <Loader className="h-8 w-8 animate-spin text-[#0785CF]" />
       </div>
     );
   }
@@ -97,7 +97,7 @@ export default function HotelRoomTypes() {
           >
             <div className="flex items-center gap-4">
               <div className="p-2 bg-[#EFF6FF] dark:bg-[#162142] rounded-full">
-                <stat.icon className="h-5 w-5 text-blue-600 dark:text-[#7592FF]" />
+                <stat.icon className="h-5 w-5 text-[#0785CF] dark:text-[#7592FF]" />
               </div>
               <div>
                 <p className="text-sm text-gray-500 dark:text-[#98A2B3]">
@@ -123,7 +123,7 @@ export default function HotelRoomTypes() {
 
       {areDetailsLoading ? (
         <div className="flex justify-center items-center h-64">
-          <Loader className="h-8 w-8 animate-spin text-blue-600" />
+          <Loader className="h-8 w-8 animate-spin text-[#0785CF]" />
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">

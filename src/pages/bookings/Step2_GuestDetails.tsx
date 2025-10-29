@@ -270,7 +270,7 @@ export default function Step2_GuestDetails() {
       `}</style>
       {/* Header Section */}
       <div className="text-center">
-        <div className="inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-4 py-2 rounded-full text-sm font-medium mb-4">
+        <div className="inline-flex items-center gap-2 bg-[#D6EEF9] dark:bg-[#B4E6F5]/20 text-[#0785CF] dark:text-[#0785CF] px-4 py-2 rounded-full text-sm font-medium mb-4">
           <User className="h-4 w-4" />
           Step 2: Guest Information
         </div>
@@ -288,7 +288,7 @@ export default function Step2_GuestDetails() {
         <Card className="lg:col-span-2 border border-gray-200 dark:border-gray-700 shadow-none">
           <CardHeader className="border-b">
             <CardTitle className="flex items-center gap-3 text-gray-900 dark:text-white">
-              <User className="h-6 w-6 text-blue-600" />
+              <User className="h-6 w-6 text-[#0785CF]" />
               Guest Information & Payment
             </CardTitle>
             <CardDescription className="text-gray-600 dark:text-gray-400">
@@ -307,7 +307,7 @@ export default function Step2_GuestDetails() {
                 {/* Personal Information Section */}
                 <div className="space-y-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
+                    <div className="w-2 h-6 bg-[#0785CF] rounded-full"></div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                       Personal Information
                     </h3>
@@ -427,7 +427,7 @@ export default function Step2_GuestDetails() {
                 {/* Occupancy Section */}
                 <div className="space-y-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
+                    <div className="w-2 h-6 bg-[#0785CF] rounded-full"></div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                       Occupancy Details
                     </h3>
@@ -526,7 +526,7 @@ export default function Step2_GuestDetails() {
                 {/* Payment Method Section - Enhanced */}
                 <div className="space-y-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
+                    <div className="w-2 h-6 bg-[#0785CF] rounded-full"></div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                       Payment Method
                     </h3>
@@ -576,7 +576,7 @@ export default function Step2_GuestDetails() {
                                     className={cn(
                                       "flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 w-full",
                                       isActive
-                                        ? "bg-blue-600 text-white"
+                                        ? "bg-[#0785CF] text-white"
                                         : "bg-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                                     )}
                                   >
@@ -597,7 +597,7 @@ export default function Step2_GuestDetails() {
                 {/* Additional Information Section */}
                 <div className="space-y-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
+                    <div className="w-2 h-6 bg-[#0785CF] rounded-full"></div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                       Additional Information
                     </h3>
@@ -671,7 +671,7 @@ export default function Step2_GuestDetails() {
                   <Button
                     type="submit"
                     disabled={mutation.isPending || !form.formState.isValid}
-                    className="h-11 px-8 bg-blue-600 hover:bg-blue-700 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="h-11 px-8 bg-[#0785CF] hover:bg-[#0785CF]/90 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {mutation.isPending ? (
                       <>
@@ -710,7 +710,7 @@ export default function Step2_GuestDetails() {
                     </p>
                     <Badge
                       variant="secondary"
-                      className="mt-1 bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
+                      className="mt-1 bg-[#D6EEF9] text-[#0785CF] dark:bg-[#B4E6F5]/30 dark:text-[#0785CF]"
                     >
                       {selectedRoom.room_code}
                     </Badge>
@@ -732,7 +732,7 @@ export default function Step2_GuestDetails() {
               {/* Stay Details */}
               <div className="space-y-3">
                 <div className="flex items-center gap-3 text-sm">
-                  <Calendar className="h-4 w-4 text-blue-600" />
+                  <Calendar className="h-4 w-4 text-[#0785CF]" />
                   <div className="flex-1">
                     <p className="font-medium text-gray-900 dark:text-white">
                       Stay Duration
@@ -744,7 +744,7 @@ export default function Step2_GuestDetails() {
                   </div>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
-                  <MapPin className="h-4 w-4 text-blue-600" />
+                  <MapPin className="h-4 w-4 text-[#0785CF]" />
                   <div>
                     <p className="font-medium text-gray-900 dark:text-white">
                       Property
@@ -755,7 +755,7 @@ export default function Step2_GuestDetails() {
                   </div>
                 </div>
                 <div className="flex items-center gap-3 text-sm">
-                  <Calendar className="h-4 w-4 text-blue-600" />
+                  <Calendar className="h-4 w-4 text-[#0785CF]" />
                   <div className="flex-1">
                     <p className="font-medium text-gray-900 dark:text-white">
                       Number of Days

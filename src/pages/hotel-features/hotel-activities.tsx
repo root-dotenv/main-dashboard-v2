@@ -182,7 +182,7 @@ const CategoryForm = ({
           <Button
             type="submit"
             disabled={isPending}
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-[#0785CF] hover:bg-[#0785CF]/90"
           >
             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {category ? "Save Changes" : "Create Category"}
@@ -246,7 +246,7 @@ const ActivityForm = ({
       <form onSubmit={form.handleSubmit(mutate)} className="space-y-8">
         <div className="space-y-6">
           <div className="flex items-center gap-3">
-            <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
+            <div className="w-2 h-6 bg-[#0785CF] rounded-full"></div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
               Activity Details
             </h3>
@@ -315,7 +315,7 @@ const ActivityForm = ({
 
         <div className="space-y-6">
           <div className="flex items-center gap-3">
-            <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
+            <div className="w-2 h-6 bg-[#0785CF] rounded-full"></div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
               Logistics & Pricing
             </h3>
@@ -408,7 +408,7 @@ const ActivityForm = ({
 
         <div className="space-y-6">
           <div className="flex items-center gap-3">
-            <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
+            <div className="w-2 h-6 bg-[#0785CF] rounded-full"></div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
               Image
             </h3>
@@ -449,7 +449,7 @@ const ActivityForm = ({
           <Button
             type="submit"
             disabled={isPending}
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-[#0785CF] hover:bg-[#0785CF]/90"
           >
             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {activity ? "Save Changes" : "Create Activity"}
@@ -587,7 +587,7 @@ export default function HotelActivities() {
                 setEditingActivity(undefined);
                 setIsActivityFormOpen(true);
               }}
-              className="h-10 flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-lg"
+              className="h-10 flex items-center gap-2 bg-[#0785CF] hover:bg-[#0785CF]/90 text-white px-4 rounded-lg"
             >
               <Plus className="h-4 w-4" />
               <span>New Activity</span>
@@ -601,7 +601,7 @@ export default function HotelActivities() {
               {filteredActivities.map((activity) => (
                 <Card
                   key={activity.id}
-                  className="flex flex-col justify-between bg-white dark:bg-[#171F2F] border border-[#DADCE0] dark:border-[#1D2939] shadow-none rounded-xl transition-colors hover:border-blue-500 dark:hover:border-blue-700"
+                  className="flex flex-col justify-between bg-white dark:bg-[#171F2F] border border-[#DADCE0] dark:border-[#1D2939] shadow-none rounded-xl transition-colors hover:border-[#B4E6F5]500 dark:hover:border-[#B4E6F5]700"
                 >
                   <div>
                     <img

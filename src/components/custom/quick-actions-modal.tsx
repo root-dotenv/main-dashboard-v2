@@ -20,7 +20,7 @@ const quickActions = [
     label: "New Booking",
     url: "/bookings/new-booking",
     icon: LuTicketCheck,
-    color: "bg-blue-100 text-blue-600",
+    color: "bg-[#D6EEF9] text-[#0785CF]",
   },
   {
     label: "Available Rooms",
@@ -32,25 +32,25 @@ const quickActions = [
     label: "Invoices",
     url: "/billings/invoices",
     icon: Receipt,
-    color: "bg-purple-100 text-purple-600",
+    color: "bg-[#D6EEF9] text-[#0785CF]",
   },
   {
     label: "Check-ins",
     url: "/reservations/checkin",
     icon: FiUserCheck,
-    color: "bg-indigo-100 text-indigo-600",
+    color: "bg-[#D6EEF9] text-[#0785CF]",
   },
   {
     label: "Inventory",
     url: "/house-keeping/inventory-items",
     icon: MdOutlineInventory2,
-    color: "bg-yellow-100 text-yellow-600",
+    color: "bg-[#D6EEF9] text-[#0785CF]",
   },
   {
     label: "New Rooms",
     url: "/rooms/new-room",
     icon: IoAdd,
-    color: "bg-indigo-100 text-indigo-600",
+    color: "bg-[#D6EEF9] text-[#0785CF]",
   },
 ];
 

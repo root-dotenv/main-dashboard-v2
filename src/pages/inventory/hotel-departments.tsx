@@ -381,7 +381,7 @@ export default function HotelDepartments() {
                 <SheetTrigger asChild>
                   <Button
                     onClick={() => handleOpenForm()}
-                    className="bg-blue-600 hover:bg-blue-700"
+                    className="bg-[#0785CF] hover:bg-[#0785CF]/90"
                   >
                     <Plus className="mr-2 h-4 w-4" /> Add Department
                   </Button>
@@ -418,7 +418,7 @@ export default function HotelDepartments() {
                         colSpan={columns.length}
                         className="h-24 text-center"
                       >
-                        <Loader2 className="animate-spin h-8 w-8 text-blue-600 mx-auto" />
+                        <Loader2 className="animate-spin h-8 w-8 text-[#0785CF] mx-auto" />
                       </TableCell>
                     </TableRow>
                   ) : table.getRowModel().rows?.length ? (
@@ -715,7 +715,7 @@ function DepartmentFormSheet({
           <Button
             type="submit"
             disabled={isLoading}
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-[#0785CF] hover:bg-[#0785CF]/90"
           >
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {department ? "Save Changes" : "Create Department"}

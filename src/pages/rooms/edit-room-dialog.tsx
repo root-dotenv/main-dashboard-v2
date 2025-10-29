@@ -226,7 +226,7 @@ const ImageDropzone = ({
           type="button"
           variant="ghost"
           size="icon"
-          className="h-8 w-8 rounded-full text-blue-500 hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-blue-900/50"
+          className="h-8 w-8 rounded-full text-[#0785CF] hover:bg-[#D6EEF9] hover:text-[#0785CF] dark:hover:bg-[#B4E6F5]/50"
           onClick={() => inputRef.current?.click()}
         >
           <UploadCloud className="h-5 w-5" />
@@ -246,7 +246,7 @@ const ImageDropzone = ({
       className={cn(
         "flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-colors",
         isDragging
-          ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+          ? "border-[#B4E6F5]500 bg-[#D6EEF9] dark:bg-[#B4E6F5]/20"
           : "border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 hover:bg-gray-100 dark:hover:bg-gray-800"
       )}
     >
@@ -315,7 +315,7 @@ function MultipleImageDropzone({
       className={cn(
         "flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-colors",
         isDragging
-          ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+          ? "border-[#B4E6F5]500 bg-[#D6EEF9] dark:bg-[#B4E6F5]/20"
           : "border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 hover:bg-gray-100 dark:hover:bg-gray-800"
       )}
     >
@@ -1044,7 +1044,7 @@ export function EditRoomForm({
                       </FormLabel>
                       {isLoadingAmenities ? (
                         <div className="flex items-center gap-2 py-8">
-                          <Loader2 className="h-5 w-5 animate-spin text-blue-600" />
+                          <Loader2 className="h-5 w-5 animate-spin text-[#0785CF]" />
                           <p className="text-base text-[#667085] dark:text-[#98A2B3]">
                             Loading amenities...
                           </p>
@@ -1077,7 +1077,7 @@ export function EditRoomForm({
                                   className={cn(
                                     "flex flex-wrap items-center justify-center text-center px-4 py-2.5 rounded-lg border-2 font-medium cursor-pointer transition-all text-[13px]",
                                     isChecked
-                                      ? "bg-[#EFF6FF] dark:bg-[#162142] text-blue-600 border border-blue-300 shadow-xs rounded-full dark:border-none dark:border-[#162142] dark:text-[#98A2B3]"
+                                      ? "bg-[#EFF6FF] dark:bg-[#162142] text-[#0785CF] border border-[#B4E6F5]300 shadow-xs rounded-full dark:border-none dark:border-[#162142] dark:text-[#98A2B3]"
                                       : "bg-white dark:bg-[#162142] border border-[#E4E7EC] text-gray-700 hover:bg-gray-50 hover:border-gray-300 rounded-full shadow-xs dark:hover:bg-[#1C2433] dark:border-[#162142] dark:text-[#98A2B3]"
                                   )}
                                 >
@@ -1099,7 +1099,7 @@ export function EditRoomForm({
           <SheetFooter className="flex-shrink-0 px-6 shadow-lg py-4 border-t bg-white dark:bg-[#101828] dark:border-t-[#1D2939]">
             <div className="flex items-center justify-end gap-3 w-full">
               <button
-                className="bg-blue-600 hover:bg-blue-700 text-[#FFF] flex items-center gap-x-2 py-2.5 px-4 rounded-full text-[1rem] cursor-pointer transition-all focus-visible:ring-blue-500 focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-[#0785CF] hover:bg-[#0785CF]/90 text-[#FFF] flex items-center gap-x-2 py-2.5 px-4 rounded-full text-[1rem] cursor-pointer transition-all focus-visible:ring-blue-500 focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 type="submit"
                 disabled={
                   updateRoomMutation.isPending ||

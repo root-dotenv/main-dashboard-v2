@@ -52,7 +52,7 @@ const HotelCustomizationLayout: React.FC<HotelCustomizationLayoutProps> = ({
               className={cn(
                 "w-full flex items-center gap-3 px-4 py-2.5 text-left text-sm font-medium rounded-lg transition-colors",
                 activeView === item.id
-                  ? "bg-blue-600 text-white shadow-sm"
+                  ? "bg-[#0785CF] text-white shadow-sm"
                   : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
               )}
             >

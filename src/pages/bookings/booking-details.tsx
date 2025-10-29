@@ -92,7 +92,7 @@ const InfoItem: React.FC<{
 }> = ({ icon: Icon, label, value }) => (
   <div className="flex items-center gap-4">
     <div className="flex-shrink-0 p-2 bg-[#EFF6FF] dark:bg-[#162142] rounded-full">
-      <Icon className="h-5 w-5 text-blue-600 dark:text-[#7592FF]" />
+      <Icon className="h-5 w-5 text-[#0785CF] dark:text-[#7592FF]" />
     </div>
     <div>
       <p className="text-sm text-gray-500 dark:text-[#98A2B3]">{label}</p>
@@ -105,7 +105,7 @@ const InfoItem: React.FC<{
 
 const statusConfig = {
   confirmed: "bg-green-100 text-green-800 border-green-200",
-  "checked in": "bg-blue-100 text-blue-800 border-blue-200",
+  "checked in": "bg-[#D6EEF9] text-blue-800 border-[#B4E6F5]200",
   pending: "bg-yellow-100 text-yellow-800 border-yellow-200",
   cancelled: "bg-red-100 text-red-800 border-red-200",
   expired: "bg-red-100 text-red-800 border-red-200",
@@ -204,7 +204,7 @@ export default function BookingDetailsPage() {
   if (isLoadingBooking || isLoadingRoom) {
     return (
       <div className="flex items-center justify-center h-screen bg-[#F9FAFB] dark:bg-[#101828]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#0785CF]"></div>
       </div>
     );
   }
@@ -240,7 +240,7 @@ export default function BookingDetailsPage() {
               <div className="space-y-1">
                 <button
                   onClick={() => navigate(-1)}
-                  className="flex items-center gap-2 text-sm text-gray-500 dark:text-[#98A2B3] hover:text-blue-600"
+                  className="flex items-center gap-2 text-sm text-gray-500 dark:text-[#98A2B3] hover:text-[#0785CF]"
                 >
                   <ArrowLeft className="h-4 w-4" />
                   Back to Bookings
@@ -278,7 +278,7 @@ export default function BookingDetailsPage() {
                 </SheetTrigger>
                 <Button
                   onClick={handlePrint}
-                  className="gap-2 bg-blue-600 hover:bg-blue-700"
+                  className="gap-2 bg-[#0785CF] hover:bg-[#0785CF]/90"
                 >
                   <Printer className="h-4 w-4" /> Print Ticket
                 </Button>
@@ -296,7 +296,7 @@ export default function BookingDetailsPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center text-2xl font-bold">
+                    <div className="w-16 h-16 bg-[#0785CF] text-white rounded-full flex items-center justify-center text-2xl font-bold">
                       {booking.full_name.charAt(0)}
                     </div>
                     <div>
@@ -452,7 +452,7 @@ export default function BookingDetailsPage() {
                         <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-1">
                           Guest's Special Requests
                         </h4>
-                        <p className="text-sm text-gray-600 dark:text-[#98A2B3] pl-2 border-l-2 border-blue-500">
+                        <p className="text-sm text-gray-600 dark:text-[#98A2B3] pl-2 border-l-2 border-[#B4E6F5]500">
                           {booking.special_requests}
                         </p>
                       </div>
@@ -462,7 +462,7 @@ export default function BookingDetailsPage() {
                         <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-1">
                           Internal Service Notes
                         </h4>
-                        <p className="text-sm text-gray-600 dark:text-[#98A2B3] pl-2 border-l-2 border-blue-500">
+                        <p className="text-sm text-gray-600 dark:text-[#98A2B3] pl-2 border-l-2 border-[#B4E6F5]500">
                           {booking.service_notes}
                         </p>
                       </div>
@@ -481,7 +481,7 @@ export default function BookingDetailsPage() {
                       {roomDetails.amenities.slice(0, 8).map((amenity) => (
                         <Badge
                           key={amenity.id}
-                          className="bg-[#EFF6FF] text-blue-600 border border-blue-200 dark:bg-[#162142] dark:border-transparent dark:text-[#98A2B3] text-sm"
+                          className="bg-[#EFF6FF] text-[#0785CF] border border-[#B4E6F5]200 dark:bg-[#162142] dark:border-transparent dark:text-[#98A2B3] text-sm"
                         >
                           {amenity.name}
                         </Badge>
@@ -521,7 +521,7 @@ export default function BookingDetailsPage() {
           <AlertDialogFooter>
             <AlertDialogCancel>No, keep editing</AlertDialogCancel>
             <AlertDialogAction
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-[#0785CF] hover:bg-[#0785CF]/90"
               onClick={handleDiscardChanges}
             >
               Yes, discard changes

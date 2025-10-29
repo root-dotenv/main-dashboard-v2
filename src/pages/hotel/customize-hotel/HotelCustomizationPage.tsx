@@ -197,7 +197,7 @@ export default function CustomizeHotel() {
   if (!hotelId || isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-none text-gray-700">
-        <Loader2 className="animate-spin h-12 w-12 text-blue-500 mb-4" />
+        <Loader2 className="animate-spin h-12 w-12 text-[#0785CF] mb-4" />
         <p>Loading hotel data...</p>
       </div>
     );

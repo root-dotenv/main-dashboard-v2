@@ -31,8 +31,8 @@ export const StatCard: React.FC<StatCardProps> = ({
   return (
     <div className="bg-[#FFF] dark:bg-[#171F2F] flex items-center border border-[#E4E7EC] dark:border-[#1D2939] rounded-md px-4 py-6 shadow-xs">
       <div className="flex items-center gap-3">
-        <div className="p-2 bg-[#EFF6FF] dark:bg-[#162142] rounded-full">
-          <Icon className="h-5 w-5 text-blue-600 dark:text-[#7592FF]" />
+        <div className="p-2 bg-[#D6EEF9] dark:bg-[#B4E6F5]/30 rounded-full">
+          <Icon className="h-5 w-5 text-[#0785CF] dark:text-[#0785CF]" />
         </div>
         <div>
           <p className="text-sm text-gray-500 dark:text-[#98A2B3]">{title}</p>

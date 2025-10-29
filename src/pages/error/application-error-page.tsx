@@ -84,7 +84,7 @@ export default function DataLoadingError({
         >
           <Link
             to="/"
-            className="inline-flex items-center gap-2 rounded bg-blue-600 px-6 py-3 font-medium text-white shadow transition-all hover:bg-blue-700 hover:shadow"
+            className="inline-flex items-center gap-2 rounded bg-[#0785CF] px-6 py-3 font-medium text-white shadow transition-all hover:bg-[#0785CF]/90 hover:shadow"
           >
             <RxDashboard className="h-5 w-5" />
             Return to Dashboard
@@ -116,19 +116,19 @@ export default function DataLoadingError({
           <div className="mt-6 flex flex-wrap justify-center gap-6">
             <a
               href="mailto:support@safaripro.com"
-              className="flex items-center gap-2 text-gray-600 hover:text-blue-600 font-medium dark:text-blue-500 dark:hover:text-blue-400"
+              className="flex items-center gap-2 text-gray-600 hover:text-[#0785CF] font-medium dark:text-[#0785CF] dark:hover:text-[#0785CF]"
             >
               Email Support
             </a>
             <a
               href="tel:+255689759215"
-              className="flex items-center gap-2 text-gray-600 hover:text-blue-600 font-medium dark:text-blue-500 dark:hover:text-blue-400"
+              className="flex items-center gap-2 text-gray-600 hover:text-[#0785CF] font-medium dark:text-[#0785CF] dark:hover:text-[#0785CF]"
             >
               Call Us
             </a>
             <Link
               to="/help-center"
-              className="flex items-center gap-2 text-gray-600 hover:text-blue-600 font-medium dark:text-blue-500 dark:hover:text-blue-400"
+              className="flex items-center gap-2 text-gray-600 hover:text-[#0785CF] font-medium dark:text-[#0785CF] dark:hover:text-[#0785CF]"
             >
               Help Center
             </Link>

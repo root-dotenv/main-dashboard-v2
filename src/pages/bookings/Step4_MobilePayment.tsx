@@ -236,8 +236,8 @@ export default function Step4_MobilePayment() {
   if (isFetchingConversion && !currentBookingDetails) {
     return (
       <div className="flex flex-col items-center justify-center text-center py-20">
-        <div className="w-20 h-20 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mb-6">
-          <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
+        <div className="w-20 h-20 bg-[#D6EEF9] dark:bg-[#B4E6F5]/20 rounded-full flex items-center justify-center mb-6">
+          <Loader2 className="h-10 w-10 animate-spin text-[#0785CF]" />
         </div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
           Preparing Payment
@@ -370,7 +370,7 @@ export default function Step4_MobilePayment() {
     <div className="space-y-8 p-8">
       {/* Header Section */}
       <div className="text-center">
-        <div className="inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 px-4 py-2 rounded-full text-sm font-medium mb-4">
+        <div className="inline-flex items-center gap-2 bg-[#D6EEF9] dark:bg-[#B4E6F5]/20 text-[#0785CF] dark:text-[#0785CF] px-4 py-2 rounded-full text-sm font-medium mb-4">
           <Smartphone className="h-4 w-4" />
           Step 4: Mobile Payment
         </div>
@@ -388,7 +388,7 @@ export default function Step4_MobilePayment() {
         <Card className="lg:col-span-2 border border-gray-200 dark:border-gray-700 shadow-none">
           <CardHeader className="border-b">
             <CardTitle className="flex items-center gap-3 text-2xl text-gray-900 dark:text-white">
-              <Smartphone className="h-6 w-6 text-blue-600" />
+              <Smartphone className="h-6 w-6 text-[#0785CF]" />
               Mobile Payment Request
             </CardTitle>
             <CardDescription className="text-gray-600 dark:text-gray-400">
@@ -409,11 +409,11 @@ export default function Step4_MobilePayment() {
                   ) ?? "0.00"}
                 </p>
               </div>
-              <div className="p-4 bg-blue-50 dark:bg-blue-900/30 rounded-lg text-center">
-                <p className="text-sm text-blue-700 dark:text-blue-300 mb-2">
+              <div className="p-4 bg-[#D6EEF9] dark:bg-[#B4E6F5]/30 rounded-lg text-center">
+                <p className="text-sm text-[#0785CF] dark:text-[#0785CF] mb-2">
                   Amount to Pay (TZS)
                 </p>
-                <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                <p className="text-2xl font-bold text-[#0785CF] dark:text-[#0785CF]">
                   {new Intl.NumberFormat("en-US").format(finalAmountTZS || 0)}{" "}
                   TZS
                 </p>
@@ -519,7 +519,7 @@ export default function Step4_MobilePayment() {
                       initiatePaymentMutation.isPending ||
                       paymentState === PaymentStatus.PENDING
                     }
-                    className="h-11 px-8 bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+                    className="h-11 px-8 bg-[#0785CF] hover:bg-[#0785CF]/90 text-white font-semibold"
                   >
                     {(initiatePaymentMutation.isPending ||
                       paymentState === PaymentStatus.INITIATING) && (

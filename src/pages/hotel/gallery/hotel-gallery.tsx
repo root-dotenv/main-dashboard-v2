@@ -277,7 +277,7 @@ const AddImageDialog = ({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-blue-600 hover:bg-blue-700 text-[#FFF] hover:text-[#FFF]">
+        <Button className="bg-[#0785CF] hover:bg-[#0785CF]/90 text-[#FFF] hover:text-[#FFF]">
           <Plus className="h-4 w-4" /> Add Image
         </Button>
       </DialogTrigger>
@@ -304,7 +304,7 @@ const AddImageDialog = ({
                     className={cn(
                       "mt-1 flex justify-center rounded-lg border-2 border-dashed px-6 pt-5 pb-6 transition-colors",
                       isDragActive
-                        ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                        ? "border-[#B4E6F5]500 bg-[#D6EEF9] dark:bg-[#B4E6F5]/20"
                         : "border-gray-300 dark:border-gray-600"
                     )}
                   >
@@ -422,7 +422,7 @@ const AddImageDialog = ({
               <Button
                 type="submit"
                 disabled={isPending}
-                className="bg-blue-600 hover:bg-blue-700 text-white"
+                className="bg-[#0785CF] hover:bg-[#0785CF]/90 text-white"
               >
                 {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}{" "}
                 Add Image
@@ -538,7 +538,7 @@ const EditImageDialog = ({
                       className={cn(
                         "mt-1 flex justify-center rounded-lg border-2 border-dashed px-6 pt-5 pb-6 transition-colors",
                         isDragActive
-                          ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                          ? "border-[#B4E6F5]500 bg-[#D6EEF9] dark:bg-[#B4E6F5]/20"
                           : "border-gray-300 dark:border-gray-600"
                       )}
                     >
@@ -664,7 +664,7 @@ const EditImageDialog = ({
                 <Button
                   type="submit"
                   disabled={isSaving}
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                  className="bg-[#0785CF] hover:bg-[#0785CF]/90 text-white"
                 >
                   {isSaving && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -922,7 +922,7 @@ export default function HotelGallery() {
                     className={cn(
                       "rounded-full px-4 py-2 text-sm font-semibold shadow-none transition-all duration-200",
                       activeTab === "all"
-                        ? "bg-blue-600 text-white hover:bg-blue-700"
+                        ? "bg-[#0785CF] text-white hover:bg-[#0785CF]/90"
                         : "text-[#1D2939] border border-gray-200 bg-white hover:bg-gray-100 dark:text-[#98A2B3] dark:hover:bg-[#1C2433] dark:bg-[#171F2F] dark:border-[#1D2939]"
                     )}
                   >
@@ -935,7 +935,7 @@ export default function HotelGallery() {
                       className={cn(
                         "rounded-full px-4 py-2 text-sm font-semibold shadow-none transition-all duration-200",
                         activeTab === category.name
-                          ? "bg-blue-600 text-white hover:bg-blue-700"
+                          ? "bg-[#0785CF] text-white hover:bg-[#0785CF]/90"
                           : "text-[#1D2939] border border-gray-200 bg-white hover:bg-gray-100 dark:text-[#98A2B3] dark:hover:bg-[#1C2433] dark:bg-[#171F2F] dark:border-[#1D2939]"
                       )}
                     >

@@ -40,7 +40,7 @@ const DownloadAppDialog = () => {
         <Button
           variant={"main"}
           size="sm"
-          className="w-full mt-4 bg-blue-600 hover:bg-blue-700"
+          className="w-full mt-4"
         >
           Download the App
         </Button>
@@ -116,8 +116,8 @@ const NavItem = ({
             "flex w-full items-center rounded-lg z-40 p-2 transition-colors duration-200",
             isCollapsed ? "justify-center" : "justify-between",
             isActive
-              ? "bg-blue-50 text-blue-700 dark:bg-[#162142] dark:text-[#7592FF] z-40"
-              : "text-gray-600 hover:bg-gray-100 dark:hover:bg-[#1C2433] dark:text-[#7592FF] z-40"
+              ? "bg-[#D6EEF9] text-[#0785CF] dark:bg-[#B4E6F5] dark:text-[#0785CF] z-40"
+              : "text-gray-600 hover:bg-gray-100 dark:hover:bg-[#1C2433] dark:text-[#D0D5DD] z-40"
           )}
         >
           <div className="flex items-center gap-3 z-40">
@@ -125,7 +125,7 @@ const NavItem = ({
               className={cn(
                 "h-5 w-5",
                 isActive
-                  ? "text-blue-600 dark:text-[#7592FF]"
+                  ? "text-[#0785CF] dark:text-[#0785CF]"
                   : "text-[#344055] dark:text-[#D0D5DD]"
               )}
             />
@@ -158,14 +158,14 @@ const NavItem = ({
                   className={cn(
                     "flex items-center gap-3 p-2 text-sm rounded-md transition-colors duration-200",
                     isChildActive
-                      ? "bg-blue-50 font-medium text-blue-700 dark:bg-[#162142] dark:text-[#7592FF]"
+                      ? "bg-[#D6EEF9] font-medium text-[#0785CF] dark:bg-[#B4E6F5] dark:text-[#0785CF]"
                       : "text-[#667085] hover:bg-gray-100/50 hover:text-gray-800 dark:text-[#98A2B3] dark:hover:bg-[#1C2433]"
                   )}
                 >
                   <child.icon
                     className={cn(
                       "h-2 w-2 border-none hover:border-none hover:bg-none",
-                      isChildActive ? "fill-blue-700" : "text-[#344055]"
+                      isChildActive ? "fill-[#0785CF] dark:fill-[#0785CF]" : "text-[#344055]"
                     )}
                   />
                   <span>{child.title}</span>
@@ -185,8 +185,8 @@ const NavItem = ({
         "flex w-full items-center rounded-lg p-2 transition-colors z-40 duration-200",
         isCollapsed ? "justify-center" : "justify-between",
         isActive
-          ? "bg-blue-50 text-blue-700 font-semibold dark:bg-[#162142] z-40"
-          : "text-gray-600 hover:bg-gray-100 dark:hover:bg-[#1C2433] z-40"
+          ? "bg-[#D6EEF9] text-[#0785CF] font-semibold dark:bg-[#B4E6F5] dark:text-[#0785CF] z-40"
+          : "text-gray-600 hover:bg-gray-100 dark:hover:bg-[#1C2433] dark:text-[#D0D5DD] z-40"
       )}
     >
       <div className="flex items-center gap-3 z-40">
@@ -194,7 +194,7 @@ const NavItem = ({
           className={cn(
             "h-5 w-5",
             isActive
-              ? "text-blue-600 dark:text-[#7592FF]"
+              ? "text-[#1F4A8C] dark:text-[#4A9EFF]"
               : "text-[#344055] dark:text-[#D0D5DD]"
           )}
         />

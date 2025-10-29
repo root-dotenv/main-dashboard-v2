@@ -183,7 +183,7 @@ CreateAllocationDialogProps) {
 
   // Consistent input styling
   const inputBaseClass =
-    "h-10 bg-white dark:bg-[#101828] border border-gray-200 dark:border-[#1D2939] text-gray-800 dark:text-[#D0D5DD] rounded-md shadow-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 transition-all dark:placeholder:text-[#5D636E]";
+    "h-10 bg-white dark:bg-[#101828] border border-gray-200 dark:border-[#1D2939] text-gray-800 dark:text-[#D0D5DD] rounded-md shadow-none focus:ring-2 focus:ring-blue-500 focus:border-[#0785CF] transition-all dark:placeholder:text-[#5D636E]";
   const selectBaseClass = inputBaseClass; // Use same base for selects
 
   return (
@@ -445,7 +445,7 @@ CreateAllocationDialogProps) {
               </SheetClose>
               {/* Adjusted button style, added shadow-none */}
               <Button
-                className="bg-blue-600 hover:bg-blue-700 text-[#FFF] rounded-lg shadow-none"
+                className="bg-[#0785CF] hover:bg-[#0785CF]/90 text-[#FFF] rounded-lg shadow-none"
                 type="submit"
                 disabled={createAllocationMutation.isPending}
               >

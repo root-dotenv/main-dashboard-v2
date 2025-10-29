@@ -95,7 +95,7 @@ const schema = yup.object().shape({
 
 // --- Styling Constants (from all-bookings.tsx) ---
 const focusRingClass =
-  "focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/40 focus:border-blue-500 dark:focus:border-blue-400 focus:outline-none";
+  "focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/40 focus:border-[#B4E6F5]500 dark:focus:border-[#B4E6F5]400 focus:outline-none";
 const inputBaseClass =
   "bg-white dark:bg-[#171F2F] border border-[#DADCE0] dark:border-[#1D2939] dark:text-[#D0D5DD] dark:placeholder:text-[#5D636E] rounded-lg shadow-none h-10 px-3 py-2 text-sm";
 
@@ -219,7 +219,7 @@ export default function EditBookingForm({
           <div className="flex-1 overflow-y-auto px-6 py-6 space-y-8">
             <div className="space-y-6">
               <div className="flex items-center gap-3">
-                <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
+                <div className="w-2 h-6 bg-[#0785CF] rounded-full"></div>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                   Guest Information
                 </h3>
@@ -262,7 +262,7 @@ export default function EditBookingForm({
 
             <div className="space-y-6">
               <div className="flex items-center gap-3">
-                <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
+                <div className="w-2 h-6 bg-[#0785CF] rounded-full"></div>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                   Booking Status
                 </h3>
@@ -316,7 +316,7 @@ export default function EditBookingForm({
 
             <div className="space-y-6">
               <div className="flex items-center gap-3">
-                <div className="w-2 h-6 bg-blue-600 rounded-full"></div>
+                <div className="w-2 h-6 bg-[#0785CF] rounded-full"></div>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                   Notes & Requests
                 </h3>
@@ -424,7 +424,7 @@ export default function EditBookingForm({
               type="submit"
               form="edit-booking-form"
               disabled={isProcessing || !isDirty}
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-[#0785CF] hover:bg-[#0785CF]/90"
             >
               {updateBookingMutation.isPending && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -449,7 +449,7 @@ export default function EditBookingForm({
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-[#0785CF] hover:bg-[#0785CF]/90"
               onClick={handleConfirmSave}
             >
               Save Changes

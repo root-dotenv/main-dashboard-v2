@@ -417,7 +417,7 @@
 //                 <SheetTrigger asChild>
 //                   <Button
 //                     onClick={() => handleOpenForm()}
-//                     className="bg-blue-600 hover:bg-blue-700"
+//                     className="bg-[#0785CF] hover:bg-[#0785CF]/90"
 //                   >
 //                     <Plus className="mr-2 h-4 w-4" /> Add Space
 //                   </Button>
@@ -454,7 +454,7 @@
 //                         colSpan={columns.length}
 //                         className="h-24 text-center"
 //                       >
-//                         <Loader2 className="animate-spin h-8 w-8 text-blue-600 mx-auto" />
+//                         <Loader2 className="animate-spin h-8 w-8 text-[#0785CF] mx-auto" />
 //                       </TableCell>
 //                     </TableRow>
 //                   ) : table.getRowModel().rows?.length ? (
@@ -822,7 +822,7 @@
 //           <Button
 //             type="submit"
 //             disabled={isLoading}
-//             className="bg-blue-600 hover:bg-blue-700"
+//             className="bg-[#0785CF] hover:bg-[#0785CF]/90"
 //           >
 //             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
 //             {eventSpace ? "Save Changes" : "Create Space"}
@@ -1254,7 +1254,7 @@ export default function EventSpaces() {
                 <SheetTrigger asChild>
                   <Button
                     onClick={() => handleOpenForm()}
-                    className="bg-blue-600 hover:bg-blue-700"
+                    className="bg-[#0785CF] hover:bg-[#0785CF]/90"
                   >
                     <Plus className="mr-2 h-4 w-4" /> Add Space
                   </Button>
@@ -1291,7 +1291,7 @@ export default function EventSpaces() {
                         colSpan={columns.length}
                         className="h-24 text-center"
                       >
-                        <Loader2 className="animate-spin h-8 w-8 text-blue-600 mx-auto" />
+                        <Loader2 className="animate-spin h-8 w-8 text-[#0785CF] mx-auto" />
                       </TableCell>
                     </TableRow>
                   ) : table.getRowModel().rows?.length ? (
@@ -1619,7 +1619,7 @@ function EventSpaceFormSheet({
                     className={cn(
                       "rounded-full px-4 py-2 text-sm font-medium transition-colors",
                       (formState.amenities || []).includes(amenity.id)
-                        ? "bg-blue-600 text-white"
+                        ? "bg-[#0785CF] text-white"
                         : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#171F2F] dark:text-gray-300 dark:hover:bg-[#1C2433]"
                     )}
                   >
@@ -1639,7 +1639,7 @@ function EventSpaceFormSheet({
           <Button
             type="submit"
             disabled={isLoading}
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-[#0785CF] hover:bg-[#0785CF]/90"
           >
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {eventSpace ? "Save Changes" : "Create Space"}

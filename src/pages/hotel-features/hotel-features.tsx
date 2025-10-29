@@ -68,7 +68,7 @@ export default function HotelFeaturesLayout() {
                   className={cn(
                     "rounded-full px-4 py-2 text-sm font-semibold shadow-none transition-all duration-200",
                     activeView === item.id
-                      ? "bg-blue-600 text-white hover:bg-blue-700"
+                      ? "bg-[#0785CF] text-white hover:bg-[#0785CF]/90"
                       : "text-[#1D2939] border border-gray-200 bg-white hover:bg-gray-100 dark:text-[#98A2B3] dark:hover:bg-[#1C2433] dark:bg-[#171F2F] dark:border-[#1D2939]"
                   )}
                 >

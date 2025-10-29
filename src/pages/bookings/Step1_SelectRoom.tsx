@@ -122,7 +122,7 @@ export default function Step1_SelectRoom() {
       {/* Search Section */}
       <div className="border-b border-gray-200 dark:border-gray-700 pb-8">
         <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white mb-4 flex items-center gap-3">
-          <Search className="h-6 w-6 text-blue-600" />
+          <Search className="h-6 w-6 text-[#0785CF]" />
           Search for Available Rooms
         </h2>
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-end">
@@ -213,7 +213,7 @@ export default function Step1_SelectRoom() {
           <Button
             onClick={handleSearch}
             disabled={isFetching}
-            className="h-12 bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+            className="h-12 bg-[#0785CF] hover:bg-[#0785CF]/90 text-white font-semibold"
           >
             {isFetching && hasSearched ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -234,8 +234,8 @@ export default function Step1_SelectRoom() {
               className={cn(
                 "cursor-pointer text-base shadow-none",
                 selectedQuickDate === days
-                  ? "bg-blue-600 text-white hover:bg-blue-700"
-                  : "text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 border border-blue-200 dark:border-blue-700/60"
+                  ? "bg-[#0785CF] text-white hover:bg-[#0785CF]/90"
+                  : "text-[#0785CF] dark:text-[#0785CF] bg-[#D6EEF9] dark:bg-[#B4E6F5]/30 hover:bg-[#D6EEF9] dark:hover:bg-[#B4E6F5]/50 border border-[#B4E6F5]200 dark:border-[#B4E6F5]700/60"
               )}
             >
               {days} {days === 7 ? "Week" : "Days"}
@@ -269,7 +269,7 @@ export default function Step1_SelectRoom() {
             <Card className="px-4 py-4">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg px-0 py-0">
-                  <Filter className="h-5 w-5 text-blue-600" />
+                  <Filter className="h-5 w-5 text-[#0785CF]" />
                   Filters
                 </CardTitle>
               </CardHeader>
@@ -285,8 +285,8 @@ export default function Step1_SelectRoom() {
                         className={cn(
                           "cursor-pointer text-[13px] shadow-none",
                           selectedRoomTypeId === null
-                            ? "bg-blue-600 text-white hover:bg-blue-700"
-                            : "text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 border border-blue-200 dark:border-blue-700/60"
+                            ? "bg-[#0785CF] text-white hover:bg-[#0785CF]/90"
+                            : "text-[#0785CF] dark:text-[#0785CF] bg-[#D6EEF9] dark:bg-[#B4E6F5]/30 hover:bg-[#D6EEF9] dark:hover:bg-[#B4E6F5]/50 border border-[#B4E6F5]200 dark:border-[#B4E6F5]700/60"
                         )}
                       >
                         All Types
@@ -298,8 +298,8 @@ export default function Step1_SelectRoom() {
                           className={cn(
                             "cursor-pointer text-[13px] shadow-none",
                             selectedRoomTypeId === type.id
-                              ? "bg-blue-600 text-white hover:bg-blue-700"
-                              : "text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 border border-blue-200 dark:border-blue-700/60"
+                              ? "bg-[#0785CF] text-white hover:bg-[#0785CF]/90"
+                              : "text-[#0785CF] dark:text-[#0785CF] bg-[#D6EEF9] dark:bg-[#B4E6F5]/30 hover:bg-[#D6EEF9] dark:hover:bg-[#B4E6F5]/50 border border-[#B4E6F5]200 dark:border-[#B4E6F5]700/60"
                           )}
                         >
                           {type.name}
@@ -331,7 +331,7 @@ export default function Step1_SelectRoom() {
               <Card>
                 <CardContent className="pt-6">
                   <div className="flex justify-center items-center py-16">
-                    <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
+                    <Loader2 className="h-10 w-10 animate-spin text-[#0785CF]" />
                   </div>
                 </CardContent>
               </Card>
@@ -347,7 +347,7 @@ export default function Step1_SelectRoom() {
                     </p>
                   </div>
                   {selectedRoomTypeId && (
-                    <div className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm font-medium">
+                    <div className="bg-[#D6EEF9] dark:bg-[#B4E6F5]/30 text-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm font-medium">
                       Filtered
                     </div>
                   )}
@@ -400,8 +400,8 @@ export default function Step1_SelectRoom() {
         <Card>
           <CardContent className="pt-6">
             <div className="text-center py-16">
-              <div className="w-20 h-20 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Search className="h-10 w-10 text-blue-600" />
+              <div className="w-20 h-20 bg-[#D6EEF9] dark:bg-[#B4E6F5]/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Search className="h-10 w-10 text-[#0785CF]" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
                 Start Your Booking Journey

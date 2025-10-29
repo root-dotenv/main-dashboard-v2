@@ -51,7 +51,7 @@ export default function RoomTypesTabController() {
                 "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-all duration-200",
                 activeTab === tab.id
                   ? // Applied shadow-none to active tab
-                    "bg-blue-600 text-white shadow-none"
+                    "bg-[#0785CF] text-white shadow-none"
                   : "bg-transparent text-gray-600 dark:text-[#98A2B3] hover:text-gray-800 dark:hover:text-white"
               )}
             >

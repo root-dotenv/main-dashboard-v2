@@ -94,7 +94,7 @@ export function FeatureSelectionSheet({
               className={cn(
                 "flex items-center gap-4 p-3 rounded-lg cursor-pointer transition-colors",
                 "hover:bg-gray-100 dark:hover:bg-[#1C2433]",
-                selectedIds.has(item.id) && "bg-blue-50 dark:bg-[#162142]"
+                selectedIds.has(item.id) && "bg-[#D6EEF9] dark:bg-[#162142]"
               )}
             >
               <Checkbox
@@ -103,7 +103,7 @@ export function FeatureSelectionSheet({
                 onCheckedChange={(checked) =>
                   onSelectionChange(item.id, !!checked)
                 }
-                className="border-gray-400 dark:border-gray-500 rounded data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
+                className="border-gray-400 dark:border-gray-500 rounded data-[state=checked]:bg-[#0785CF] data-[state=checked]:border-[#0785CF]"
               />
               <span className="font-medium text-gray-800 dark:text-[#D0D5DD]">
                 {item.name}
@@ -137,7 +137,7 @@ export function FeatureSelectionSheet({
           <Button
             onClick={handleSaveClick}
             disabled={isSaving || selectedIds.size === 0}
-            className="bg-blue-600 hover:bg-blue-700 transition-all disabled:opacity-50"
+            className="bg-[#0785CF] hover:bg-[#0785CF]/90 transition-all disabled:opacity-50"
           >
             {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Update Hotel

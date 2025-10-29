@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useHotel } from "@/providers/hotel-provider";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import hotelClient from "@/api/hotel-client";
 import bookingClient from "@/api/booking-client";
@@ -26,12 +26,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -51,12 +46,10 @@ import {
   CalendarX2,
   AreaChart as AreaChartIcon,
   ArrowRight,
-  Menu,
   Eye,
   TrendingUp,
   Users,
   Bed,
-  Star,
   ArrowUpRight,
   Building2,
   ChevronRight,
@@ -67,12 +60,6 @@ import {
 import type {
   Booking,
   PaginatedResponse,
-  Amenity,
-  Facility,
-  Service,
-  Department,
-  MealType,
-  Translation,
   Allocation,
   RoomType,
 } from "../hotel/hotel-types";
@@ -81,13 +68,13 @@ import type {
 
 const getRoomTypeColor = (roomType: string) => {
   const colors = [
-    "#8dd3c7",
-    "#fdb462",
-    "#b3de69",
-    "#fccde5",
-    "#d9d9d9",
-    "#bc80bd",
-    "#80b1d3",
+    "#0785CF", // Primary SafariPro blue
+    "#B4E6F5", // Light SafariPro blue
+    "#D6EEF9", // Very light SafariPro blue
+    "#0785CF", // Repeat primary for more segments
+    "#B4E6F5", // Repeat light for more segments
+    "#D6EEF9", // Repeat very light for more segments
+    "#0785CF", // Repeat primary for more segments
   ];
   const index =
     roomType.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) %
@@ -109,7 +96,7 @@ const getBookingStatusClass = (status: string): string => {
     case "confirmed":
       return "bg-green-100 text-green-800 border-green-200";
     case "checked in":
-      return "bg-blue-100 text-blue-800 border-blue-200";
+      return "bg-[#D6EEF9] text-blue-800 border-[#B4E6F5]200";
     case "processing":
       return "bg-amber-100 text-amber-800 border-amber-200";
     case "cancelled":
@@ -155,18 +142,17 @@ const StatCard = ({
 }) => {
   const variants = {
     default: "bg-white border-gray-200",
-    primary: "bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200",
-    success:
-      "bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200",
-    warning: "bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200",
-    info: "bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200",
+    primary: "bg-gradient-to-br from-[#D6EEF9] to-[#B4E6F5] border-[#B4E6F5]",
+    success: "bg-gradient-to-br from-[#D6EEF9] to-[#B4E6F5] border-[#B4E6F5]",
+    warning: "bg-gradient-to-br from-[#D6EEF9] to-[#B4E6F5] border-[#B4E6F5]",
+    info: "bg-gradient-to-br from-[#D6EEF9] to-[#B4E6F5] border-[#B4E6F5]",
   };
   const iconVariants = {
     default: "text-gray-600",
-    primary: "text-blue-600",
-    success: "text-emerald-600",
-    warning: "text-amber-600",
-    info: "text-purple-600",
+    primary: "text-[#0785CF]",
+    success: "text-[#0785CF]",
+    warning: "text-[#0785CF]",
+    info: "text-[#0785CF]",
   };
 
   const cardContent = (
@@ -183,13 +169,13 @@ const StatCard = ({
           </CardTitle>
           {trend && (
             <div className="flex items-center gap-1 text-xs">
-              <ArrowUpRight className="h-3 w-3 text-emerald-500" />
-              <span className="text-emerald-600 font-medium">{trend}</span>
+              <ArrowUpRight className="h-3 w-3 text-[#0785CF]" />
+              <span className="text-[#0785CF] font-medium">{trend}</span>
             </div>
           )}
         </div>
         <div
-          className={cn("p-2 rounded-lg bg-white/50", iconVariants[variant])}
+          className={cn("p-2 rounded-lg bg-[#D6EEF9] dark:bg-[#B4E6F5]/30", iconVariants[variant])}
         >
           <Icon className="h-5 w-5" />
         </div>
@@ -231,7 +217,7 @@ const RevenueChart = ({
   data,
   isLoading,
 }: {
-  data: any[];
+  data: { date: string; revenue: number }[];
   isLoading: boolean;
 }) => {
   if (isLoading) {
@@ -254,6 +240,32 @@ const RevenueChart = ({
       </Card>
     );
   }
+
+  // Handle empty data case
+  if (!data || data.length === 0) {
+    return (
+      <Card className="col-span-1 lg:col-span-2">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-[#0785CF]" /> Revenue Overview
+              </CardTitle>
+              <CardDescription>
+                Daily revenue and booking performance
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-center h-[320px] text-gray-500">
+            No revenue data available
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   const totalRevenue = data.reduce((sum, day) => sum + day.revenue, 0);
   const avgDaily = data.length > 0 ? totalRevenue / data.length : 0;
 
@@ -263,7 +275,7 @@ const RevenueChart = ({
         <div className="flex items-center justify-between">
           <div>
             <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-blue-600" /> Revenue Overview
+              <TrendingUp className="h-5 w-5 text-[#0785CF]" /> Revenue Overview
             </CardTitle>
             <CardDescription>
               Daily revenue and booking performance
@@ -271,7 +283,7 @@ const RevenueChart = ({
           </div>
           <Badge
             variant="outline"
-            className="bg-blue-50 text-blue-700 border-blue-200"
+            className="bg-[#D6EEF9] text-[#0785CF] border-[#B4E6F5]200"
           >
             Avg: TZS {formatCurrency(avgDaily)}/day
           </Badge>
@@ -285,8 +297,9 @@ const RevenueChart = ({
           >
             <defs>
               <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
+                <stop offset="0%" stopColor="#0785CF" stopOpacity={0.5} />
+                <stop offset="50%" stopColor="#0785CF" stopOpacity={0.25} />
+                <stop offset="100%" stopColor="#0785CF" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -308,9 +321,10 @@ const RevenueChart = ({
             <Area
               type="monotone"
               dataKey="revenue"
-              stroke="#3B82F6"
+              stroke="#0785CF"
               strokeWidth={3}
               fill="url(#revenueGradient)"
+              dot={false}
             />
           </AreaChart>
         </ResponsiveContainer>
@@ -323,14 +337,16 @@ const RoomDistributionChart = ({
   data,
   isLoading,
 }: {
-  data: any[];
+  data: { name: string; total: number }[];
   isLoading: boolean;
 }) => {
   if (isLoading) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Room Distribution</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <AreaChartIcon className="h-5 w-5 text-[#0785CF]" /> Room Distribution
+          </CardTitle>
           <CardDescription>Distribution of room types.</CardDescription>
         </CardHeader>
         <CardContent>
@@ -342,7 +358,9 @@ const RoomDistributionChart = ({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Room Distribution</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <AreaChartIcon className="h-5 w-5 text-[#0785CF]" /> Room Distribution
+        </CardTitle>
         <CardDescription>
           Distribution of room types in your hotel.
         </CardDescription>
@@ -358,7 +376,13 @@ const RoomDistributionChart = ({
               cy="50%"
               outerRadius={100}
               fill="#8884d8"
-              label
+              label={{
+                fill: '#000000',
+                fontSize: 14,
+                fontWeight: 'bold',
+                fontFamily: 'Poppins, sans-serif'
+              }}
+              labelLine={false}
             >
               {data.map((entry, index) => (
                 <Cell
@@ -368,7 +392,14 @@ const RoomDistributionChart = ({
               ))}
             </Pie>
             <Tooltip />
-            <Legend />
+            <Legend 
+              wrapperStyle={{ 
+                color: "#000000", 
+                fontSize: "14px",
+                fontWeight: "bold",
+                fontFamily: "Poppins, sans-serif"
+              }} 
+            />
           </PieChart>
         </ResponsiveContainer>
       </CardContent>
@@ -386,7 +417,7 @@ const RoomTypesTable = ({
   <Card>
     <CardHeader>
       <CardTitle className="flex items-center gap-2">
-        <Bed className="h-5 w-5 text-indigo-600" /> Room Types Overview
+        <Bed className="h-5 w-5 text-[#0785CF]" /> Room Types Overview
       </CardTitle>
       <CardDescription>
         Detailed breakdown of room availability and occupancy
@@ -488,7 +519,7 @@ const RecentCheckIns = ({
           <CardDescription>Latest guests who have checked in</CardDescription>
         </div>
         <Button
-          className="bg-none text-blue-600 border-none px-0"
+          className="bg-none text-[#0785CF] border-none px-0"
           variant="outline"
           size="sm"
           asChild
@@ -618,7 +649,7 @@ const RecentAllocations = ({
       <div className="flex justify-end mt-4">
         <Button
           variant="outline"
-          className="bg-none text-blue-600 border-none"
+          className="bg-none text-[#0785CF] border-none"
           asChild
         >
           <Link to="/rooms/allocate-rooms">
@@ -718,7 +749,7 @@ const RecentBookings = ({
       <div className="flex justify-end mt-4">
         <Button
           variant="outline"
-          className="bg-none text-blue-600 border-none px-0"
+          className="bg-none text-[#0785CF] border-none px-0"
           asChild
         >
           <Link to="/bookings/all-bookings">
@@ -808,78 +839,80 @@ export default function MainOverview() {
   });
 
   // --- Feature Data Queries ---
-  const queries = (hotel?.amenities || []).map((id) => ({
-    queryKey: ["amenity", id],
-    queryFn: () =>
-      hotelClient.get(`/amenities/${id}/`).then((res) => res.data as Amenity),
-    enabled: !!hotel,
-  }));
-  const amenityQueries = useQueries({ queries });
-  const facilityQueries = useQueries({
-    queries: (hotel?.facilities || []).map((id) => ({
-      queryKey: ["facility", id],
-      queryFn: () =>
-        hotelClient
-          .get(`/facilities/${id}/`)
-          .then((res) => res.data as Facility),
-      enabled: !!hotel,
-    })),
-  });
-  const serviceQueries = useQueries({
-    queries: (hotel?.services || []).map((id) => ({
-      queryKey: ["service", id],
-      queryFn: () =>
-        hotelClient.get(`/services/${id}/`).then((res) => res.data as Service),
-      enabled: !!hotel,
-    })),
-  });
-  const departmentQueries = useQueries({
-    queries: (hotel?.department_ids || []).map((id) => ({
-      queryKey: ["department", id],
-      queryFn: () =>
-        hotelClient
-          .get(`/departments/${id}/`)
-          .then((res) => res.data as Department),
-      enabled: !!hotel,
-    })),
-  });
-  const mealTypeQueries = useQueries({
-    queries: (hotel?.meal_types || []).map((id) => ({
-      queryKey: ["mealType", id],
-      queryFn: () =>
-        hotelClient
-          .get(`/meal-types/${id}/`)
-          .then((res) => res.data as MealType),
-      enabled: !!hotel,
-    })),
-  });
-  const translationQueries = useQueries({
-    queries: (hotel?.translations || []).map((id) => ({
-      queryKey: ["translation", id],
-      queryFn: () =>
-        hotelClient
-          .get(`/translations/${id}/`)
-          .then((res) => res.data as Translation),
-      enabled: !!hotel,
-    })),
-  });
+  // Keeping queries for future use but commenting out to avoid unused variable warnings
+  // const queries = (hotel?.amenities || []).map((id) => ({
+  //   queryKey: ["amenity", id],
+  //   queryFn: () =>
+  //     hotelClient.get(`/amenities/${id}/`).then((res) => res.data as Amenity),
+  //   enabled: !!hotel,
+  // }));
+  // const amenityQueries = useQueries({ queries });
+  // const facilityQueries = useQueries({
+  //   queries: (hotel?.facilities || []).map((id) => ({
+  //     queryKey: ["facility", id],
+  //     queryFn: () =>
+  //       hotelClient
+  //         .get(`/facilities/${id}/`)
+  //         .then((res) => res.data as Facility),
+  //     enabled: !!hotel,
+  //   })),
+  // });
+  // const serviceQueries = useQueries({
+  //   queries: (hotel?.services || []).map((id) => ({
+  //     queryKey: ["service", id],
+  //     queryFn: () =>
+  //       hotelClient.get(`/services/${id}/`).then((res) => res.data as Service),
+  //     enabled: !!hotel,
+  //   })),
+  // });
+  // const departmentQueries = useQueries({
+  //   queries: (hotel?.department_ids || []).map((id) => ({
+  //     queryKey: ["department", id],
+  //     queryFn: () =>
+  //       hotelClient
+  //         .get(`/departments/${id}/`)
+  //         .then((res) => res.data as Department),
+  //     enabled: !!hotel,
+  //   })),
+  // });
+  // const mealTypeQueries = useQueries({
+  //   queries: (hotel?.meal_types || []).map((id) => ({
+  //     queryKey: ["mealType", id],
+  //     queryFn: () =>
+  //       hotelClient
+  //         .get(`/meal-types/${id}/`)
+  //         .then((res) => res.data as MealType),
+  //     enabled: !!hotel,
+  //   })),
+  // });
+  // const translationQueries = useQueries({
+  //   queries: (hotel?.translations || []).map((id) => ({
+  //     queryKey: ["translation", id],
+  //     queryFn: () =>
+  //       hotelClient
+  //         .get(`/translations/${id}/`)
+  //         .then((res) => res.data as Translation),
+  //     enabled: !!hotel,
+  //   })),
+  // });
 
-  const amenities = amenityQueries
-    .filter((q) => q.isSuccess)
-    .map((q) => q.data);
-  const facilities = facilityQueries
-    .filter((q) => q.isSuccess)
-    .map((q) => q.data);
-  const services = serviceQueries.filter((q) => q.isSuccess).map((q) => q.data);
-  const departments = departmentQueries
-    .filter((q) => q.isSuccess)
-    .map((q) => q.data);
-  const mealTypes = mealTypeQueries
-    .filter((q) => q.isSuccess)
-    .map((q) => q.data);
-  const translations = translationQueries
-    .filter((q) => q.isSuccess)
-    .map((q) => q.data);
+  // Feature data queries - keeping for future use
+  // const amenities = amenityQueries
+  //   .filter((q) => q.isSuccess)
+  //   .map((q) => q.data);
+  // const facilities = facilityQueries
+  //   .filter((q) => q.isSuccess)
+  //   .map((q) => q.data);
+  // const services = serviceQueries.filter((q) => q.isSuccess).map((q) => q.data);
+  // const departments = departmentQueries
+  //   .filter((q) => q.isSuccess)
+  //   .map((q) => q.data);
+  // const mealTypes = mealTypeQueries
+  //   .filter((q) => q.isSuccess)
+  //   .map((q) => q.data);
+  // const translations = translationQueries
+  //   .filter((q) => q.isSuccess)
+  //   .map((q) => q.data);
 
   const allocationsWithRoomNames = (allocationData?.results || []).map(
     (alloc) => ({
@@ -1003,13 +1036,13 @@ export default function MainOverview() {
                     title: "New Booking",
                     icon: CalendarCheck2,
                     path: "/bookings/new-booking",
-                    color: "text-sky-600",
+                    color: "text-[#0785CF]",
                   },
                   {
                     title: "Add New Room",
                     icon: Bed,
                     path: "/rooms/new-room",
-                    color: "text-indigo-600",
+                    color: "text-[#0785CF]",
                   },
                   {
                     title: "Manage Check-ins",
@@ -1027,7 +1060,7 @@ export default function MainOverview() {
                     title: "Features & Services",
                     icon: Sparkles,
                     path: "/hotel/hotel-features",
-                    color: "text-blue-600",
+                    color: "text-[#0785CF]",
                   },
                   {
                     title: "Property Details",

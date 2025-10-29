@@ -142,7 +142,7 @@ const CategoryForm = ({
           <Button
             type="submit"
             disabled={isPending}
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-[#0785CF] hover:bg-[#0785CF]/90"
           >
             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {category ? "Save Changes" : "Create Category"}
@@ -240,7 +240,7 @@ export default function HotelActivityCategories() {
                 setEditingCategory(null);
                 setIsFormOpen(true);
               }}
-              className="h-10 flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-lg"
+              className="h-10 flex items-center gap-2 bg-[#0785CF] hover:bg-[#0785CF]/90 text-white px-4 rounded-lg"
             >
               <Plus className="h-4 w-4" />
               <span>New Category</span>
@@ -254,7 +254,7 @@ export default function HotelActivityCategories() {
               {filteredCategories.map((category) => (
                 <Card
                   key={category.id}
-                  className="flex flex-col justify-between bg-white dark:bg-[#171F2F] border border-[#DADCE0] dark:border-[#1D2939] shadow-none rounded-xl transition-colors hover:border-blue-500 dark:hover:border-blue-700"
+                  className="flex flex-col justify-between bg-white dark:bg-[#171F2F] border border-[#DADCE0] dark:border-[#1D2939] shadow-none rounded-xl transition-colors hover:border-[#B4E6F5]500 dark:hover:border-[#B4E6F5]700"
                 >
                   <CardHeader>
                     <CardTitle className="text-lg font-semibold text-gray-800 dark:text-[#D0D5DD]">

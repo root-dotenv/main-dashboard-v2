@@ -191,7 +191,7 @@ export function AddEditImageModal({
               Cancel
             </Button>
             <Button
-              className="bg-[#0081FB] transition-all cursor-pointer hover:bg-blue-600"
+              className="bg-[#0081FB] transition-all cursor-pointer hover:bg-[#0785CF]"
               type="submit"
               disabled={isPending}
             >

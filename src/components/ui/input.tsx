@@ -15,7 +15,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         className={cn(
           // --- STYLES FOR THE WRAPPER ---
           "flex h-11 w-full items-center rounded-md border-[1.125px] border-input shadow-none transition-colors",
-          "focus-within:border-blue-600 focus-within:ring-[1px] focus-within:ring-blue-600",
+          "focus-within:border-[#0785CF] focus-within:ring-[1px] focus-within:ring-blue-600",
           "aria-[invalid=true]:border-destructive",
           "has-[input:disabled]:cursor-not-allowed has-[input:disabled]:opacity-50",
           className

@@ -56,7 +56,7 @@ export function RoomTypeCard({ room, variant }: RoomTypeCardProps) {
               {/* Applied shadow-none */}
               <Badge
                 variant="secondary"
-                className="text-xs bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-0 shadow-none"
+                className="text-xs bg-[#D6EEF9] dark:bg-[#B4E6F5]/30 text-[#0785CF] dark:text-[#0785CF] border-0 shadow-none"
               >
                 {room.bed_type} Bed
               </Badge>
@@ -153,7 +153,7 @@ export function RoomTypeCard({ room, variant }: RoomTypeCardProps) {
                     className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400"
                   >
                     {/* Consistent Star icon */}
-                    <Star className="h-3 w-3 text-blue-600 dark:text-blue-400 fill-current" />
+                    <Star className="h-3 w-3 text-[#0785CF] dark:text-[#0785CF] fill-current" />
                     <span>{amenity.name}</span>
                   </div>
                 )
@@ -200,7 +200,7 @@ export function RoomTypeCard({ room, variant }: RoomTypeCardProps) {
             <Button
               onClick={() => navigate("/bookings/new-booking")}
               variant="default" // Changed variant for primary action
-              className="flex-1 bg-blue-600 hover:bg-blue-700 text-[#FFF] rounded-lg font-medium shadow-none transition-all duration-300 cursor-pointer"
+              className="flex-1 bg-[#0785CF] hover:bg-[#0785CF]/90 text-[#FFF] rounded-lg font-medium shadow-none transition-all duration-300 cursor-pointer"
             >
               <HiOutlineTicket className="h-4 w-4 mr-2" />
               Book Now
@@ -212,7 +212,7 @@ export function RoomTypeCard({ room, variant }: RoomTypeCardProps) {
                 navigate(`/rooms/hotel-rooms?roomTypeId=${room.id}`)
               }
               variant={"outline"}
-              className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 dark:border-[#1D2939] border-gray-200 px-4 font-medium shadow-none transition-all duration-300 cursor-pointer hover:bg-blue-50 dark:hover:bg-[#1C2433] rounded-lg"
+              className="text-[#0785CF] dark:text-[#0785CF] hover:text-[#0785CF] dark:hover:text-[#0785CF] dark:border-[#1D2939] border-gray-200 px-4 font-medium shadow-none transition-all duration-300 cursor-pointer hover:bg-[#D6EEF9] dark:hover:bg-[#1C2433] rounded-lg"
             >
               <Eye className="h-4 w-4 mr-1" />
               View Rooms

@@ -129,7 +129,7 @@ export default function SafariProRoomTypes() {
 
   // Consistent styling classes
   const nativeSelectClass =
-    "w-full sm:w-40 h-10 px-3 py-2 bg-white dark:bg-[#101828] border border-gray-200 dark:border-[#1D2939] text-gray-800 dark:text-[#D0D5DD] rounded-md shadow-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600";
+    "w-full sm:w-40 h-10 px-3 py-2 bg-white dark:bg-[#101828] border border-gray-200 dark:border-[#1D2939] text-gray-800 dark:text-[#D0D5DD] rounded-md shadow-none focus:ring-2 focus:ring-blue-500 focus:border-[#0785CF]";
 
   return (
     <div className="space-y-6">
@@ -157,7 +157,7 @@ export default function SafariProRoomTypes() {
               placeholder="Search name, bed type..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-10 w-full h-10 bg-white dark:bg-[#101828] border-gray-200 dark:border-[#1D2939] rounded-md shadow-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600 dark:text-[#D0D5DD] dark:placeholder:text-[#5D636E]"
+              className="pl-10 pr-10 w-full h-10 bg-white dark:bg-[#101828] border-gray-200 dark:border-[#1D2939] rounded-md shadow-none focus:ring-2 focus:ring-blue-500 focus:border-[#0785CF] dark:text-[#D0D5DD] dark:placeholder:text-[#5D636E]"
             />
             {searchQuery && (
               <button
@@ -205,7 +205,7 @@ export default function SafariProRoomTypes() {
 
       {isLoading ? (
         <div className="flex justify-center items-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-[#0785CF]" />
         </div>
       ) : (
         // Applied shadow-none to grid container

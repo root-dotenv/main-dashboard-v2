@@ -198,7 +198,7 @@ export default function GenericFeaturePage({
             <SheetTrigger asChild>
               <Button
                 onClick={handleOpenSheet}
-                className="h-10 flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-[#FFF] hover:text-[#FFF] px-4 rounded-lg transition-colors"
+                className="h-10 flex items-center gap-2 bg-[#0785CF] hover:bg-[#0785CF]/90 text-[#FFF] hover:text-[#FFF] px-4 rounded-lg transition-colors"
               >
                 <Plus className="h-4 w-4" />
                 <span>Add or Remove</span>
@@ -213,7 +213,7 @@ export default function GenericFeaturePage({
               {filteredFeatures.map((feature) => (
                 <Card
                   key={feature.id}
-                  className="flex flex-col justify-between bg-white dark:bg-[#171F2F] border border-[#DADCE0] dark:border-[#1D2939] shadow-none rounded-xl transition-colors hover:border-blue-500 dark:hover:border-blue-700"
+                  className="flex flex-col justify-between bg-white dark:bg-[#171F2F] border border-[#DADCE0] dark:border-[#1D2939] shadow-none rounded-xl transition-colors hover:border-[#B4E6F5]500 dark:hover:border-[#B4E6F5]700"
                 >
                   <CardHeader>
                     <div className="flex items-start justify-between">

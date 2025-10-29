@@ -23,7 +23,7 @@ export default function ErrorPage({ error, onRetry }: ErrorPageProps) {
       </p>
       <Button
         onClick={onRetry}
-        className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-md transition-colors"
+        className="bg-[#0785CF] hover:bg-[#0785CF]/90 text-white font-medium px-6 py-2 rounded-md transition-colors"
       >
         Retry
       </Button>

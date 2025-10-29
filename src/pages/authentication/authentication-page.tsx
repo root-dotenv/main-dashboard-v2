@@ -17,7 +17,8 @@ import {
   IoShieldCheckmarkOutline,
   IoSyncCircleOutline,
 } from "react-icons/io5";
-import company_logo from "../../../public/images/safaripro-logo-blue.png";
+// import company_logo from "../../../public/images/safaripro-logo-blue.png";
+const company_logo = "/images/safaripro-logo-blue.png";
 import "@/index.css";
 
 // UI Components
@@ -39,7 +40,13 @@ const loginSchema = z.object({
           .email("Invalid email address format");
         const result = emailValidation.safeParse(val);
         if (!result.success) {
-          result.error.issues.forEach((issue) => ctx.addIssue(issue));
+          result.error.issues.forEach((issue) => {
+            ctx.addIssue({
+              code: "custom",
+              message: issue.message,
+              path: issue.path,
+            });
+          });
         }
       }
     }),
@@ -84,7 +91,7 @@ const ApiErrorDisplay = ({ message }: { message: string | null }) =>
 
 // --- Reusable Form Field Component ---
 interface AuthFormFieldProps {
-  name: keyof LoginFormData;
+  name: string;
   label: string;
   icon?: React.ReactNode;
   children: React.ReactNode;
@@ -148,12 +155,12 @@ const LoginForm = React.memo(({ setView }: LoginFormProps) => {
       // The identifier is now lowercased inside the store action
       await login(data);
       // The useEffect above will handle the navigation
-    } catch (error: any) {
+    } catch (error: unknown) {
       // The store action re-throws the error, so we can catch it here
-      setApiError(
-        error?.response?.data?.message ||
-          "An unexpected error occurred. Please try again."
-      );
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as { response?: { data?: { message?: string } } })?.response?.data?.message || "An unexpected error occurred. Please try again."
+        : "An unexpected error occurred. Please try again.";
+      setApiError(errorMessage);
     }
   };
 
@@ -219,7 +226,7 @@ const LoginForm = React.memo(({ setView }: LoginFormProps) => {
         <button
           type="button"
           onClick={() => setView("forgot_password")}
-          className="text-[13px] font-semibold text-blue-600 hover:underline cursor-pointer inter"
+          className="text-[13px] font-semibold text-[#0785CF] hover:underline cursor-pointer inter"
         >
           Forgot Password?
         </button>
@@ -264,10 +271,11 @@ const ForgotPasswordForm = React.memo(
           setIdentifier(data.identifier);
           setView("reset_password_otp");
         }
-      } catch (error: any) {
-        setApiError(
-          error?.response?.data?.message || "Failed to send reset code."
-        );
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error && 'response' in error 
+          ? (error as { response?: { data?: { message?: string } } })?.response?.data?.message || "Failed to send reset code."
+          : "Failed to send reset code.";
+        setApiError(errorMessage);
       }
     };
 
@@ -306,7 +314,7 @@ const ForgotPasswordForm = React.memo(
           <button
             type="button"
             onClick={() => setView("login")}
-            className="font-semibold text-blue-600 hover:underline cursor-pointer inter"
+            className="font-semibold text-[#0785CF] hover:underline cursor-pointer inter"
           >
             Sign in
           </button>
@@ -354,8 +362,11 @@ const OtpForm = React.memo(({ identifier, setView }: OtpFormProps) => {
       if (success) {
         setView("reset_password_form");
       }
-    } catch (error: any) {
-      setApiError(error?.response?.data?.message || "Invalid OTP code.");
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as { response?: { data?: { message?: string } } })?.response?.data?.message || "Invalid OTP code."
+        : "Invalid OTP code.";
+      setApiError(errorMessage);
     }
   };
 
@@ -364,8 +375,11 @@ const OtpForm = React.memo(({ identifier, setView }: OtpFormProps) => {
     try {
       await resendOtp(identifier);
       setResendCooldown(60);
-    } catch (error: any) {
-      setApiError(error?.response?.data?.message || "Failed to resend OTP.");
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error && 'response' in error 
+        ? (error as { response?: { data?: { message?: string } } })?.response?.data?.message || "Failed to resend OTP."
+        : "Failed to resend OTP.";
+      setApiError(errorMessage);
     }
   };
 
@@ -401,7 +415,7 @@ const OtpForm = React.memo(({ identifier, setView }: OtpFormProps) => {
           type="button"
           onClick={handleResend}
           disabled={resendCooldown > 0 || isLoading}
-          className="text-[13px] font-semibold text-blue-600 hover:underline disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer inter"
+          className="text-[13px] font-semibold text-[#0785CF] hover:underline disabled:text-gray-400 disabled:cursor-not-allowed cursor-pointer inter"
         >
           {resendCooldown > 0
             ? `Resend code in ${resendCooldown}s`
@@ -446,10 +460,11 @@ const ResetPasswordForm = React.memo(
             "Password has been reset successfully. Please log in using your new updated password"
           );
         }
-      } catch (error: any) {
-        setApiError(
-          error?.response?.data?.message || "Failed to reset password."
-        );
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error && 'response' in error 
+          ? (error as { response?: { data?: { message?: string } } })?.response?.data?.message || "Failed to reset password."
+          : "Failed to reset password.";
+        setApiError(errorMessage);
       }
     };
 
@@ -682,7 +697,7 @@ export default function AuthenticationPage() {
                   },
                 ].map((feature) => (
                   <li key={feature.title} className="flex items-start gap-4">
-                    <div className="bg-blue-500/20 p-2 rounded-lg mt-1">
+                    <div className="bg-[#0785CF]/20 p-2 rounded-lg mt-1">
                       {feature.icon}
                     </div>
                     <div>
@@ -702,14 +717,14 @@ export default function AuthenticationPage() {
         <p className="text-center text-[0.875rem] text-[#4A5565] inter">
           By continuing, you agree to our{" "}
           <a
-            className="text-blue-600 hover:underline inter font-medium"
+            className="text-[#0785CF] hover:underline inter font-medium"
             href="https://web.safaripro.net/terms"
           >
             Terms of Service
           </a>{" "}
           and{" "}
           <a
-            className="text-blue-600 hover:underline inter font-medium"
+            className="text-[#0785CF] hover:underline inter font-medium"
             href="https://web.safaripro.net/privacy-policy"
           >
             Privacy Policy

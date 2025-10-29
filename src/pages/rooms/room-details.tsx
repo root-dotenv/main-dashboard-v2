@@ -377,7 +377,7 @@ export default function RoomDetailsPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-[#FFF] dark:bg-[#101828]">
         <div className="relative">
-          <Loader className="h-12 w-12 animate-spin text-blue-600" />
+          <Loader className="h-12 w-12 animate-spin text-[#0785CF]" />
           <div className="absolute inset-0 h-12 w-12 animate-ping rounded-full bg-blue-400 opacity-20"></div>
         </div>
       </div>
@@ -442,7 +442,7 @@ export default function RoomDetailsPage() {
             <div className="flex items-center gap-2 py-3 text-sm text-gray-500 dark:text-[#98A2B3]">
               <button
                 onClick={() => window.history.back()}
-                className="hover:text-blue-600 transition-colors flex items-center gap-1"
+                className="hover:text-[#0785CF] transition-colors flex items-center gap-1"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Back to Rooms
@@ -612,7 +612,7 @@ export default function RoomDetailsPage() {
                     className={cn(
                       "relative rounded-lg overflow-hidden border-2 transition-all duration-200 hover:scale-105",
                       activeImageIndex === index
-                        ? "border-blue-500 shadow-md"
+                        ? "border-[#B4E6F5]500 shadow-md"
                         : "border-transparent dark:border-gray-800"
                     )}
                   >
@@ -626,7 +626,7 @@ export default function RoomDetailsPage() {
                       className={cn(
                         "absolute inset-0 transition-opacity duration-200",
                         activeImageIndex === index
-                          ? "bg-blue-500/20"
+                          ? "bg-[#0785CF]/20"
                           : "bg-black/0 hover:bg-black/10"
                       )}
                     />
@@ -640,7 +640,7 @@ export default function RoomDetailsPage() {
                 <div className="bg-[#FFF] dark:bg-[#171F2F] w-full flex items-center border border-[#E4E7EC] dark:border-[#1D2939] rounded-l-md px-4 py-6 shadow-xs">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-[#EFF6FF] dark:bg-[#162142] rounded-full">
-                      <BsCurrencyDollar className="h-5 w-5 text-blue-600 dark:text-[#7592FF]" />
+                      <BsCurrencyDollar className="h-5 w-5 text-[#0785CF] dark:text-[#7592FF]" />
                     </div>
                     <div>
                       <p className="text-sm text-gray-500 dark:text-[#98A2B3]">
@@ -655,7 +655,7 @@ export default function RoomDetailsPage() {
                 <div className="bg-[#FFF] dark:bg-[#171F2F] w-full flex items-center border border-[#E4E7EC] dark:border-[#1D2939] rounded-none px-4 py-6 shadow-xs">
                   <div className="flex items-center gap-5">
                     <div className="p-2 bg-[#EFF6FF] dark:bg-[#162142] rounded-full">
-                      <Users className="h-5 w-5 text-blue-600 dark:text-[#7592FF]" />
+                      <Users className="h-5 w-5 text-[#0785CF] dark:text-[#7592FF]" />
                     </div>
                     <div>
                       <p className="text-sm text-gray-500 dark:text-[#98A2B3]">
@@ -670,7 +670,7 @@ export default function RoomDetailsPage() {
                 <div className="bg-[#FFF] dark:bg-[#171F2F] w-full flex items-center border border-[#E4E7EC] dark:border-[#1D2939] rounded-none px-4 py-6 shadow-xs">
                   <div className="flex items-center gap-5">
                     <div className="p-2 bg-[#EFF6FF] dark:bg-[#162142] rounded-full">
-                      <TbStack3 className="h-5 w-5 text-blue-600 dark:text-[#7592FF]" />
+                      <TbStack3 className="h-5 w-5 text-[#0785CF] dark:text-[#7592FF]" />
                     </div>
                     <div>
                       <p className="text-sm text-gray-500 dark:text-[#98A2B3]">
@@ -685,7 +685,7 @@ export default function RoomDetailsPage() {
                 <div className="bg-[#FFF] dark:bg-[#171F2F] w-full flex items-center border border-[#E4E7EC] dark:border-[#1D2939] rounded-r-md px-4 py-6 shadow-xs">
                   <div className="flex items-center gap-5">
                     <div className="p-2 bg-[#EFF6FF] dark:bg-[#162142] shadow-xs rounded-full">
-                      <TrendingUp className="h-5 w-5 text-blue-600 dark:text-[#7592FF]" />
+                      <TrendingUp className="h-5 w-5 text-[#0785CF] dark:text-[#7592FF]" />
                     </div>
                     <div>
                       <p className="text-sm text-gray-500 dark:text-[#98A2B3]">
@@ -744,7 +744,7 @@ export default function RoomDetailsPage() {
                     {room.amenities?.map((amenity) => (
                       <span
                         key={amenity.id}
-                        className="bg-[#EFF6FF] text-blue-600 border border-blue-200 rounded-full px-4 py-2 text-sm font-medium hover:from-blue-100 hover:to-indigo-100 transition-all cursor-default dark:bg-[#162142]  dark:border-[#162142] dark:text-[#98A2B3]"
+                        className="bg-[#EFF6FF] text-[#0785CF] border border-[#B4E6F5]200 rounded-full px-4 py-2 text-sm font-medium hover:from-blue-100 hover:to-indigo-100 transition-all cursor-default dark:bg-[#162142]  dark:border-[#162142] dark:text-[#98A2B3]"
                       >
                         {amenity.name}
                       </span>
@@ -756,7 +756,7 @@ export default function RoomDetailsPage() {
                 <div className="pt-4">
                   {room.availability_status === "Available" ? (
                     <button
-                      className="w-fit rounded-full bg-blue-600 hover:bg-blue-700 text-white font-medium px-8 py-3"
+                      className="w-fit rounded-full bg-[#0785CF] hover:bg-[#0785CF]/90 text-white font-medium px-8 py-3"
                       onClick={() => toast.success("Room booking initiated!")}
                     >
                       Book Room
@@ -781,7 +781,7 @@ export default function RoomDetailsPage() {
           <div className="space-y-8">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-[#D0D5DD] flex items-center gap-3">
-                <MessageSquare className="h-6 w-6 text-blue-600" />
+                <MessageSquare className="h-6 w-6 text-[#0785CF]" />
                 Guest Reviews & Ratings
               </h2>
             </div>
@@ -900,7 +900,7 @@ export default function RoomDetailsPage() {
           <AlertDialogFooter>
             <AlertDialogCancel>No, keep editing</AlertDialogCancel>
             <AlertDialogAction
-              className="cursor-pointer bg-blue-600 hover:bg-blue-700 transition-all"
+              className="cursor-pointer bg-[#0785CF] hover:bg-[#0785CF]/90 transition-all"
               onClick={handleDiscardChanges}
             >
               Yes, discard changes

@@ -49,7 +49,7 @@ export const AccordionItem: React.FC<AccordionItemProps> = ({
         className="w-full px-6 py-4 flex items-center justify-between bg-gray-50 hover:bg-gray-100 transition-colors rounded-t-lg"
       >
         <div className="flex items-center space-x-3">
-          <Icon className="h-5 w-5 text-blue-600" />
+          <Icon className="h-5 w-5 text-[#0785CF]" />
           <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
         </div>
         <ChevronDown
@@ -128,13 +128,13 @@ export const FormField: React.FC<FormFieldProps> = ({
 
 export const Badge: React.FC<BadgeProps> = ({ children, onRemove }) => {
   return (
-    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 border-blue-200 border mr-2 mb-2">
+    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#D6EEF9] text-blue-800 border-[#B4E6F5]200 border mr-2 mb-2">
       {children}
       {onRemove && (
         <button
           type="button"
           onClick={onRemove}
-          className="ml-1 p-0.5 rounded-full hover:bg-blue-200 focus:outline-none"
+          className="ml-1 p-0.5 rounded-full hover:bg-[#B4E6F<｜place▁holder▁no▁797｜>] focus:outline-none"
         >
           <X className="h-3 w-3" />
         </button>

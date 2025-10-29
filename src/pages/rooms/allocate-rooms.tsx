@@ -95,7 +95,7 @@ const getStatusColor = (status?: string) => {
     case "confirmed":
       return "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900/50 dark:text-emerald-400 dark:border-emerald-700/60";
     case "pending":
-      return "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/50 dark:text-blue-400 dark:border-blue-700/60";
+      return "bg-[#D6EEF9] text-[#0785CF] border-[#B4E6F5] dark:bg-[#B4E6F5]/50 dark:text-[#0785CF] dark:border-[#0785CF]/60";
     case "expired":
       return "bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700";
     case "draft":
@@ -173,7 +173,6 @@ export default function AllocateRooms() {
       const response = await hotelClient.get("/allocations/", { params });
       return response.data;
     },
-    keepPreviousData: true,
     enabled: !!hotel?.id,
   });
 
@@ -192,7 +191,8 @@ export default function AllocateRooms() {
   }, [roomTypesData]);
 
   const allocations = useMemo(() => {
-    return (paginatedResponse?.results ?? []).map((alloc) => ({
+    if (!paginatedResponse?.results) return [];
+    return paginatedResponse.results.map((alloc) => ({
       ...alloc,
       room_type_name: roomTypesMap.get(alloc.room_type) || "Unknown",
     }));
@@ -205,10 +205,11 @@ export default function AllocateRooms() {
       toast.success("Allocation deleted successfully.");
       queryClient.invalidateQueries({ queryKey: ["allocations"] });
     },
-    onError: (err: any) => {
-      toast.error(
-        `Deletion failed: ${err.response?.data?.detail || err.message}`
-      );
+    onError: (err: unknown) => {
+      const errorMessage = err instanceof Error && 'response' in err 
+        ? (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail || err.message || "Deletion failed"
+        : "Deletion failed";
+      toast.error(errorMessage);
     },
   });
 
@@ -397,13 +398,13 @@ export default function AllocateRooms() {
         size: 80, // Added size consistency
       },
     ],
-    [deleteAllocationMutation, navigate, pagination, roomTypesMap] // Added roomTypesMap dependency
+    [deleteAllocationMutation, navigate, pagination]
   );
 
   const table = useReactTable({
     data: allocations,
     columns,
-    pageCount: paginatedResponse
+    pageCount: paginatedResponse?.count
       ? Math.ceil(paginatedResponse.count / pagination.pageSize)
       : -1,
     state: { sorting, columnFilters, pagination },
@@ -653,11 +654,11 @@ export default function AllocateRooms() {
 
           {/* --- Restyled Pagination --- */}
           <div className="flex items-center justify-between gap-4 mt-6">
-            <div className="flex-1 text-sm text-gray-600 dark:text-[#98A2B3]">
+              <div className="flex-1 text-sm text-gray-600 dark:text-gray-400">
               Page {pagination.pageIndex + 1} of {table.getPageCount() || 1}
             </div>
             <div className="flex items-center gap-6">
-              <div className="flex items-center justify-center text-sm font-medium text-gray-700 dark:text-[#98A2B3]">
+              <div className="flex items-center justify-center text-sm font-medium text-gray-700 dark:text-gray-400">
                 Showing {table.getRowModel().rows.length} of{" "}
                 {paginatedResponse?.count ?? 0} Allocations
               </div>

@@ -67,7 +67,7 @@ function RoomDetailsView({ roomId }: { roomId: string }) {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#0785CF]" />
       </div>
     );
   }
@@ -91,7 +91,7 @@ function RoomDetailsView({ roomId }: { roomId: string }) {
       {room.images && room.images.length > 0 && (
         <div className="space-y-4">
           <h3 className="font-semibold text-lg flex items-center gap-2 text-[#1D2939] dark:text-[#D0D5DD]">
-            <ImageIcon className="text-blue-600" />
+            <ImageIcon className="text-[#0785CF]" />
             Room Gallery
           </h3>
           <div
@@ -126,7 +126,7 @@ function RoomDetailsView({ roomId }: { roomId: string }) {
               // Applied shadow-none
               <Badge
                 key={amenity.id}
-                className="bg-[#EFF6FF] dark:bg-[#162142] text-blue-600 dark:text-[#98A2B3] border border-blue-200 dark:border-[#162142] shadow-none"
+                className="bg-[#EFF6FF] dark:bg-[#162142] text-[#0785CF] dark:text-[#98A2B3] border border-[#B4E6F5]200 dark:border-[#162142] shadow-none"
               >
                 {amenity.name}
               </Badge>
@@ -362,7 +362,7 @@ export default function AvailableRoomsByDate() {
 
   // Consistent input styling
   const dateInputClass =
-    "w-full h-10 px-3 py-2 bg-white dark:bg-[#101828] border border-gray-200 dark:border-[#1D2939] text-gray-800 dark:text-[#D0D5DD] rounded-md shadow-none focus:ring-2 focus:ring-blue-500 focus:border-blue-600";
+    "w-full h-10 px-3 py-2 bg-white dark:bg-[#101828] border border-gray-200 dark:border-[#1D2939] text-gray-800 dark:text-[#D0D5DD] rounded-md shadow-none focus:ring-2 focus:ring-blue-500 focus:border-[#0785CF]";
 
   return (
     // Applied consistent background
@@ -435,7 +435,7 @@ export default function AvailableRoomsByDate() {
                 onClick={handleSearch}
                 disabled={!startDate || !endDate || isFetching}
                 // Applied shadow-none
-                className="bg-blue-600 hover:bg-blue-700 text-[#FFF] text-[0.9375rem] font-medium border-none shadow-none w-full sm:w-auto"
+                className="bg-[#0785CF] hover:bg-[#0785CF]/90 text-[#FFF] text-[0.9375rem] font-medium border-none shadow-none w-full sm:w-auto"
               >
                 {isFetching ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -451,7 +451,7 @@ export default function AvailableRoomsByDate() {
         {/* Loading State */}
         {isFetching && (
           <div className="flex justify-center items-center h-64">
-            <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
+            <Loader2 className="h-10 w-10 animate-spin text-[#0785CF]" />
           </div>
         )}
 
@@ -478,8 +478,8 @@ export default function AvailableRoomsByDate() {
                   className={cn(
                     "cursor-pointer text-[13px] shadow-none", // Added shadow-none
                     selectedRoomTypeId === null
-                      ? "bg-blue-600 text-white hover:bg-blue-700"
-                      : "text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 border border-blue-200 dark:border-blue-700/60" // Adjusted non-active style
+                      ? "bg-[#0785CF] text-white hover:bg-[#0785CF]/90"
+                      : "text-[#0785CF] dark:text-[#0785CF] bg-[#D6EEF9] dark:bg-[#B4E6F5]/30 hover:bg-[#D6EEF9] dark:hover:bg-[#B4E6F5]/50 border border-[#B4E6F5]200 dark:border-[#B4E6F5]700/60" // Adjusted non-active style
                   )}
                 >
                   All Types
@@ -492,8 +492,8 @@ export default function AvailableRoomsByDate() {
                     className={cn(
                       "cursor-pointer text-[13px] shadow-none", // Added shadow-none
                       selectedRoomTypeId === rt.id
-                        ? "bg-blue-600 text-white hover:bg-blue-700"
-                        : "text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 border border-blue-200 dark:border-blue-700/60" // Adjusted non-active style
+                        ? "bg-[#0785CF] text-white hover:bg-[#0785CF]/90"
+                        : "text-[#0785CF] dark:text-[#0785CF] bg-[#D6EEF9] dark:bg-[#B4E6F5]/30 hover:bg-[#D6EEF9] dark:hover:bg-[#B4E6F5]/50 border border-[#B4E6F5]200 dark:border-[#B4E6F5]700/60" // Adjusted non-active style
                     )}
                   >
                     {rt.name}
@@ -508,7 +508,7 @@ export default function AvailableRoomsByDate() {
                   placeholder="Filter by Room Code..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-white dark:bg-[#101828] border-gray-200 dark:border-[#1D2939] shadow-none focus:ring-blue-500 focus:border-blue-600 dark:text-gray-200 dark:placeholder:text-gray-500"
+                  className="pl-10 bg-white dark:bg-[#101828] border-gray-200 dark:border-[#1D2939] shadow-none focus:ring-blue-500 focus:border-[#0785CF] dark:text-gray-200 dark:placeholder:text-gray-500"
                 />
               </div>
             </div>
@@ -599,7 +599,7 @@ export default function AvailableRoomsByDate() {
                             variant="ghost"
                             size="icon"
                             onClick={() => setSelectedRoomId(room.room_id)}
-                            className="text-blue-600 h-8 w-8 rounded-full hover:bg-blue-100 dark:hover:bg-blue-900/40 shadow-none"
+                            className="text-[#0785CF] h-8 w-8 rounded-full hover:bg-[#D6EEF9] dark:hover:bg-[#B4E6F5]/40 shadow-none"
                           >
                             <Eye className="h-5 w-5" />
                           </Button>
@@ -611,7 +611,7 @@ export default function AvailableRoomsByDate() {
                           <Button
                             size="sm"
                             onClick={() => navigate("/bookings/new-booking")}
-                            className="bg-blue-600 text-white hover:bg-blue-700 shadow-none rounded-md px-3" // Adjusted styling
+                            className="bg-[#0785CF] text-white hover:bg-[#0785CF]/90 shadow-none rounded-md px-3" // Adjusted styling
                           >
                             <Ticket className="h-4 w-4 mr-1.5" />{" "}
                             {/* Adjusted margin */}
