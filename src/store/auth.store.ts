@@ -144,11 +144,11 @@ export const useAuthStore = create<AuthState>()(
             title: "Login Successful!",
             description: "Redirecting to your dashboard...",
           });
+          return { success: true }; // Return success
         } catch (error) {
           const errorMessage = parseAxiosError(error);
-          // DON'T show toast here - let the component handle it
           set({ isLoading: false, error: errorMessage });
-          // IMPORTANT: Re-throw the error so the UI component can catch it and display the message.
+          // Re-throw the error for the UI component to catch
           throw error;
         } finally {
           set({ isLoading: false });
@@ -333,7 +333,8 @@ export const useAuthStore = create<AuthState>()(
           console.error("Logout API call failed, cleaning up locally:", error);
         } finally {
           set({ ...initialState });
-          window.location.replace("/login");
+          // REMOVED: window.location.replace("/login");
+          // Navigation is now handled by the ProtectedRoute component.
         }
       },
 
