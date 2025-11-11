@@ -24,7 +24,6 @@ export const navData = {
       title: "Hotel Management",
       icon: RiHotelLine,
       items: [
-        { title: "My Hotel", url: "/hotel/hotel-details", icon: Circle },
         { title: "Hotel Features", url: "/hotel/hotel-features", icon: Circle },
         { title: "Hotel Gallery", url: "/hotel/hotel-gallery", icon: Circle },
       ],
@@ -45,7 +44,7 @@ export const navData = {
         { title: "Hotel Rooms", url: "/rooms/hotel-rooms", icon: Circle },
         { title: "Room Types", url: "/rooms/room-types", icon: Circle },
         {
-          title: "Available Rooms By Date",
+          title: "Availability Calendar",
           url: "/rooms/available-rooms-by-date",
           icon: Circle,
         },
@@ -60,8 +59,13 @@ export const navData = {
       title: "Reservations",
       icon: FiUserCheck,
       items: [
-        { title: "Check-in", url: "/reservations/checkin", icon: Circle },
-        { title: "Check-out", url: "/reservations/checkout", icon: Circle },
+        { title: "Checked-in", url: "/reservations/checkin", icon: Circle },
+        { title: "Checked-Out", url: "/reservations/checkout", icon: Circle },
+        {
+          title: "Cancelled Bookings",
+          url: "/reservations/cancelled-bookings",
+          icon: Circle,
+        },
       ],
     },
     {
@@ -99,6 +103,7 @@ export const navData = {
       title: "Billings & Payments",
       icon: MdPayment,
       items: [
+        { title: "Wallet", url: "/billings/wallet", icon: Circle },
         { title: "Payouts", url: "/billings/payouts", icon: Circle },
         { title: "Charges", url: "/billings/charges", icon: Circle },
         { title: "Invoices", url: "/billings/invoices", icon: Circle },

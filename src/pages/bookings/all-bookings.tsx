@@ -21,20 +21,19 @@ import {
   Columns3Icon,
   EllipsisIcon,
   Eye,
-  Trash2,
   ChevronFirstIcon,
   ChevronLastIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  Loader2,
   Loader,
   Users,
   XIcon,
   DoorOpen,
   MoreVertical,
   Smartphone,
+  Loader2,
 } from "lucide-react";
-import { TbBellRinging, TbFileTypeCsv } from "react-icons/tb";
+import { Ban } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -42,7 +41,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"; // Keep Shadcn Input for search
 // Removed MdAdd import as icon is removed
 import {
@@ -66,7 +64,6 @@ import {
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -80,6 +77,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { TbBellRinging, TbFileTypeCsv } from "react-icons/tb";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import { IoRefreshOutline } from "react-icons/io5";
@@ -88,7 +87,7 @@ import bookingClient from "@/api/booking-client";
 import { StatCard } from "@/components/custom/StatCard"; // Using StatCard
 import { BiWalk } from "react-icons/bi";
 import { useAuthStore } from "@/store/auth.store";
-import { useHotel } from "@/providers/hotel-provider"; // Import useHotel hook
+import { useHotel } from "@/providers/hotel-provider";
 
 // --- Type Definitions ---
 interface Booking {
@@ -302,16 +301,18 @@ export default function AllBookings() {
     },
   });
 
-  const deleteBookingMutation = useMutation({
+  const cancelBookingMutation = useMutation({
     mutationFn: (bookingId: string) =>
-      bookingClient.delete(`/bookings/${bookingId}`),
+      bookingClient.patch(`/bookings/${bookingId}`, {
+        booking_status: "Cancelled",
+      }),
     onSuccess: () => {
-      toast.success("Booking deleted successfully!");
+      toast.success("Booking cancelled successfully!");
       queryClient.invalidateQueries({ queryKey: ["bookings"] });
     },
     onError: (error: any) => {
       toast.error(
-        `Failed to delete booking: ${
+        `Failed to cancel booking: ${
           error.response?.data?.detail || error.message
         }`
       );
@@ -501,8 +502,8 @@ export default function AllBookings() {
               row={row}
               checkingInId={checkingInId}
               checkInMutation={checkInMutation}
-              deleteBookingMutation={deleteBookingMutation}
               setCheckInError={setCheckInError}
+              cancelBookingMutation={cancelBookingMutation}
               navigate={navigate} // Pass navigate
             />
           </div>
@@ -514,9 +515,9 @@ export default function AllBookings() {
     [
       checkInMutation,
       checkingInId,
-      deleteBookingMutation,
       setCheckInError,
       navigate,
+      cancelBookingMutation,
     ] // Added navigate dependency
   );
 
@@ -536,14 +537,6 @@ export default function AllBookings() {
   });
 
   // --- Event Handlers ---
-  const handleDeleteRows = () => {
-    const selectedRows = table.getSelectedRowModel().rows;
-    selectedRows.forEach((row) => {
-      deleteBookingMutation.mutate(row.original.id);
-    });
-    table.resetRowSelection();
-  };
-
   const clearFilters = () => {
     setGlobalFilter("");
     setColumnFilters([]);
@@ -624,8 +617,8 @@ export default function AllBookings() {
   if (isError) return <ErrorPage error={error as Error} onRetry={refetch} />;
 
   return (
-    // Added bg-[#F9FAFB] for light mode consistency
-    <div className="flex-1 space-y-6 bg-[#F9FAFB] dark:bg-[#101828] pb-10">
+    // Added min-h-screen to ensure the page takes at least the full viewport height
+    <div className="flex-1 space-y-6 bg-[#F9FAFB] dark:bg-[#101828] pb-10 min-h-screen">
       {/* --- Redesigned Header --- */}
       {/* Added h-[132px] */}
       <div className="bg-white/80 dark:bg-[#101828]/80 backdrop-blur-sm border-b border-gray-200 dark:border-[#1D2939] sticky top-0 z-30 px-4 md:px-6 py-4 shadow-none h-[132px] flex flex-col justify-center">
@@ -827,42 +820,6 @@ export default function AllBookings() {
 
           {/* Action Buttons (Refresh, View Columns etc.) */}
           <div className="flex flex-wrap items-center justify-end gap-3">
-            {table.getSelectedRowModel().rows.length > 0 && (
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="gap-2 bg-white dark:bg-transparent border-gray-200 dark:border-[#1D2939] rounded-lg shadow-none hover:bg-rose-50 dark:hover:bg-rose-900/40 hover:border-rose-300 dark:hover:border-rose-600 text-rose-600 dark:text-rose-400"
-                  >
-                    <Trash2 size={16} /> Delete (
-                    {table.getSelectedRowModel().rows.length})
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent className="bg-white dark:bg-[#101828] dark:border-[#1D2939] rounded-xl shadow-none">
-                  <AlertDialogHeader>
-                    <AlertDialogTitle className="text-lg font-bold text-gray-900 dark:text-[#D0D5DD]">
-                      Confirm Deletion
-                    </AlertDialogTitle>
-                    <AlertDialogDescription className="text-gray-600 dark:text-[#98A2B3]">
-                      This will permanently delete{" "}
-                      {table.getSelectedRowModel().rows.length} selected
-                      booking(s). This action cannot be undone.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel className="bg-gray-100 dark:bg-[#171F2F] hover:bg-gray-200 dark:hover:bg-[#1C2433] text-gray-700 dark:text-[#D0D5DD] rounded-lg border-none shadow-none">
-                      Cancel
-                    </AlertDialogCancel>
-                    <AlertDialogAction
-                      className="bg-rose-600 hover:bg-rose-700 text-white rounded-lg shadow-none"
-                      onClick={handleDeleteRows}
-                    >
-                      Delete
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            )}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -1129,10 +1086,13 @@ export default function AllBookings() {
             <AlertDialogTitle className="text-lg font-bold text-gray-900 dark:text-[#D0D5DD]">
               Check-in Not Allowed
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-gray-600 dark:text-[#98A2B3]">
+            <AlertDialogDescription className="text-gray-600 dark:text-[#98A2B3] leading-relaxed">
               The guest with booking code{" "}
               <span className="font-semibold">{checkInError?.code}</span> cannot
-              be checked in. A booking must be "Confirmed" to allow check-in.
+              be checked in.
+              <br />
+              Please ensure the booking is <b>Confirmed</b>, payment is{" "}
+              <b>Paid</b>, and today is the scheduled <b>check-in date</b>.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -1185,19 +1145,28 @@ function RowActions({
   row,
   checkingInId,
   checkInMutation,
-  deleteBookingMutation,
   setCheckInError,
+  cancelBookingMutation,
   navigate, // Added navigate prop
 }: {
   row: Row<Booking>;
   checkingInId: string | null;
   checkInMutation: any;
-  deleteBookingMutation: any;
   setCheckInError: (error: { code: string } | null) => void;
+  cancelBookingMutation: any;
   navigate: ReturnType<typeof useNavigate>; // Added type for navigate
 }) {
   const booking = row.original;
-  const canCheckIn = booking.booking_status === "Confirmed";
+  const isToday =
+    format(new Date(), "yyyy-MM-dd") ===
+    format(new Date(booking.start_date), "yyyy-MM-dd");
+  const canCheckIn =
+    booking.booking_status === "Confirmed" &&
+    booking.payment_status === "Paid" &&
+    isToday;
+  const canCancel = !["Checked In", "Checked Out", "Cancelled"].includes(
+    booking.booking_status
+  );
   const isCheckingIn = checkingInId === booking.id;
 
   return (
@@ -1236,33 +1205,34 @@ function RowActions({
           )}
           <span>Check In</span>
         </DropdownMenuItem>
-        <DropdownMenuSeparator className="dark:bg-[#1D2939]" />
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <div className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-rose-50 dark:hover:bg-rose-900/40 text-rose-600 dark:text-rose-400">
-              <Trash2 className="mr-2 h-5 w-5" />
-              <span>Delete</span>
+            <div
+              className={cn(
+                "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-rose-50 dark:hover:bg-rose-900/40 text-rose-600 dark:text-rose-400",
+                !canCancel &&
+                  "opacity-50 cursor-not-allowed hover:bg-transparent dark:hover:bg-transparent"
+              )}
+              onClick={(e) => !canCancel && e.preventDefault()}
+            >
+              <Ban className="mr-2 h-5 w-5" />
+              <span>Cancel Booking</span>
             </div>
           </AlertDialogTrigger>
           <AlertDialogContent className="dark:bg-[#101828] dark:border-[#1D2939] rounded-xl shadow-none">
             <AlertDialogHeader>
-              <AlertDialogTitle className="text-lg font-bold text-gray-900 dark:text-[#D0D5DD]">
-                Confirm Deletion
-              </AlertDialogTitle>
-              <AlertDialogDescription className="text-gray-600 dark:text-[#98A2B3]">
-                This will permanently delete the booking for '
-                {booking.full_name}'. This action cannot be undone.
+              <AlertDialogTitle>Confirm Cancellation</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to cancel the booking for '
+                {booking.full_name}'? This action cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel className="bg-gray-100 dark:bg-[#171F2F] hover:bg-gray-200 dark:hover:bg-[#1C2433] text-gray-700 dark:text-[#D0D5DD] rounded-lg border-none shadow-none">
-                Cancel
-              </AlertDialogCancel>
+              <AlertDialogCancel>No, keep booking</AlertDialogCancel>
               <AlertDialogAction
-                className="bg-rose-600 hover:bg-rose-700 text-white rounded-lg shadow-none"
-                onClick={() => deleteBookingMutation.mutate(booking.id)}
+                onClick={() => cancelBookingMutation.mutate(booking.id)}
               >
-                Delete
+                Yes, cancel booking
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

@@ -17,6 +17,7 @@ import MakeBookingPage from "@/pages/bookings/make-booking";
 import BookingDetailsPage from "@/pages/bookings/booking-details";
 import CheckedInGuests from "@/pages/reservation/checked-in";
 import CheckedOutGuests from "@/pages/reservation/checked-out";
+import ComingSoon from "@/pages/error/coming-soon";
 import HotelFeaturesLayout from "@/pages/hotel-features/hotel-features";
 import HotelDepartments from "@/pages/inventory/hotel-departments";
 import InventoryItems from "@/pages/inventory/inventory-items";
@@ -31,6 +32,8 @@ import Payouts from "@/pages/billings/payouts";
 import Charges from "@/pages/billings/charges";
 import Invoices from "@/pages/billings/invoices";
 import UserProfilePage from "@/pages/authentication/user-profile";
+import CancelledBookings from "../pages/reservation/cancelled-bookings";
+import Wallet from "@/pages/billings/wallet";
 
 const RootLayout = () => {
   return (
@@ -105,6 +108,28 @@ export const router = createBrowserRouter([
               { path: "reservations/checkin", element: <CheckedInGuests /> },
               { path: "reservations/checkout", element: <CheckedOutGuests /> },
               {
+                path: "analytics",
+                element: (
+                  <ComingSoon
+                    title="Analytics"
+                    description="Our Analytics dashboard is currently under construction. Stay tuned!"
+                  />
+                ),
+              },
+              {
+                path: "reports",
+                element: (
+                  <ComingSoon
+                    title="Reports"
+                    description="Our Reporting tools are currently under construction. Stay tuned!"
+                  />
+                ),
+              },
+              {
+                path: "reservations/cancelled-bookings",
+                element: <CancelledBookings />,
+              },
+              {
                 path: "hotel/hotel-features",
                 element: <HotelFeaturesLayout />,
               },
@@ -131,6 +156,7 @@ export const router = createBrowserRouter([
               { path: "billings/Payouts", element: <Payouts /> },
               { path: "billings/Charges", element: <Charges /> },
               { path: "billings/Invoices", element: <Invoices /> },
+              { path: "billings/wallet", element: <Wallet /> },
             ],
           },
         ],

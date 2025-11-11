@@ -17,6 +17,8 @@ import {
   Phone,
   Printer,
   Users,
+  LogIn,
+  Ban,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,6 +33,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Separator } from "@/components/ui/separator";
 import { toTitleCase } from "../../utils/capitalize";
@@ -193,6 +196,41 @@ export default function BookingDetailsPage() {
       ),
   });
 
+  const checkInMutation = useMutation({
+    mutationFn: () =>
+      axios.post(`${BOOKING_BASE_URL}bookings/${booking_id}/check_in`),
+    onSuccess: () => {
+      toast.success("Guest checked in successfully!");
+      queryClient.invalidateQueries({
+        queryKey: ["bookingDetails", booking_id],
+      });
+    },
+    onError: (error: any) => {
+      toast.error(
+        `Check-in failed: ${error.response?.data?.detail || error.message}`
+      );
+    },
+  });
+
+  const cancelBookingMutation = useMutation({
+    mutationFn: () =>
+      axios.patch(`${BOOKING_BASE_URL}bookings/${booking_id}`, {
+        booking_status: "Cancelled",
+      }),
+    onSuccess: () => {
+      toast.success("Booking cancelled successfully!");
+      queryClient.invalidateQueries({
+        queryKey: ["bookingDetails", booking_id],
+      });
+    },
+    onError: (error: any) =>
+      toast.error(
+        `Failed to cancel booking: ${
+          error.response?.data?.detail || error.message
+        }`
+      ),
+  });
+
   const handlePrint = () => {
     setShowPrintView(true);
     setTimeout(() => {
@@ -231,6 +269,18 @@ export default function BookingDetailsPage() {
     );
   }
 
+  const isToday =
+    format(new Date(), "yyyy-MM-dd") ===
+    format(new Date(booking.start_date), "yyyy-MM-dd");
+  const canCheckIn =
+    booking.booking_status === "Confirmed" &&
+    booking.payment_status === "Paid" &&
+    isToday;
+
+  const canCancel = !["Checked In", "Checked Out", "Cancelled"].includes(
+    booking.booking_status
+  );
+
   return (
     <Sheet open={isSheetOpen} onOpenChange={handleSheetOpenChange}>
       <div className="min-h-screen bg-[#F9FAFB] dark:bg-[#101828]">
@@ -255,6 +305,22 @@ export default function BookingDetailsPage() {
                 </div>
               </div>
               <div className="flex items-center gap-2">
+                {canCheckIn && (
+                  <Button
+                    variant="outline"
+                    className="gap-2 text-green-600 border-[#DADCE0] bg-white dark:bg-transparent hover:bg-green-50 hover:text-green-700 dark:text-green-400 dark:border-green-600/50 dark:hover:bg-green-900/40 shadow-none"
+                    onClick={() => checkInMutation.mutate()}
+                    disabled={checkInMutation.isPending}
+                  >
+                    {checkInMutation.isPending ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <LogIn className="h-4 w-4" />
+                    )}
+                    Check In
+                  </Button>
+                )}
+
                 {booking.booking_status === "Checked In" && (
                   <Button
                     variant="outline"
@@ -269,6 +335,39 @@ export default function BookingDetailsPage() {
                     )}
                     Check Out
                   </Button>
+                )}
+                {canCancel && (
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="gap-2 text-rose-600 border-[#DADCE0] bg-white dark:bg-transparent hover:bg-rose-50 hover:text-rose-700 dark:text-rose-400 dark:border-rose-600/50 dark:hover:bg-rose-900/40 shadow-none"
+                        disabled={cancelBookingMutation.isPending}
+                      >
+                        <Ban className="h-4 w-4" />
+                        Cancel Booking
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent className="dark:bg-[#101828] dark:border-[#1D2939] rounded-xl shadow-none">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Confirm Cancellation
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Are you sure you want to cancel this booking? This
+                          action cannot be undone.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>No, keep booking</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => cancelBookingMutation.mutate()}
+                        >
+                          Yes, cancel booking
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 )}
                 <SheetTrigger asChild>
                   <Button variant="outline" className="gap-2">

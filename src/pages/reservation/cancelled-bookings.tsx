@@ -1,4 +1,4 @@
-// src/pages/bookings/checked-in-guests.tsx
+// src/pages/reservation/cancelled-bookings.tsx
 "use client";
 import {
   useState,
@@ -28,7 +28,6 @@ import {
   Eye,
   Trash2,
   Loader2,
-  Search,
   Loader,
   ChevronUpIcon,
   ChevronDownIcon,
@@ -38,12 +37,10 @@ import {
   ChevronLastIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  Users,
   XIcon,
   MoreVertical,
 } from "lucide-react";
-import { DoorOpen } from "lucide-react";
-import { TbBellRinging, TbFileTypeCsv } from "react-icons/tb";
+import { TbFileTypeCsv } from "react-icons/tb";
 import { MdAdd } from "react-icons/md";
 import { IoRefreshOutline } from "react-icons/io5";
 
@@ -61,18 +58,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -104,12 +94,10 @@ interface Booking {
   code: string;
   phone_number: string | number;
   start_date: string;
-  end_date: string; // Changed from checkout to end_date
-  checkout: string | null; // Keep for interface consistency, but won't be used
+  end_date: string;
+  checkout: string | null;
   booking_type: "Physical" | "Online";
   amount_paid: string;
-  special_requests: string | null; // Added for Notes column
-  service_notes: string | null; // Added for Notes column
 }
 
 interface PaginatedBookingsResponse {
@@ -141,17 +129,17 @@ const getBookingTypeBadgeClasses = (type: "Physical" | "Online"): string => {
   }
 };
 
-// --- Styling Constants (from all-bookings.tsx) ---
+// --- Styling Constants ---
 const focusRingClass =
   "focus:ring-2 focus:ring-blue-500/40 dark:focus:ring-blue-400/40 focus:border-[#B4E6F5]500 dark:focus:border-[#B4E6F5]400 focus:outline-none";
 const inputBaseClass =
   "bg-white dark:bg-[#171F2F] border border-[#DADCE0] dark:border-[#1D2939] dark:text-[#D0D5DD] dark:placeholder:text-[#5D636E] rounded-lg shadow-none h-10 px-3 py-2 text-sm";
 
 // --- Main Component ---
-export default function CheckedInGuests() {
+export default function CancelledBookings() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { hotel } = useHotel(); // Get hotel details
+  const { hotel } = useHotel();
   const hotelId = hotel?.id;
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -176,20 +164,19 @@ export default function CheckedInGuests() {
     isRefetching,
   } = useQuery<PaginatedBookingsResponse>({
     queryKey: [
-      "checkedInGuests",
+      "cancelledBookings",
       hotelId,
       pagination,
       debouncedGlobalFilter,
       sorting,
       columnFilters,
     ],
-
     queryFn: async () => {
       const params = new URLSearchParams({
         microservice_item_id: hotelId!,
         limit: String(pagination.pageSize),
         offset: String(pagination.pageIndex * pagination.pageSize),
-        booking_status: "Checked In",
+        booking_status: "Cancelled",
       });
       if (debouncedGlobalFilter)
         params.append("full_name", debouncedGlobalFilter);
@@ -217,7 +204,7 @@ export default function CheckedInGuests() {
       bookingClient.delete(`/bookings/${bookingId}`),
     onSuccess: () => {
       toast.success("Booking deleted successfully!");
-      queryClient.invalidateQueries({ queryKey: ["checkedInGuests"] });
+      queryClient.invalidateQueries({ queryKey: ["cancelledBookings"] });
     },
     onError: (error: any) =>
       toast.error(
@@ -227,20 +214,7 @@ export default function CheckedInGuests() {
       ),
   });
 
-  const checkOutMutation = useMutation({
-    mutationFn: (bookingId: string) =>
-      bookingClient.post(`/bookings/${bookingId}/check_out`),
-    onSuccess: () => {
-      toast.success("Guest checked out successfully!");
-      queryClient.invalidateQueries({ queryKey: ["checkedInGuests"] });
-    },
-    onError: (error: any) =>
-      toast.error(
-        `Check-out failed: ${error.response?.data?.detail || error.message}`
-      ),
-  });
-
-  const guests = paginatedResponse?.results ?? [];
+  const bookings = paginatedResponse?.results ?? [];
   const totalCount = paginatedResponse?.count ?? 0;
   const totalPages = Math.ceil(totalCount / pagination.pageSize);
   const hasNextPage = paginatedResponse?.next !== null;
@@ -254,12 +228,12 @@ export default function CheckedInGuests() {
       const { data } = await bookingClient.get(`/bookings`, {
         params: {
           microservice_item_id: hotelId,
-          booking_status: "Checked In",
+          booking_status: "Cancelled",
           limit: totalCount || 10,
         },
       });
       if (!data.results || data.results.length === 0) {
-        toast.warning("No guests to export.");
+        toast.warning("No bookings to export.");
         return;
       }
       const csv = Papa.unparse(
@@ -267,15 +241,15 @@ export default function CheckedInGuests() {
           "Booking Code": b.code,
           "Guest Name": b.full_name,
           Phone: b.phone_number,
-          "Check-in Date": format(new Date(b.start_date), "PP"),
-          "Planned Check-out Date": format(new Date(b.end_date), "PP"),
+          "Original Check-in Date": format(new Date(b.start_date), "PP"),
+          "Original Check-out Date": format(new Date(b.end_date), "PP"),
           "Amount Paid": b.amount_paid,
         }))
       );
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = `checked-in-guests-${format(
+      link.download = `cancelled-bookings-${format(
         new Date(),
         "yyyy-MM-dd"
       )}.csv`;
@@ -336,7 +310,7 @@ export default function CheckedInGuests() {
       },
       {
         id: "stay_dates",
-        header: "Stay Dates",
+        header: "Original Stay Dates",
         cell: ({ row }) => (
           <div className="text-gray-600 dark:text-[#98A2B3]">
             {format(new Date(row.original.start_date), "PP")} -{" "}
@@ -380,37 +354,6 @@ export default function CheckedInGuests() {
         },
         size: 180,
       },
-      // --- NEW NOTES COLUMN ---
-      {
-        id: "notes",
-        header: () => <div className="text-center">Notes</div>,
-        cell: ({ row }) => {
-          const hasSpecialRequest = !!row.original.special_requests;
-          const hasServiceNotes = !!row.original.service_notes;
-          const needsAttention = hasSpecialRequest || hasServiceNotes;
-
-          return (
-            <div className="text-center">
-              {needsAttention ? (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger className="flex w-full justify-center">
-                      <TbBellRinging className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Has special requests or notes.</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              ) : (
-                <span className="text-gray-400">-</span>
-              )}
-            </div>
-          );
-        },
-        size: 80,
-      },
-      // --- END NEW NOTES COLUMN ---
       {
         id: "details",
         header: () => <div className="text-center">Details</div>,
@@ -435,7 +378,6 @@ export default function CheckedInGuests() {
             <RowActions
               row={row}
               deleteBookingMutation={deleteBookingMutation}
-              checkOutMutation={checkOutMutation}
             />
           </div>
         ),
@@ -443,11 +385,11 @@ export default function CheckedInGuests() {
         enableHiding: false,
       },
     ],
-    [deleteBookingMutation, navigate, checkOutMutation]
+    [deleteBookingMutation, navigate]
   );
 
   const table = useReactTable({
-    data: guests,
+    data: bookings,
     columns,
     state: { sorting, columnFilters, pagination },
     pageCount: totalPages,
@@ -467,7 +409,6 @@ export default function CheckedInGuests() {
     table.resetRowSelection();
   };
 
-  // --- Active Filters Display ---
   const activeFilters = useMemo(() => {
     const filters = [];
     if (globalFilter) {
@@ -501,15 +442,14 @@ export default function CheckedInGuests() {
 
   return (
     <div className="flex-1 space-y-6 bg-[#F9FAFB] dark:bg-[#101828] pb-10 min-h-screen">
-      {/* --- Redesigned Header --- */}
       <div className="bg-white/80 dark:bg-[#101828]/80 backdrop-blur-sm border-b border-gray-200 dark:border-[#1D2939] sticky top-0 z-30 px-4 md:px-6 py-4 shadow-none h-[132px] flex flex-col justify-center">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl lg:text-[30px] lg:leading-[36px] font-bold tracking-tight text-gray-900 dark:text-gray-100">
-              Checked-In Guests
+              Cancelled Bookings
             </h1>
             <p className="text-base text-gray-600 dark:text-[#98A2B3] mt-1">
-              A list of all guests currently checked in at your hotel.
+              A list of all bookings that have been cancelled.
             </p>
           </div>
           <Button
@@ -521,37 +461,25 @@ export default function CheckedInGuests() {
         </div>
       </div>
 
-      {/* --- Main Content Area --- */}
       <main className="px-4 md:px-6 space-y-6">
-        {/* --- MODIFIED Stats Display --- */}
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold text-gray-700 dark:text-[#D0D5DD]">
-            Total Checked In:
+            Total Cancelled:
           </span>
           {isLoading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
-            <Badge className="bg-[#D6EEF9] text-blue-800 dark:bg-[#B4E6F5]/50 dark:text-[#0785CF] shadow-none rounded-md px-2.5 py-0.5 text-sm font-semibold">
+            <Badge className="bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-400 shadow-none rounded-md px-2.5 py-0.5 text-sm font-semibold">
               {totalCount}
             </Badge>
           )}
-          <span className="text-sm text-gray-600 dark:text-[#98A2B3]">
-            Guests currently staying at the hotel
-          </span>
         </div>
 
-        {/* --- Filters & Actions --- */}
         <div className="space-y-4">
-          {/* --- MODIFIED Filter/Action Bar Alignment --- */}
           <div className="flex flex-wrap items-center justify-between gap-4">
-            {/* Left Side: Filters */}
             <div className="flex flex-wrap items-center gap-4">
-              {/* Search */}
               <div>
-                <label
-                  htmlFor="guest-search"
-                  className="sr-only block text-sm font-medium text-gray-700 dark:text-[#98A2B3] mb-1"
-                >
+                <label htmlFor="guest-search" className="sr-only">
                   Search by Guest
                 </label>
                 <div className="relative">
@@ -581,12 +509,8 @@ export default function CheckedInGuests() {
                 </div>
               </div>
 
-              {/* Booking Type Select (Native) */}
               <div>
-                <label
-                  htmlFor="booking-type-filter"
-                  className="sr-only block text-sm font-medium text-gray-700 dark:text-[#98A2B3] mb-1"
-                >
+                <label htmlFor="booking-type-filter" className="sr-only">
                   Booking Type
                 </label>
                 <select
@@ -616,7 +540,6 @@ export default function CheckedInGuests() {
               </div>
             </div>
 
-            {/* Right Side: Action Buttons */}
             <div className="flex items-center gap-3">
               {table.getSelectedRowModel().rows.length > 0 && (
                 <AlertDialog>
@@ -696,7 +619,6 @@ export default function CheckedInGuests() {
                 />
                 Refresh
               </Button>
-              {/* More Actions Dropdown (Export) */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -737,7 +659,6 @@ export default function CheckedInGuests() {
             </div>
           </div>
 
-          {/* Active Filters Display */}
           {activeFilters.length > 0 && (
             <div className="flex flex-wrap items-center gap-2">
               <span className="text-sm font-semibold text-gray-700 dark:text-[#98A2B3]">
@@ -752,7 +673,7 @@ export default function CheckedInGuests() {
                   {filter.label}
                   <button
                     onClick={filter.onClear}
-                    className="rounded-full hover:bg-[#B4E6F<｜place▁holder▁no▁797｜>] dark:hover:bg-blue-800/50 p-0.5"
+                    className="rounded-full hover:bg-[#B4E6F5] dark:hover:bg-blue-800/50 p-0.5"
                   >
                     <XIcon className="h-3 w-3" />
                   </button>
@@ -768,81 +689,77 @@ export default function CheckedInGuests() {
           )}
         </div>
 
-        {/* --- Table --- */}
         <div className="rounded-lg border border-gray-200 dark:border-[#1D2939] shadow-none bg-white dark:bg-[#171F2F] overflow-hidden">
-          <TooltipProvider>
-            <Table>
-              <TableHeader>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow
-                    key={headerGroup.id}
-                    className="hover:bg-transparent border-b-2 border-gray-300 dark:border-b-[#1D2939]"
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow
+                  key={headerGroup.id}
+                  className="hover:bg-transparent border-b-2 border-gray-300 dark:border-b-[#1D2939]"
+                >
+                  {headerGroup.headers.map((header) => (
+                    <TableHead
+                      key={header.id}
+                      style={{ width: `${header.getSize()}px` }}
+                      className="h-14 px-4 text-left align-middle font-semibold text-[13px] uppercase tracking-wide text-[#667085] dark:text-[#98A2B3] border-r border-gray-200 dark:border-r-[#1D2939] last:border-r-0 bg-gradient-to-b from-slate-50 to-slate-100 dark:from-[#171F2F] dark:to-[#171F2F]/90 shadow-none"
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {isLoading ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
                   >
-                    {headerGroup.headers.map((header) => (
-                      <TableHead
-                        key={header.id}
-                        style={{ width: `${header.getSize()}px` }}
-                        className="h-14 px-4 text-left align-middle font-semibold text-[13px] uppercase tracking-wide text-[#667085] dark:text-[#98A2B3] border-r border-gray-200 dark:border-r-[#1D2939] last:border-r-0 bg-gradient-to-b from-slate-50 to-slate-100 dark:from-[#171F2F] dark:to-[#171F2F]/90 shadow-none"
+                    <div className="w-full flex items-center justify-center">
+                      <Loader className="animate-spin h-8 w-8 text-[#0785CF]" />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    className="border-b border-gray-200 dark:border-b-[#1D2939] hover:bg-indigo-50/30 dark:hover:bg-[#1C2433] transition-colors data-[state=selected]:bg-[#D6EEF9] dark:data-[state=selected]:bg-[#162142]"
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell
+                        key={cell.id}
+                        className="px-4 py-3 align-middle border-r border-gray-200 dark:border-r-[#1D2939] last:border-r-0 text-gray-700 dark:text-[#D0D5DD] text-sm"
                       >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
                     ))}
                   </TableRow>
-                ))}
-              </TableHeader>
-              <TableBody>
-                {isLoading ? (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className="h-24 text-center"
-                    >
-                      <div className="w-full flex items-center justify-center">
-                        <Loader className="animate-spin h-8 w-8 text-[#0785CF]" />
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ) : table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      data-state={row.getIsSelected() && "selected"}
-                      className="border-b border-gray-200 dark:border-b-[#1D2939] hover:bg-indigo-50/30 dark:hover:bg-[#1C2433] transition-colors data-[state=selected]:bg-[#D6EEF9] dark:data-[state=selected]:bg-[#162142]"
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell
-                          key={cell.id}
-                          className="px-4 py-3 align-middle border-r border-gray-200 dark:border-r-[#1D2939] last:border-r-0 text-gray-700 dark:text-[#D0D5DD] text-sm"
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className="h-24 text-center text-gray-500 dark:text-[#98A2B3]"
-                    >
-                      No checked-in guests found.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TooltipProvider>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center text-gray-500 dark:text-[#98A2B3]"
+                  >
+                    No cancelled bookings found.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
         </div>
 
-        {/* --- Pagination --- */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6">
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-600 dark:text-[#98A2B3]">
@@ -956,11 +873,9 @@ const SortableHeader: FC<{
 function RowActions({
   row,
   deleteBookingMutation,
-  checkOutMutation,
 }: {
   row: Row<Booking>;
   deleteBookingMutation: any;
-  checkOutMutation: any;
 }) {
   const booking = row.original;
 
@@ -981,19 +896,6 @@ function RowActions({
         align="end"
         className="bg-white dark:bg-[#101828] border-gray-200 dark:border-[#1D2939] rounded-lg shadow-none"
       >
-        <DropdownMenuItem
-          onClick={() => checkOutMutation.mutate(booking.id)}
-          disabled={checkOutMutation.isPending}
-          className="gap-2 text-gray-700 dark:text-[#D0D5DD] hover:bg-indigo-50 dark:hover:bg-[#1C2433]"
-        >
-          {checkOutMutation.isPending &&
-          checkOutMutation.variables === booking.id ? (
-            <Loader className="h-5 w-5 animate-spin" />
-          ) : (
-            <DoorOpen className="h-5 w-5 text-green-600" />
-          )}
-          <span>Check Out</span>
-        </DropdownMenuItem>
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <div className="relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-rose-50 dark:hover:bg-rose-900/40 text-rose-600 dark:text-rose-400">

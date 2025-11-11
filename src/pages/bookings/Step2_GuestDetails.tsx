@@ -1,6 +1,7 @@
 // src/pages/bookings/components/Step2_GuestDetails.tsx
 "use client";
 import { useState } from "react";
+import { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -23,6 +24,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage, // --- ENSURED THIS IS IMPORTED ---
 } from "@/components/ui/form";
 import {
   Card,
@@ -38,7 +40,6 @@ import {
   Loader2,
   User,
   Mail,
-  Home,
   Users,
   Baby,
   Info,
@@ -49,14 +50,10 @@ import {
   CreditCard,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import GooglePlacesAutocomplete from "./GooglePlacesAutocomplete";
+import CountryPicker from "@/components/custom/country-picker";
 
-import "react-phone-number-input/style.css";
-import PhoneInputWithCountry from "react-phone-number-input/react-hook-form";
-import { isPossiblePhoneNumber } from "react-phone-number-input";
-import { IoLocationOutline } from "react-icons/io5";
-import { parsePhoneNumberFromString } from "libphonenumber-js";
-
-// Schema remains exactly the same
+// --- UPDATED SCHEMA ---
 const guestDetailsSchema = yup.object({
   full_name: yup.string().required("Full name is required."),
   email: yup
@@ -65,39 +62,26 @@ const guestDetailsSchema = yup.object({
     .required("Email is required."),
   phone_number: yup
     .string()
-    .test(
-      "is-possible",
-      "Please enter a valid phone number",
-      (value) => !value || isPossiblePhoneNumber(value)
-    )
-    .test(
-      "length-check",
-      "Phone number should be 9 digits, without the leading zero.",
-      (value) => {
-        if (!value) return true;
-        const phoneNumber = parsePhoneNumberFromString(value);
-        if (!phoneNumber) return true;
-        if (phoneNumber.country === "TZ") {
-          return phoneNumber.nationalNumber.length === 9;
-        }
-        return true;
-      }
-    )
+    .min(9, "Please enter a valid 9 or 10-digit phone number")
+    .max(10, "Phone number cannot exceed 10 digits")
     .required("Phone number is required."),
   address: yup.string().required("Address is required."),
   number_of_guests: yup
     .number()
     .min(1, "At least one guest is required.")
+    .integer("Please enter a whole number.") // --- ADDED ---
     .required()
     .typeError("Must be a number"),
   number_of_children: yup
     .number()
     .min(0)
+    .integer("Please enter a whole number.") // --- ADDED ---
     .required()
     .typeError("Must be a number"),
   number_of_infants: yup
     .number()
     .min(0)
+    .integer("Please enter a whole number.") // --- ADDED ---
     .required()
     .typeError("Must be a number"),
   payment_method: yup
@@ -128,11 +112,18 @@ export default function Step2_GuestDetails() {
     setStep,
     setBookingPayload,
   } = useBookingStore();
-  const [isConfirmed, setIsConfirmed] = useState(false);
+  // const [isConfirmed, setIsConfirmed] = useState(false); // This state wasn't being used
+
+  const [selectedCountry, setSelectedCountry] = useState({
+    code: "TZ",
+    name: "Tanzania",
+    dialCode: "+255",
+    flag: "🇹🇿",
+  });
 
   const form = useForm<GuestDetailsFormData>({
     resolver: yupResolver(guestDetailsSchema),
-    mode: "onBlur",
+    mode: "onBlur", // --- This enables validation on blur (Point 3)
     defaultValues: {
       number_of_guests: 1,
       number_of_children: 0,
@@ -140,6 +131,10 @@ export default function Step2_GuestDetails() {
       service_notes: "",
       special_requests: "",
       payment_method: "Cash",
+      address: "",
+      full_name: "",
+      email: "",
+      phone_number: "",
     },
   });
 
@@ -159,7 +154,59 @@ export default function Step2_GuestDetails() {
       setStep(3);
     },
     onError: (error) => {
-      toast.error(`Failed to create booking: ${error.message}`);
+      let userFriendlyMessage =
+        "An unexpected error occurred. Please try again.";
+      let isFieldSpecificError = false;
+
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          const serverErrors = error.response.data;
+          if (serverErrors && typeof serverErrors === "object") {
+            // Attempt to set field-specific errors if the backend provides them
+            Object.entries(serverErrors).forEach(([field, messages]) => {
+              const fieldName = field as keyof GuestDetailsFormData;
+              // Check if the field exists in our form schema to avoid setting errors on unknown fields
+              if (guestDetailsSchema.fields[fieldName]) {
+                const message = Array.isArray(messages)
+                  ? messages.join(", ")
+                  : String(messages);
+                form.setError(fieldName, { type: "server", message });
+                isFieldSpecificError = true;
+              }
+            });
+
+            if (isFieldSpecificError) {
+              userFriendlyMessage =
+                "Please correct the errors highlighted below.";
+            } else {
+              // If no field-specific errors, use a general message from the server response
+              userFriendlyMessage =
+                serverErrors.message ||
+                serverErrors.detail ||
+                userFriendlyMessage;
+            }
+          } else {
+            // Server responded with an error, but no structured data (e.e.g, plain text error)
+            userFriendlyMessage = error.response.data || userFriendlyMessage;
+          }
+        } else if (error.request) {
+          // The request was made but no response was received (e.g., network error, CORS)
+          userFriendlyMessage =
+            "Could not connect to the server. Please check your internet connection or try again later.";
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          userFriendlyMessage = error.message;
+        }
+      } else if (error instanceof Error) {
+        // Generic JavaScript error
+        userFriendlyMessage = error.message;
+      }
+
+      toast.error("Booking Creation Failed", {
+        description: userFriendlyMessage,
+      });
     },
   });
 
@@ -179,7 +226,7 @@ export default function Step2_GuestDetails() {
     const payload: CreateBookingPayload = {
       full_name: data.full_name,
       email: data.email,
-      phone_number: data.phone_number,
+      phone_number: `${selectedCountry.dialCode}${data.phone_number}`,
       address: data.address,
       number_of_guests: String(data.number_of_guests),
       number_of_children: String(data.number_of_children),
@@ -196,10 +243,8 @@ export default function Step2_GuestDetails() {
       payment_method: data.payment_method as "Cash" | "Mobile",
     };
 
-    const fullUrl = `${bookingClient.defaults.baseURL}/bookings/web-create`;
-    console.log("--- Debugging Booking Creation ---");
-    console.log("Full Request URL:", fullUrl);
-    console.log("Request Payload:", payload);
+    // --- ADDED console.log (Point 4) ---
+    console.log("Booking Payload:", payload);
 
     setBookingPayload(payload);
     mutation.mutate(payload);
@@ -235,32 +280,6 @@ export default function Step2_GuestDetails() {
   return (
     <div className="space-y-8 p-8">
       <style>{`
-        .custom-phone-input .PhoneInputCountry {
-          margin-left: 16px;
-        }
-        .PhoneInputInput {
-          border: none !important;
-          outline: none !important;
-          box-shadow: none !important;
-          background-color: transparent !important;
-          height: 100%;
-          font-size: 16px;
-        }
-        .PhoneInput {
-          display: flex;
-          align-items: center;
-          border: 1px solid #e5e7eb;
-          height: 44px;
-          background-color: white;
-          box-shadow: none;
-        }
-        .dark .PhoneInput {
-          background-color: #1f2937;
-          border-color: #4b5563;
-        }
-        .PhoneInput--error {
-          border-color: #ef4444 !important;
-        }
         .custom-form-label {
           font-size: 17px;
         }
@@ -320,12 +339,12 @@ export default function Step2_GuestDetails() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300 custom-form-label">
-                            Full Name (First Name, Last Name)
+                            Full Name (First & Last Name)
                           </FormLabel>
                           <FormControl>
                             <FormInputWithIcon
                               icon={User}
-                              placeholder="John Doe"
+                              placeholder="Yvonne Ratzinger"
                               {...field}
                               className={cn(
                                 "h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 custom-form-input",
@@ -334,6 +353,7 @@ export default function Step2_GuestDetails() {
                               )}
                             />
                           </FormControl>
+                          <FormMessage /> {/* --- ADDED (Point 8) --- */}
                         </FormItem>
                       )}
                     />
@@ -352,7 +372,7 @@ export default function Step2_GuestDetails() {
                             <FormInputWithIcon
                               icon={Mail}
                               type="email"
-                              placeholder="john.doe@email.com"
+                              placeholder="yvonne@mail.com"
                               {...field}
                               className={cn(
                                 "h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600",
@@ -361,6 +381,7 @@ export default function Step2_GuestDetails() {
                               )}
                             />
                           </FormControl>
+                          <FormMessage /> {/* --- ADDED (Point 8) --- */}
                         </FormItem>
                       )}
                     />
@@ -376,20 +397,26 @@ export default function Step2_GuestDetails() {
                             )}
                           </FormLabel>
                           <FormControl>
-                            <PhoneInputWithCountry
-                              name="phone_number"
-                              control={form.control}
-                              rules={{ required: true }}
-                              maxLength={10}
-                              defaultCountry="TZ"
-                              placeholder="712 345 678"
-                              className={cn(
-                                "custom-phone-input rounded-md",
-                                form.formState.errors.phone_number &&
-                                  "PhoneInput--error"
-                              )}
-                            />
+                            <div className="flex gap-2">
+                              <CountryPicker
+                                selectedCountry={selectedCountry}
+                                onCountrySelect={setSelectedCountry}
+                                className="w-28 sm:w-32 h-11"
+                              />
+                              <Input
+                                type="tel"
+                                maxLength={10}
+                                placeholder="712 345 678"
+                                {...field}
+                                className={cn(
+                                  "h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 custom-form-input",
+                                  form.formState.errors.phone_number &&
+                                    "border-red-500 dark:border-red-500 focus-visible:ring-red-500"
+                                )}
+                              />
+                            </div>
                           </FormControl>
+                          <FormMessage /> {/* --- ADDED (Point 8) --- */}
                         </FormItem>
                       )}
                     />
@@ -405,17 +432,19 @@ export default function Step2_GuestDetails() {
                             )}
                           </FormLabel>
                           <FormControl>
-                            <FormInputWithIcon
-                              icon={IoLocationOutline}
-                              placeholder="Dar es Salaam, Tanzania"
-                              {...field}
-                              className={cn(
-                                "h-11 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600",
-                                form.formState.errors.address &&
-                                  "border-red-500 dark:border-red-500 focus-visible:ring-red-500"
-                              )}
-                            />
+                            <div>
+                              <GooglePlacesAutocomplete
+                                value={field.value}
+                                onChange={field.onChange}
+                                onSelect={(place) => {
+                                  field.onChange(place);
+                                  form.trigger("address");
+                                }}
+                                placeholder="e.g., Dar es Salaam, Tanzania"
+                              />
+                            </div>
                           </FormControl>
+                          <FormMessage /> {/* --- ADDED (Point 8) --- */}
                         </FormItem>
                       )}
                     />
@@ -459,6 +488,7 @@ export default function Step2_GuestDetails() {
                               )}
                             />
                           </FormControl>
+                          <FormMessage /> {/* --- ADDED (Point 8) --- */}
                         </FormItem>
                       )}
                     />
@@ -487,6 +517,7 @@ export default function Step2_GuestDetails() {
                               )}
                             />
                           </FormControl>
+                          <FormMessage /> {/* --- ADDED (Point 8) --- */}
                         </FormItem>
                       )}
                     />
@@ -515,6 +546,7 @@ export default function Step2_GuestDetails() {
                               )}
                             />
                           </FormControl>
+                          <FormMessage /> {/* --- ADDED (Point 8) --- */}
                         </FormItem>
                       )}
                     />
@@ -586,6 +618,7 @@ export default function Step2_GuestDetails() {
                               })}
                             </div>
                           </FormControl>
+                          <FormMessage /> {/* --- ADDED (Point 8) --- */}
                         </FormItem>
                       );
                     }}
@@ -610,7 +643,7 @@ export default function Step2_GuestDetails() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Guest's Service Note (if any)
+                            Guest's Service Note (Optional)
                           </FormLabel>
                           <FormControl>
                             <Textarea
@@ -623,6 +656,7 @@ export default function Step2_GuestDetails() {
                               {...field}
                             />
                           </FormControl>
+                          <FormMessage /> {/* --- ADDED (Point 8) --- */}
                         </FormItem>
                       )}
                     />
@@ -632,7 +666,7 @@ export default function Step2_GuestDetails() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Guest's Special Request (if any)
+                            Guest's Special Request (Optional)
                           </FormLabel>
                           <FormControl>
                             <Textarea
@@ -645,6 +679,7 @@ export default function Step2_GuestDetails() {
                               {...field}
                             />
                           </FormControl>
+                          <FormMessage /> {/* --- ADDED (Point 8) --- */}
                         </FormItem>
                       )}
                     />
@@ -652,13 +687,6 @@ export default function Step2_GuestDetails() {
                 </div>
 
                 {/* Action Buttons */}
-                                {!isValid && (
-                  <p className="text-red-500 text-sm">
-                    {Object.keys(errors).length > 1
-                      ? "Be sure to fill all field before submitting"
-                      : `${Object.keys(errors).map(key => key.replace(/_/g, ' ')).join(', ')} is required and should be filled to continue`}
-                  </p>
-                )}
                 <div className="flex justify-start items-center pt-6 border-t border-gray-200 dark:border-gray-700 gap-6">
                   <Button
                     type="button"
@@ -670,7 +698,8 @@ export default function Step2_GuestDetails() {
                   </Button>
                   <Button
                     type="submit"
-                    disabled={mutation.isPending || !form.formState.isValid}
+                    // --- This logic handles Point 5 & 7 ---
+                    disabled={mutation.isPending || !isValid}
                     className="h-11 px-8 bg-[#0785CF] hover:bg-[#0785CF]/90 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {mutation.isPending ? (

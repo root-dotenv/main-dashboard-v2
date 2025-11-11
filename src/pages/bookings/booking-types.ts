@@ -150,6 +150,7 @@ export interface CurrencyConversionResponse {
 
 export interface UpdatePaymentPayload {
   booking_status: "Confirmed";
+  payment_status: "Paid";
   currency_paid: "TZS";
   amount_paid: string;
 }

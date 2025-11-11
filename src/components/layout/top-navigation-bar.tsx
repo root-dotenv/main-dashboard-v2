@@ -16,11 +16,13 @@ import { UserMenuItems } from "./user-menu-items";
 import { ThemeToggle } from "../custom/theme-toggle";
 import { useAuthStore } from "../../store/auth.store";
 import { useCommandSearchStore } from "@/store/command-search-store";
+import { useHotel } from "@/providers/hotel-provider";
 
 export function TopNavigationBar() {
   const { toggleSidebar } = useSidebarStore();
   const { userProfile } = useAuthStore();
   const { open } = useCommandSearchStore();
+  const { hotel } = useHotel();
 
   return (
     <header className="flex h-[68px] flex-shrink-0 items-center justify-between border-b bg-[#FFF] px-4 md:px-6 dark:bg-[#101828] dark:border-[#1D2939]">
@@ -31,7 +33,7 @@ export function TopNavigationBar() {
           <span className="sr-only">Toggle Sidebar</span>
         </button>
         <h1 className="hidden text-[20px] font-bold text-gray-900 dark:text-[#D0D5DD] md:block">
-          SafariPro Management
+          {hotel?.name || "SafariPro Management"}
         </h1>
       </div>
 

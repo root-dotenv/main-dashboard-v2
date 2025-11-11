@@ -58,21 +58,19 @@ export default function Step5_CheckInAndFinish() {
     },
   });
 
-  const {
-    data: exchangeRateData,
-    isLoading: isFetchingExchangeRate,
-  } = useQuery({
-    queryKey: ["exchangeRate", "USD", "TZS"],
-    queryFn: async () => {
-      const response = await bookingClient.post("/currency/convert", {
-        amount: 1,
-        from_currency: "USD",
-        to_currency: "TZS",
-      });
-      return response.data;
-    },
-    staleTime: 1000 * 60 * 60, // Cache for an hour
-  });
+  const { data: exchangeRateData, isLoading: isFetchingExchangeRate } =
+    useQuery({
+      queryKey: ["exchangeRate", "USD", "TZS"],
+      queryFn: async () => {
+        const response = await bookingClient.post("/currency/convert", {
+          amount: 1,
+          from_currency: "USD",
+          to_currency: "TZS",
+        });
+        return response.data;
+      },
+      staleTime: 1000 * 60 * 60, // Cache for an hour
+    });
 
   const currentBookingDetails =
     bookingDetails || fetchedConversionData?.data.booking;
@@ -242,7 +240,10 @@ export default function Step5_CheckInAndFinish() {
           </Button>
         </div>
         <div ref={ticketRef}>
-          <BookingPrintTicket booking={currentBookingDetails} exchangeRate={exchangeRateData?.exchange_rate} />
+          <BookingPrintTicket
+            booking={currentBookingDetails}
+            exchangeRate={exchangeRateData?.exchange_rate}
+          />
         </div>
       </div>
 

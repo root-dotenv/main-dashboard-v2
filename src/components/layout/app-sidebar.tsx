@@ -37,11 +37,7 @@ const DownloadAppDialog = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          variant={"main"}
-          size="sm"
-          className="w-full mt-4"
-        >
+        <Button variant={"main"} size="sm" className="w-full mt-4">
           Download the App
         </Button>
       </DialogTrigger>
@@ -116,7 +112,7 @@ const NavItem = ({
             "flex w-full items-center rounded-lg z-40 p-2 transition-colors duration-200",
             isCollapsed ? "justify-center" : "justify-between",
             isActive
-              ? "bg-[#D6EEF9] text-[#0785CF] dark:bg-[#B4E6F5] dark:text-[#0785CF] z-40"
+              ? "bg-[#D6EEF9] text-[#0785CF] dark:bg-[#0785CF] dark:text-white z-40"
               : "text-gray-600 hover:bg-gray-100 dark:hover:bg-[#1C2433] dark:text-[#D0D5DD] z-40"
           )}
         >
@@ -125,7 +121,7 @@ const NavItem = ({
               className={cn(
                 "h-5 w-5",
                 isActive
-                  ? "text-[#0785CF] dark:text-[#0785CF]"
+                  ? "text-[#0785CF] dark:text-white"
                   : "text-[#344055] dark:text-[#D0D5DD]"
               )}
             />
@@ -158,14 +154,16 @@ const NavItem = ({
                   className={cn(
                     "flex items-center gap-3 p-2 text-sm rounded-md transition-colors duration-200",
                     isChildActive
-                      ? "bg-[#D6EEF9] font-medium text-[#0785CF] dark:bg-[#B4E6F5] dark:text-[#0785CF]"
+                      ? "bg-[#D6EEF9] font-medium text-[#0785CF] dark:bg-[#0785CF] dark:text-white"
                       : "text-[#667085] hover:bg-gray-100/50 hover:text-gray-800 dark:text-[#98A2B3] dark:hover:bg-[#1C2433]"
                   )}
                 >
                   <child.icon
                     className={cn(
                       "h-2 w-2 border-none hover:border-none hover:bg-none",
-                      isChildActive ? "fill-[#0785CF] dark:fill-[#0785CF]" : "text-[#344055]"
+                      isChildActive
+                        ? "fill-[#0785CF] dark:fill-[#0785CF]"
+                        : "text-[#344055]"
                     )}
                   />
                   <span>{child.title}</span>
@@ -185,7 +183,7 @@ const NavItem = ({
         "flex w-full items-center rounded-lg p-2 transition-colors z-40 duration-200",
         isCollapsed ? "justify-center" : "justify-between",
         isActive
-          ? "bg-[#D6EEF9] text-[#0785CF] font-semibold dark:bg-[#B4E6F5] dark:text-[#0785CF] z-40"
+          ? "bg-[#D6EEF9] text-[#0785CF] font-semibold dark:bg-[#0785CF] dark:text-white z-40"
           : "text-gray-600 hover:bg-gray-100 dark:hover:bg-[#1C2433] dark:text-[#D0D5DD] z-40"
       )}
     >
@@ -194,7 +192,7 @@ const NavItem = ({
           className={cn(
             "h-5 w-5",
             isActive
-              ? "text-[#1F4A8C] dark:text-[#4A9EFF]"
+              ? "text-[#0785CF] dark:text-white"
               : "text-[#344055] dark:text-[#D0D5DD]"
           )}
         />

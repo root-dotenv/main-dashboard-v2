@@ -206,9 +206,13 @@ export default function AllocateRooms() {
       queryClient.invalidateQueries({ queryKey: ["allocations"] });
     },
     onError: (err: unknown) => {
-      const errorMessage = err instanceof Error && 'response' in err 
-        ? (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail || err.message || "Deletion failed"
-        : "Deletion failed";
+      const errorMessage =
+        err instanceof Error && "response" in err
+          ? (err as { response?: { data?: { detail?: string } } })?.response
+              ?.data?.detail ||
+            err.message ||
+            "Deletion failed"
+          : "Deletion failed";
       toast.error(errorMessage);
     },
   });
@@ -448,7 +452,7 @@ export default function AllocateRooms() {
               >
                 <SheetTrigger asChild>
                   {/* Applied shadow-none */}
-                  <Button className="shadow-none bg-blue-600 hover:bg-blue-700">
+                  <Button className="shadow-none bg-[#3190D3] hover:bg-[#3190D3]">
                     Create Allocation
                   </Button>
                 </SheetTrigger>
@@ -654,7 +658,7 @@ export default function AllocateRooms() {
 
           {/* --- Restyled Pagination --- */}
           <div className="flex items-center justify-between gap-4 mt-6">
-              <div className="flex-1 text-sm text-gray-600 dark:text-gray-400">
+            <div className="flex-1 text-sm text-gray-600 dark:text-gray-400">
               Page {pagination.pageIndex + 1} of {table.getPageCount() || 1}
             </div>
             <div className="flex items-center gap-6">

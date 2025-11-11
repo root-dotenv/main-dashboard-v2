@@ -449,7 +449,7 @@ export default function CheckedOutGuests() {
   if (isError) return <ErrorPage error={error as Error} onRetry={refetch} />;
 
   return (
-    <div className="flex-1 space-y-6 bg-[#F9FAFB] dark:bg-[#101828] pb-10">
+    <div className="flex-1 space-y-6 bg-[#F9FAFB] dark:bg-[#101828] pb-10 min-h-screen">
       {/* --- Redesigned Header --- */}
       <div className="bg-white/80 dark:bg-[#101828]/80 backdrop-blur-sm border-b border-gray-200 dark:border-[#1D2939] sticky top-0 z-30 px-4 md:px-6 py-4 shadow-none h-[132px] flex flex-col justify-center">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">

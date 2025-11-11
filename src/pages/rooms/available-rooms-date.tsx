@@ -1,6 +1,6 @@
 // src/pages/rooms/available-rooms-date.tsx
 "use client";
-import { useState, useMemo, useEffect, useRef, type ChangeEvent } from "react"; // Added ChangeEvent
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 // Removed addDays, DateRange, react-day-picker imports
@@ -25,6 +25,7 @@ import {
   ChevronRight,
   ChevronLast,
   Eye,
+  CalendarIcon,
   // Calendar as CalendarIcon, // No longer needed
   Layers,
 } from "lucide-react";
@@ -49,6 +50,12 @@ import {
 } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 import type { AvailabilityRangeResponse, DetailedRoom } from "./types/rooms";
 import { toast } from "sonner"; // Import toast
 
@@ -177,11 +184,10 @@ function RoomDetailsView({ roomId }: { roomId: string }) {
 export default function AvailableRoomsByDate() {
   const navigate = useNavigate();
   const { hotel } = useHotel();
-  // --- State for native date inputs (strings) ---
-  const todayStr = format(new Date(), "yyyy-MM-dd");
-  const fourDaysLaterStr = format(addDays(new Date(), 4), "yyyy-MM-dd");
-  const [startDate, setStartDate] = useState<string>(todayStr);
-  const [endDate, setEndDate] = useState<string>(fourDaysLaterStr);
+  const [startDate, setStartDate] = useState<Date | undefined>(new Date());
+  const [endDate, setEndDate] = useState<Date | undefined>(
+    addDays(new Date(), 4)
+  );
   // --- End date input state ---
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
   const [selectedRoomTypeId, setSelectedRoomTypeId] = useState<string | null>(
@@ -207,13 +213,7 @@ export default function AvailableRoomsByDate() {
             new Error("A valid hotel and date range are required to search.")
           );
         }
-        // Basic date validation
-        const start = parseISO(startDate);
-        const end = parseISO(endDate);
-        if (!isValid(start) || !isValid(end)) {
-          return Promise.reject(new Error("Invalid date format provided."));
-        }
-        if (end <= start) {
+        if (endDate <= startDate) {
           return Promise.reject(
             new Error("End date must be after start date.")
           );
@@ -221,8 +221,8 @@ export default function AvailableRoomsByDate() {
 
         const params = new URLSearchParams({
           hotel_id: hotel.id,
-          start_date: startDate, // Use state directly
-          end_date: endDate, // Use state directly
+          start_date: format(startDate, "yyyy-MM-dd"),
+          end_date: format(endDate, "yyyy-MM-dd"),
         });
         if (selectedRoomTypeId) {
           params.append("room_type_id", selectedRoomTypeId);
@@ -255,33 +255,12 @@ export default function AvailableRoomsByDate() {
     }
   }, [selectedRoomTypeId, startDate, endDate, refetch, hotel?.id]);
 
-  const handleDateChange = (
-    e: ChangeEvent<HTMLInputElement>,
-    type: "start" | "end"
-  ) => {
-    const value = e.target.value; // yyyy-MM-dd string
-    if (type === "start") {
-      setStartDate(value);
-      // Optional: Auto-adjust end date if it becomes invalid
-      const start = parseISO(value);
-      const end = parseISO(endDate);
-      if (isValid(start) && isValid(end) && end <= start) {
-        setEndDate(format(addDays(start, 1), "yyyy-MM-dd")); // Set end date to day after start
-      }
-    } else {
-      setEndDate(value);
-    }
-  };
-
   const handleSearch = () => {
-    // Validation before triggering refetch
-    const start = parseISO(startDate);
-    const end = parseISO(endDate);
-    if (!startDate || !endDate || !isValid(start) || !isValid(end)) {
-      toast.error("Please select valid start and end dates.");
+    if (!startDate || !endDate) {
+      toast.error("Please select both a start and end date.");
       return;
     }
-    if (end <= start) {
+    if (endDate <= startDate) {
       toast.error("End date must be after start date.");
       return;
     }
@@ -406,14 +385,37 @@ export default function AvailableRoomsByDate() {
                 >
                   Start Date
                 </Label>
-                <Input
-                  id="start-date"
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => handleDateChange(e, "start")}
-                  className={dateInputClass}
-                  min={todayStr} // Prevent selecting past dates
-                />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      id="start-date"
+                      variant={"outline"}
+                      className={cn(
+                        "w-full justify-start text-left font-normal h-10",
+                        !startDate && "text-muted-foreground",
+                        dateInputClass
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {startDate ? (
+                        format(startDate, "PPP")
+                      ) : (
+                        <span>Select start date</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={startDate}
+                      onSelect={setStartDate}
+                      disabled={(date) =>
+                        date < new Date(new Date().setHours(0, 0, 0, 0))
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
               <div className="grid gap-1.5 w-full sm:w-auto">
                 <Label
@@ -422,14 +424,37 @@ export default function AvailableRoomsByDate() {
                 >
                   End Date
                 </Label>
-                <Input
-                  id="end-date"
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => handleDateChange(e, "end")}
-                  className={dateInputClass}
-                  min={startDate} // Prevent end date being before start date
-                />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      id="end-date"
+                      variant={"outline"}
+                      className={cn(
+                        "w-full justify-start text-left font-normal h-10",
+                        !endDate && "text-muted-foreground",
+                        dateInputClass
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {endDate ? (
+                        format(endDate, "PPP")
+                      ) : (
+                        <span>Select end date</span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={endDate}
+                      onSelect={setEndDate}
+                      disabled={(date) =>
+                        startDate ? date <= startDate : date < new Date()
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
               <Button
                 onClick={handleSearch}
@@ -571,10 +596,10 @@ export default function AvailableRoomsByDate() {
                       >
                         <TableCell className="px-4 py-3 sticky left-0 z-10 bg-white dark:bg-[#171F2F] border-r border-gray-200 dark:border-r-[#1D2939]">
                           <div className="font-semibold text-sm text-gray-800 dark:text-gray-200">
-                            {room.room_code}
+                            {room.room_type_name}
                           </div>
                           <div className="text-xs text-gray-500 dark:text-gray-400">
-                            {room.room_type_name}
+                            {room.room_code}
                           </div>
                         </TableCell>
                         {dateHeaders.map((date) => {

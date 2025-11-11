@@ -164,6 +164,7 @@ export default function Step4_ReceivePayment() {
 
     const payload: UpdatePaymentPayload = {
       booking_status: "Confirmed",
+      payment_status: "Paid",
       currency_paid: "TZS",
       amount_paid: String(data.amountReceived),
     };
@@ -326,8 +327,7 @@ export default function Step4_ReceivePayment() {
                 </p>
                 {finalAmountTZS !== undefined && finalAmountTZS !== null ? (
                   <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-                    {new Intl.NumberFormat("en-US").format(finalAmountTZS)}{" "}
-                    TZS
+                    {new Intl.NumberFormat("en-US").format(finalAmountTZS)} TZS
                   </p>
                 ) : (
                   <div className="flex items-center justify-center py-2">
@@ -398,9 +398,10 @@ export default function Step4_ReceivePayment() {
                         <FormControl>
                           <FormInputWithIcon
                             icon={FaCheck}
-                                                          type="number"
-                                                          step="any"
-                                                          min="0"                            placeholder="Re-enter TZS amount..."
+                            type="number"
+                            step="any"
+                            min="0"
+                            placeholder="Re-enter TZS amount..."
                             {...field}
                             className="bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
                           />
@@ -471,9 +472,7 @@ export default function Step4_ReceivePayment() {
             <CardContent className="p-6">
               <div className="flex items-center gap-3 mb-4">
                 <Info className="h-5 w-5 text-orange-500" />
-                <h4 className="font-semibold text-orange-500">
-                  Cash Handling
-                </h4>
+                <h4 className="font-semibold text-orange-500">Cash Handling</h4>
               </div>
               <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                 <li>• Count cash carefully with the guest</li>
